@@ -5,4 +5,5 @@ stages:
 test:
   stage: test
   script:
+    - chmod +x ./gradlew
     - ./gradlew clean check
