@@ -1,0 +1,12 @@
+.gradle
+/build/
+
+*.jar
+!gradle-wrapper.jar
+*.war
+*.ear
+
+hs_err_pid*
+
+# IntelliJ project files
+.idea
