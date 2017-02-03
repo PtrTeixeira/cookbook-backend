@@ -1,0 +1,11 @@
+machine:
+  java:
+    version: openjdk8
+
+checkout:
+  post:
+    - chmod +x gradlew
+
+test:
+  override:
+    - ./gradlew check
