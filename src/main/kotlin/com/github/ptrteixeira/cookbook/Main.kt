@@ -1,16 +1,21 @@
 package com.github.ptrteixeira.cookbook
 
-import org.wasabifx.wasabi.app.AppServer
+import io.vertx.core.Vertx
+import io.vertx.ext.web.Router
+
 
 fun main(args: Array<String>) {
-    val server = AppServer()
+    val vertx = Vertx.vertx()
+    val server = vertx.createHttpServer()
+    val router = Router.router(vertx)
 
-    server.get("/", {
-        response.send("Hello, World!")
-    })
-    server.get("/first", {
-        response.send("First Page!")
-    })
+    router.route("/").handler {
+        val response = it.response()
+        response.putHeader("content-type", "text/plain")
+        response.end("Hello World!")
+    }
 
-    server.start()
+    server
+        .requestHandler(router::accept)
+        .listen(8080)
 }
