@@ -1,0 +1,110 @@
+swagger: '2.0'
+
+info:
+  version: '1.0.0'
+  title: Cookbook
+  description: Simple BLOBA for storing and accessing recipes
+
+schemes:
+  - http
+basePath: /v1
+
+paths:
+  /recipes:
+    get:
+      summary: Get all recipes
+      description: Get a list of all recipes visible to the current user
+      parameters:
+        - $ref: '#/parameters/start'
+        - $ref: '#/parameters/end'
+      responses:
+        200:
+          description: A list of Recipes
+          schema:
+            $ref: '#/definitions/Recipes'
+        403:
+          description: Current user does not have permission to view recipes
+          schema:
+            $ref: '#/definitions/Error'
+    post:
+      summary: Create a new recipe
+      description: Create a new recipe for the current user
+      parameters:
+        - name: recipe
+          in: body
+          description: The recipe to be added
+          schema:
+            $ref: '#/definitions/Recipe'
+      responses:
+        204: 
+          description: Recipe successfully created
+        403:
+          description: Current user does not have permission to create a recipe
+          schema:
+            $ref: '#/definitions/Error'
+  /recipes/{recipe-id}:
+    parameters:
+      - $ref: '#/parameters/recipe-id'
+    get:
+      summary: Get a single recipe
+      description: Get a single recipe
+      responses:
+        200:
+          description: A Recipe
+          schema:
+            $ref: '#/definitions/Recipe'
+        404:
+          description: A recipe with that ID does not exist
+          schema:
+            $ref: '#/definitions/Error'
+        403:
+          description: The current user does not have permission to view this recipe
+          schema:
+            $ref: '#/definitions/Error'
+
+
+definitions:
+  Recipe:
+    properties:
+      name:
+        type: string
+      summary:
+        type: string
+      description:
+        type: string
+    required:
+      - name
+      - summary
+  Recipes:
+    type: array
+    items:
+      $ref: "#/definitions/Recipe"
+  Error:
+    properties:
+      error:
+        type: string
+      errorDescription:
+        type: string
+      errorUri: 
+        type: string
+    required:
+      - error
+      - errorDescription
+
+parameters:
+  recipe-id:
+    name: recipe-id
+    in: path
+    required: true
+    description: UUID of requested recipe
+    type: string
+  start:
+    name: start
+    in: query
+    description: Start index (1-based, inclusive) for pagination
+    type: integer
+  end:
+    name: end
+    in: query
+    description: End index (inclusive) for pagination
+    type: integer
