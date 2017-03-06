@@ -1,6 +1,11 @@
 import org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension
+import org.jetbrains.kotlin.gradle.dsl.Coroutines
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 buildscript {
+    group = "com.github.ptrteixeira.cookbook"
+    version = "0.1.0"
+
     repositories {
         gradleScriptKotlin()
         mavenCentral()
@@ -24,14 +29,14 @@ configure<ApplicationPluginConvention> {
 }
 
 configure<KotlinProjectExtension> {
-//    kotlinOptions {
-//        javaParameters = true
-//        jvmTarget = "1.8"
-//    }
+    experimental.coroutines = Coroutines.ENABLE
+}
 
-//    experimental {
-//        coroutines("enable")
-//    }
+tasks.withType<KotlinCompile> {
+    kotlinOptions {
+        javaParameters = true
+        jvmTarget = "1.8"
+    }
 }
 
 
