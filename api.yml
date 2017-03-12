@@ -36,8 +36,12 @@ paths:
           schema:
             $ref: '#/definitions/Recipe'
       responses:
-        204: 
+        200:
           description: Recipe successfully created
+          schema:
+            location:
+              type: String
+              description: URI of newly created resource
         403:
           description: Current user does not have permission to create a recipe
           schema:
