@@ -54,7 +54,9 @@ paths:
           schema:
             $ref: '#/definitions/Recipe'
         404:
-          description: A recipe with that ID does not exist
+          description: >
+            A recipe with that ID does not exist. This API reserves the right to return 404
+            instead of 403 to avoid leaking information.
           schema:
             $ref: '#/definitions/Error'
         403:
@@ -98,7 +100,7 @@ definitions:
       instructions:
         type: string
       tags:
-        type: "#/definitions/Tags"
+        $ref: "#/definitions/Tags"
       summary:
         type: string
       description:
@@ -108,6 +110,7 @@ definitions:
       - summary
       - ingredients
       - tags
+      - instructions
   Recipes:
     type: array
     items:
