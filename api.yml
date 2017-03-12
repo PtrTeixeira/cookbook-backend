@@ -16,7 +16,7 @@ paths:
       description: Get a list of all recipes visible to the current user
       parameters:
         - $ref: '#/parameters/start'
-        - $ref: '#/parameters/end'
+        - $ref: '#/parameters/count'
       responses:
         200:
           description: A list of Recipes
@@ -61,6 +61,30 @@ paths:
           description: The current user does not have permission to view this recipe
           schema:
             $ref: '#/definitions/Error'
+    patch:
+      summary: Update this recipe
+      description: Update this recipe
+      parameters:
+        - name: recipe-egg
+          in: body
+          description: Modified fields from the recipe
+          schema:
+            $ref: "#/definitions/RecipeEgg"
+      responses:
+        200:
+          description: This recipe with changes accepted
+          schema:
+            $ref: "#/definitions/Recipe"
+    delete:
+      summary: Delete this recipe
+      description: Delete this recipe
+      responses:
+        204:
+          description: Recipe was successfully deleted
+        404:
+          description: Recipe by that ID could no be found
+          schema:
+            $ref: "#/definitions/Error"
 
 
 definitions:
@@ -68,6 +92,13 @@ definitions:
     properties:
       name:
         type: string
+        minLength: 1
+      ingredients:
+        $ref: "#/definitions/Ingredients"
+      instructions:
+        type: string
+      tags:
+        type: "#/definitions/Tags"
       summary:
         type: string
       description:
@@ -75,10 +106,36 @@ definitions:
     required:
       - name
       - summary
+      - ingredients
+      - tags
   Recipes:
     type: array
     items:
       $ref: "#/definitions/Recipe"
+  RecipeEgg:
+      properties:
+        name:
+          type: string
+          minLength: 1
+        ingredients:
+          $ref: "#/definitions/Ingredients"
+        instructions:
+          type: string
+        tags:
+          type: "#/definitions/Tags"
+        summary:
+          type: string
+        description:
+          type: string
+  Ingredients:
+    type: array
+    items:
+      type: string
+  Tags:
+    type: array
+    uniqueItems: true
+    items:
+      type: string
   Error:
     properties:
       error:
@@ -103,8 +160,10 @@ parameters:
     in: query
     description: Start index (1-based, inclusive) for pagination
     type: integer
-  end:
-    name: end
+    minimum: 1
+  count:
+    name: count
     in: query
-    description: End index (inclusive) for pagination
+    description: Maximum number of items to be returned for paginated
     type: integer
+    minimum: 1
