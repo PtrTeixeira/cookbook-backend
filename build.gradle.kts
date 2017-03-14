@@ -47,7 +47,7 @@ repositories {
 
 val versions = mapOf(
     "kotlin" to "1.1.0",
-    "vertx" to "3.3.3",
+    "vertx" to "3.4.0",
     "assertj" to "3.6.1"
 )
 
