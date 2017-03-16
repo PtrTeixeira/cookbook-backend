@@ -29,6 +29,10 @@ apply {
 
 configure<ApplicationPluginConvention> {
     mainClassName = "com.github.ptrteixeira.cookbook.MainKt"
+    applicationDefaultJvmArgs = listOf(
+        "-Dvertx.logger-delegate-factory-class-name=io.vertx.core.logging.Log4j2LogDelegateFactory",
+        "-DLog4jContextSelector=org.apache.logging.log4j.core.async.AsyncLoggerContextSelector"
+    )
 }
 
 configure<KotlinProjectExtension> {
@@ -53,6 +57,7 @@ enum class Dependencies(val version: String) {
     VERTX("3.4.0"),
     ASSERTJ("3.6.1"),
     JUNIT("5.0.0-M3"),
+    JACKSON("2.8.7"),
     LOG4J("2.8.1");
 
     override fun toString() = version
@@ -64,6 +69,7 @@ dependencies {
     compile("io.vertx:vertx-web:${Dependencies.VERTX}")
     compile("org.apache.logging.log4j:log4j-api:${Dependencies.LOG4J}")
     compile("org.apache.logging.log4j:log4j-core:${Dependencies.LOG4J}")
+    compile("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${Dependencies.JACKSON}")
 
     testCompile("org.junit.jupiter:junit-jupiter-api:${Dependencies.JUNIT}")
     testRuntime("org.junit.jupiter:junit-jupiter-engine:${Dependencies.JUNIT}")
