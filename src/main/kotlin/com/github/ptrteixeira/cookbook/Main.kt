@@ -1,27 +1,23 @@
 package com.github.ptrteixeira.cookbook
 
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.github.ptrteixeira.cookbook.resources.RecipesResource
+import com.github.ptrteixeira.cookbook.resources.Serializer
 import io.vertx.core.Vertx
-import io.vertx.core.http.HttpMethod
 import io.vertx.ext.web.Router
-import org.apache.logging.log4j.LogManager
 
 
 fun main(args: Array<String>) {
-    val logger = LogManager.getLogger()
     val vertx = Vertx.vertx()
     val server = vertx.createHttpServer()
     val mainRouter = Router.router(vertx)
     val apiRouter = Router.router(vertx)
+    val objectMapper = jacksonObjectMapper()
+    val serializer = Serializer(objectMapper)
 
-    val addRoute = withRouter(apiRouter)
+    val recipes = RecipesResource(apiRouter, serializer)
 
-    addRoute("/", HttpMethod.GET) {
-        val response = it.response()
-        logger.info("Hello World!")
-        response.end("Hello World!")
-    }
-
-    mainRouter.mountSubRouter("/api/v1", apiRouter)
+    mainRouter.mountSubRouter("/api/v1", recipes.get())
     server
         .requestHandler(mainRouter::accept)
         .listen(8080)

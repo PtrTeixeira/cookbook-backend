@@ -30,8 +30,7 @@ apply {
 configure<ApplicationPluginConvention> {
     mainClassName = "com.github.ptrteixeira.cookbook.MainKt"
     applicationDefaultJvmArgs = listOf(
-        "-Dvertx.logger-delegate-factory-class-name=io.vertx.core.logging.Log4j2LogDelegateFactory",
-        "-DLog4jContextSelector=org.apache.logging.log4j.core.async.AsyncLoggerContextSelector"
+        "-Dvertx.logger-delegate-factory-class-name=io.vertx.core.logging.Log4j2LogDelegateFactory"
     )
 }
 
@@ -65,11 +64,13 @@ enum class Dependencies(val version: String) {
 
 dependencies {
     compile(kotlinModule("stdlib-jre8", Dependencies.KOTLIN.toString()))
+    compile(kotlinModule("reflect", Dependencies.KOTLIN.toString()))
     compile("io.vertx:vertx-core:${Dependencies.VERTX}")
     compile("io.vertx:vertx-web:${Dependencies.VERTX}")
     compile("org.apache.logging.log4j:log4j-api:${Dependencies.LOG4J}")
     compile("org.apache.logging.log4j:log4j-core:${Dependencies.LOG4J}")
     compile("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${Dependencies.JACKSON}")
+    compile("com.fasterxml.jackson.module:jackson-module-kotlin:${Dependencies.JACKSON}")
 
     testCompile("org.junit.jupiter:junit-jupiter-api:${Dependencies.JUNIT}")
     testRuntime("org.junit.jupiter:junit-jupiter-engine:${Dependencies.JUNIT}")

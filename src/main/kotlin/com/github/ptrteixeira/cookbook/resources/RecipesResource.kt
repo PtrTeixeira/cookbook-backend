@@ -2,8 +2,10 @@ package com.github.ptrteixeira.cookbook.resources
 
 import com.github.ptrteixeira.cookbook.model.Recipe
 import com.github.ptrteixeira.cookbook.model.RecipeEgg
+import io.vertx.core.http.HttpMethod
+import io.vertx.ext.web.Router
+import io.vertx.ext.web.RoutingContext
 import java.util.*
-
 
 val MOCK_RECIPE = Recipe(
     name = "Chocolate Chip Cookies",
@@ -14,20 +16,68 @@ val MOCK_RECIPE = Recipe(
     description = "They were invented right here in Massachusetts, you know."
 )
 
-fun getRecipes(): List<Recipe> {
+private fun getRecipes(): List<Recipe> {
     return emptyList()
 }
 
-fun getRecipe(id: String): Recipe {
-    return MOCK_RECIPE;
+private fun getRecipe(id: String): Recipe {
+    return MOCK_RECIPE
 }
 
-fun createRecipe(recipe: Recipe): String {
+private fun createRecipe(recipe: Recipe): String {
     val id = UUID.randomUUID()
 
-    return "/recipes/${id}"
+    return "/recipes/$id"
 }
 
-fun patchRecipe(id: String, recipe: RecipeEgg): Recipe {
+private fun deleteRecipe(id: String) {
+    // Whee ...
+}
+
+private fun patchRecipe(id: String, recipe: RecipeEgg): Recipe {
     return recipe.merge(MOCK_RECIPE)
+}
+
+private const val ID_PARAM = "id"
+
+class RecipesResource(private val router: Router,
+                      private val serializer: Serializer) {
+    fun getRecipes(context: RoutingContext) {
+        serializer.withContext<List<Recipe>>(context) { getRecipes() }
+    }
+    fun getRecipe(context: RoutingContext) {
+        serializer.withContextOut(context) {
+            val id = it.request().getParam(ID_PARAM)
+            getRecipe(id)
+        }
+    }
+    fun createRecipe(context: RoutingContext) {
+        serializer.withContext(context) { body: Recipe -> createRecipe(body) }
+    }
+    fun patchRecipe(context: RoutingContext) {
+        serializer.withContext(context) { body: RecipeEgg, context: RoutingContext ->
+            val id = context.request().getParam(ID_PARAM)
+            patchRecipe(id, body)
+        }
+    }
+    fun deleteRecipe(context: RoutingContext) {
+        serializer.withContextOut(context) {
+            val id = it.request().getParam(ID_PARAM)
+            deleteRecipe(id)
+            context.response()
+                .setStatusCode(204)
+        }
+    }
+
+    fun get() : Router {
+        val addRoute = withRouter(router)
+
+        addRoute("/recipes", HttpMethod.GET, this::getRecipes)
+        addRoute("/recipes", HttpMethod.POST, this::createRecipe)
+        addRoute("/recipes/:$ID_PARAM", HttpMethod.GET, this::getRecipe)
+        addRoute("/recipes/:$ID_PARAM", HttpMethod.PUT, this::patchRecipe)
+        addRoute("/recipes/:$ID_PARAM", HttpMethod.DELETE, this::deleteRecipe)
+
+        return router
+    }
 }
