@@ -15,7 +15,7 @@ fun main(args: Array<String>) {
     val objectMapper = jacksonObjectMapper()
     val serializer = Serializer(objectMapper)
 
-    val recipes = RecipesResource(apiRouter, serializer)
+    val recipes = RecipesResource(apiRouter, objectMapper, serializer)
 
     mainRouter.mountSubRouter("/api/v1", recipes.get())
     server

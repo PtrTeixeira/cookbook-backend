@@ -14,7 +14,7 @@ buildscript {
     }
     dependencies {
         classpath(kotlinModule("gradle-plugin", "1.1.0"))
-        classpath("org.junit.platform:junit-platform-gradle-plugin:1.0.0-M3")
+        classpath("org.junit.platform:junit-platform-gradle-plugin:1.0.0-M4")
     }
 }
 
@@ -55,7 +55,7 @@ enum class Dependencies(val version: String) {
     KOTLIN("1.1.0"),
     VERTX("3.4.0"),
     ASSERTJ("3.6.1"),
-    JUNIT("5.0.0-M3"),
+    JUNIT("5.0.0-M4"),
     JACKSON("2.8.7"),
     LOG4J("2.8.1");
 
