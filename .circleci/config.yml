@@ -1,0 +1,16 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/cookbook
+    docker:
+      - image: openjdk:8u121
+    steps:
+      - checkout
+      - restore_cache:
+          key: {{ checksum "build.gradle" }}
+      - run: ./gradlew check
+      - save_cache:
+          paths:
+            - ~/.m2
+          key: v1-{{ checksum "build.gradle" }}
+
