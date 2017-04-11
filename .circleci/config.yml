@@ -7,7 +7,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: {{ checksum "build.gradle" }}
+          key: v1-{{ checksum "build.gradle" }}
       - run: ./gradlew check
       - save_cache:
           paths:
