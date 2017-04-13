@@ -1,7 +1,9 @@
 package com.github.ptrteixeira.cookbook
 
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.github.ptrteixeira.cookbook.data.*
+import com.github.ptrteixeira.cookbook.resources.RecipesResource
 import io.vertx.core.Vertx
-import io.vertx.core.http.HttpMethod
 import io.vertx.ext.web.Router
 
 
@@ -10,16 +12,38 @@ fun main(args: Array<String>) {
     val server = vertx.createHttpServer()
     val mainRouter = Router.router(vertx)
     val apiRouter = Router.router(vertx)
+    val objectMapper = jacksonObjectMapper()
 
-    val addRoute = withRouter(apiRouter)
+    val recipes = RecipesResource(
+        router = apiRouter,
+        mapper = objectMapper,
+        getRecipes = ::getRecipes,
+        getRecipe = ::getRecipe,
+        createRecipe = ::createRecipe,
+        modifyRecipe = ::patchRecipe,
+        deleteRecipe = ::deleteRecipe
+        )
 
-    addRoute("/", HttpMethod.GET) {
-        val response = it.response()
-        response.end("Hello World!")
-    }
-
-    mainRouter.mountSubRouter("/api/v1", apiRouter)
+    mainRouter.mountSubRouter("/api/v1", recipes.get())
     server
         .requestHandler(mainRouter::accept)
         .listen(8080)
+}
+
+fun getRouter(vertx: Vertx): Router {
+    val mainRouter = Router.router(vertx)
+    val apiRouter = Router.router(vertx)
+    val objectMapper = jacksonObjectMapper()
+
+    val recipes = RecipesResource(
+        router = apiRouter,
+        mapper = objectMapper,
+        getRecipes = ::getRecipes,
+        getRecipe = ::getRecipe,
+        createRecipe = ::createRecipe,
+        modifyRecipe = ::patchRecipe,
+        deleteRecipe = ::deleteRecipe
+    )
+
+    return mainRouter.mountSubRouter("/api/v1", recipes.get())
 }
