@@ -17,8 +17,8 @@ fun getRecipes(): List<Recipe> {
     return emptyList()
 }
 
-fun getRecipe(id: String): Recipe {
-    return MOCK_RECIPE
+fun getRecipe(id: String): Optional<Recipe> {
+    return Optional.of(MOCK_RECIPE)
 }
 
 fun createRecipe(recipe: Recipe): String {

@@ -7,7 +7,7 @@ info:
 
 schemes:
   - http
-basePath: /v1
+basePath: /api/v1
 
 paths:
   /recipes:

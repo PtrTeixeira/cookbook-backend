@@ -1,8 +1,11 @@
 import org.gradle.api.plugins.ApplicationPluginConvention
+import org.gradle.api.plugins.ExtensionAware
 import org.gradle.script.lang.kotlin.*
 import org.jetbrains.kotlin.gradle.dsl.Coroutines
 import org.jetbrains.kotlin.gradle.dsl.KotlinProjectExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.junit.platform.gradle.plugin.FiltersExtension
+import org.junit.platform.gradle.plugin.JUnitPlatformExtension
 
 buildscript {
     group = "com.github.ptrteixeira.cookbook"
@@ -38,6 +41,12 @@ configure<KotlinProjectExtension> {
     experimental.coroutines = Coroutines.ENABLE
 }
 
+configure<JUnitPlatformExtension> {
+    filter {
+        includeClassNamePattern(".*Spec")
+    }
+}
+
 tasks.withType<KotlinCompile> {
     kotlinOptions {
         javaParameters = true
@@ -49,12 +58,15 @@ tasks.withType<KotlinCompile> {
 repositories {
     gradleScriptKotlin()
     mavenCentral()
+    jcenter()
 }
 
 enum class Dependencies(val version: String) {
     KOTLIN("1.1.0"),
     VERTX("3.4.0"),
     ASSERTJ("3.6.1"),
+    SWAGGER_REQUEST("1.0.11"),
+    REST_ASSURED("3.0.2"),
     JUNIT("5.0.0-M4"),
     JACKSON("2.8.7"),
     LOG4J("2.8.1");
@@ -75,4 +87,14 @@ dependencies {
     testCompile("org.junit.jupiter:junit-jupiter-api:${Dependencies.JUNIT}")
     testRuntime("org.junit.jupiter:junit-jupiter-engine:${Dependencies.JUNIT}")
     testCompile("org.assertj:assertj-core:${Dependencies.ASSERTJ}")
+    testCompile("com.atlassian.oai:swagger-request-validator-restassured:${Dependencies.SWAGGER_REQUEST}")
+    testCompile("io.rest-assured:rest-assured:${Dependencies.REST_ASSURED}")
+}
+
+
+fun JUnitPlatformExtension.filter(setup: FiltersExtension.() -> Unit) {
+    when (this) {
+        is ExtensionAware -> extensions.getByType(FiltersExtension::class.java).setup()
+        else -> throw Exception("${this::class} must be an instance of ExtensionAware")
+    }
 }
