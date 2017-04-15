@@ -7,12 +7,12 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: v1-{{ checksum "build.gradle.kts" }}
+          key: v1-{{ checksum "build.gradle" }}
       - run: |
               chmod +x gradlew
               ./gradlew check
       - save_cache:
           paths:
             - ~/.m2
-          key: v1-{{ checksum "build.gradle.kts" }}
+          key: v1-{{ checksum "build.gradle" }}
 

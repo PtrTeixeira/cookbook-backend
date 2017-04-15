@@ -1,0 +1,99 @@
+buildscript {
+  group = "com.github.ptrteixeira.cookbook"
+  version = "0.1.0"
+
+  repositories {
+    mavenCentral()
+  }
+  dependencies {
+    classpath "org.junit.platform:junit-platform-gradle-plugin:1.0.0-M4"
+  }
+}
+
+plugins {
+  id 'application'
+  id 'org.jetbrains.kotlin.jvm' version '1.1.1'
+}
+
+apply {
+  plugin "org.junit.platform.gradle.plugin"
+  plugin 'kotlin'
+}
+
+mainClassName = "com.github.ptrteixeira.cookbook.MainKt"
+applicationDefaultJvmArgs = [
+    "-Dvertx.logger-delegate-factory-class-name=io.vertx.core.logging.Log4j2LogDelegateFactory"
+    ]
+
+junitPlatform {
+  logManager 'org.apache.logging.log4j.jul.LogManager'
+  filters {
+    if (!System.getenv('CI')) {
+      tags {
+        exclude 'IntegrationTest'
+      }
+    }
+  }
+}
+
+kotlin {
+  experimental {
+    coroutines 'enable'
+  }
+}
+
+kapt {
+  correctErrorTypes = true
+  generateStubs = true
+}
+
+compileKotlin {
+  kotlinOptions {
+    javaParameters = true
+    jvmTarget = '1.8'
+  }
+}
+
+
+repositories {
+  mavenCentral()
+  jcenter()
+}
+
+enum Dependency {
+  KOTLIN('1.1.1'),
+  VERTX('3.4.0'),
+  ASSERTJ('3.6.1'),
+  SWAGGER_REQUEST('1.0.11'),
+  REST_ASSURED('3.0.2'),
+  JUNIT('5.0.0-M4'),
+  JACKSON('2.8.7'),
+  LOG4J('2.8.1'),
+  SLF4J('1.7.24')
+
+  private String version
+
+  private Dependency(String version) { this.version = version }
+
+  String toString() { version }
+}
+
+dependencies {
+  compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:${Dependency.KOTLIN}"
+  compile "org.jetbrains.kotlin:kotlin-reflect:${Dependency.KOTLIN}"
+  compile "io.vertx:vertx-core:${Dependency.VERTX}"
+  compile "io.vertx:vertx-web:${Dependency.VERTX}"
+  compileOnly "org.apache.logging.log4j:log4j-api:${Dependency.LOG4J}"
+  compileOnly "org.slf4j:slf4j-api:${Dependency.SLF4J}"
+  compile "org.apache.logging.log4j:log4j-core:${Dependency.LOG4J}"
+  compile "org.apache.logging.log4j:log4j-jul:${Dependency.LOG4J}"
+  compile "org.apache.logging.log4j:log4j-slf4j-impl:${Dependency.LOG4J}"
+  compile "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${Dependency.JACKSON}"
+  compile "com.fasterxml.jackson.module:jackson-module-kotlin:${Dependency.JACKSON}"
+
+  testCompileOnly "org.junit.jupiter:junit-jupiter-api:${Dependency.JUNIT}"
+  testRuntime "org.junit.jupiter:junit-jupiter-engine:${Dependency.JUNIT}"
+  testCompile "org.assertj:assertj-core:${Dependency.ASSERTJ}"
+  testCompile "com.atlassian.oai:swagger-request-validator-restassured:${Dependency.SWAGGER_REQUEST}"
+  testCompile "io.rest-assured:rest-assured:${Dependency.REST_ASSURED}"
+}
