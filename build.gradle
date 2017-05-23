@@ -13,7 +13,9 @@ buildscript {
 plugins {
   id 'application'
   id 'project-report'
+  id 'idea'
   id 'org.jetbrains.kotlin.jvm' version '1.1.1'
+  id 'org.jetbrains.kotlin.kapt' version '1.1.1'
 }
 
 apply {
@@ -34,7 +36,9 @@ repositories {
 }
 
 enum Dependency {
-  VERTX('3.4.0'),
+  VERTX('3.4.1'),
+  ELASTICSEARCH('5.4.0'),
+  DAGGER('2.10'),
   ASSERTJ('3.6.1'),
   SWAGGER_REQUEST('1.0.11'),
   REST_ASSURED('3.0.2'),
@@ -59,6 +63,10 @@ dependencies {
   compile "org.apache.logging.log4j:log4j-slf4j-impl:${Dependency.LOG4J}"
   compile "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${Dependency.JACKSON}"
   compile "com.fasterxml.jackson.module:jackson-module-kotlin:${Dependency.JACKSON}"
+  compile "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:${Dependency.JACKSON}"
+  compile("org.elasticsearch.client:transport:${Dependency.ELASTICSEARCH}")
+  compile "com.google.dagger:dagger:${Dependency.DAGGER}"
+  kapt "com.google.dagger:dagger-compiler:${Dependency.DAGGER}"
 
   testCompile "org.assertj:assertj-core:${Dependency.ASSERTJ}"
   testCompile "com.atlassian.oai:swagger-request-validator-restassured:${Dependency.SWAGGER_REQUEST}"
