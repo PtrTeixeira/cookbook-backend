@@ -29,6 +29,13 @@ applicationDefaultJvmArgs = [
     ]
 distTar.compression = Compression.GZIP
 
+idea {
+  module {
+    sourceDirs += file('build/generated/source/kapt/main')
+    generatedSourceDirs += file('build/generated/source/kapt/main')
+  }
+}
+
 
 repositories {
   mavenCentral()
