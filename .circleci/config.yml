@@ -20,7 +20,7 @@ jobs:
       - store_artifacts:
           path: build/test-reports
           destination: test-reports
-      - store_artifacts:
+      - store_test_results:
           path: build/test-results
           destination: test-results
 
