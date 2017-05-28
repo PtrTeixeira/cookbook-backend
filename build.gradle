@@ -14,8 +14,8 @@ plugins {
   id 'application'
   id 'project-report'
   id 'idea'
-  id 'org.jetbrains.kotlin.jvm' version '1.1.1'
-  id 'org.jetbrains.kotlin.kapt' version '1.1.1'
+  id 'org.jetbrains.kotlin.jvm' version '1.1.2-2'
+  id 'org.jetbrains.kotlin.kapt' version '1.1.2-2'
 }
 
 apply {
@@ -32,7 +32,9 @@ distTar.compression = Compression.GZIP
 idea {
   module {
     sourceDirs += file('build/generated/source/kapt/main')
+    testSourceDirs += file('build/generated/source/kapt/test')
     generatedSourceDirs += file('build/generated/source/kapt/main')
+    generatedSourceDirs += file('build/generated/source/kapt/test')
   }
 }
 
@@ -45,7 +47,7 @@ repositories {
 enum Dependency {
   VERTX('3.4.1'),
   ELASTICSEARCH('5.4.0'),
-  DAGGER('2.10'),
+  DAGGER('2.11'),
   ASSERTJ('3.6.1'),
   SWAGGER_REQUEST('1.0.11'),
   REST_ASSURED('3.0.2'),
@@ -78,4 +80,6 @@ dependencies {
   testCompile "org.assertj:assertj-core:${Dependency.ASSERTJ}"
   testCompile "com.atlassian.oai:swagger-request-validator-restassured:${Dependency.SWAGGER_REQUEST}"
   testCompile "io.rest-assured:rest-assured:${Dependency.REST_ASSURED}"
+  testCompile "com.google.dagger:dagger:${Dependency.DAGGER}"
+  kaptTest "com.google.dagger:dagger-compiler:${Dependency.DAGGER}"
 }

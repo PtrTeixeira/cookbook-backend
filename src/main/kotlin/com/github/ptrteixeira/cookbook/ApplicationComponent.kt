@@ -12,7 +12,7 @@ import javax.inject.Named
         modules = arrayOf(ApplicationModule::class),
         dependencies = arrayOf(BaseComponent::class, ResourcesComponent::class)
 )
-internal interface ApplicationComponent {
+interface ApplicationComponent {
     @Named(ResourcesModule.PARENT_ROUTER)
     fun parentRouter(): Router
 

@@ -10,13 +10,11 @@ import java.util.Optional
 @Component(
         modules = arrayOf(DataModule::class),
         dependencies = arrayOf(BaseComponent::class))
-internal interface DataComponent {
+interface DataComponent {
     fun elasticSearchClient(): TransportClient
     fun getRecipes(): () -> List<Recipe>
     fun getRecipe(): (String) -> Optional<Recipe>
     fun createRecipe(): (Recipe) -> String
     fun deleteRecipe(): (String) -> Unit
     fun updateRecipe(): (String, RecipeEgg) -> Recipe
-//
-//    fun recipesResource(): RecipesResource
 }

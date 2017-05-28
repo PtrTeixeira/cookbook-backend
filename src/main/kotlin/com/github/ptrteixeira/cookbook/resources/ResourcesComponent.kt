@@ -10,10 +10,8 @@ import javax.inject.Named
         modules = arrayOf(ResourcesModule::class),
         dependencies = arrayOf(
                 DataComponent::class,
-                BaseComponent::class
-        )
-)
-internal interface ResourcesComponent {
+                BaseComponent::class))
+interface ResourcesComponent {
     @Named(ResourcesModule.API_ROUTER)
     fun apiRouter(): Router
 }
