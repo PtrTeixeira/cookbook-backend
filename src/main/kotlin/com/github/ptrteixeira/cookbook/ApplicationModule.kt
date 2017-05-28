@@ -7,7 +7,7 @@ import io.vertx.core.Vertx
 import io.vertx.ext.web.Router
 import javax.inject.Named
 
-@Module(includes = arrayOf( ResourcesModule::class ))
+@Module
 internal class ApplicationModule {
     @Provides
     @Named(ResourcesModule.PARENT_ROUTER)
@@ -16,6 +16,8 @@ internal class ApplicationModule {
         return Router.router(vertx)
             .mountSubRouter("/api/v1", apiRouter)
     }
+
+
 
     @Provides
     fun server(vertx: Vertx) = vertx.createHttpServer()

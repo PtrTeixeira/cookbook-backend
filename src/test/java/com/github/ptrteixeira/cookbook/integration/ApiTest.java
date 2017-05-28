@@ -1,6 +1,6 @@
 package com.github.ptrteixeira.cookbook.integration;
 
-//@IntegrationTest
+@IntegrationTest
 final class ApiTest {
 //  private static final Vertx vertx = Vertx.vertx();
 //  private static final HttpServer server = vertx.createHttpServer();
