@@ -1,0 +1,26 @@
+buildscript {
+  ext.kotlin_version = '1.1.1'
+}
+
+kotlin {
+  experimental {
+    coroutines 'enable'
+  }
+}
+
+kapt {
+  correctErrorTypes = true
+  generateStubs = true
+}
+
+compileKotlin {
+  kotlinOptions {
+    javaParameters = true
+    jvmTarget = '1.8'
+  }
+}
+
+dependencies {
+  compile "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlin_version"
+  compile "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
+}
