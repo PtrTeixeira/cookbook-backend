@@ -35,27 +35,3 @@ internal fun deleteRecipe(client: TransportClient) = { id: String ->
 internal fun patchRecipe(client: TransportClient) = { id: String, recipe: RecipeEgg ->
     recipe.merge(MOCK_RECIPE)
 }
-
-
-internal fun getRecipes(): List<Recipe> {
-    return emptyList()
-}
-
-fun getRecipe(id: String): Optional<Recipe> {
-    return Optional.of(MOCK_RECIPE)
-}
-
-fun createRecipe(recipe: Recipe): String {
-    val id = UUID.randomUUID()
-
-    return "/recipes/$id"
-}
-
-// TODO need a better way of propagating errors
-fun deleteRecipe(id: String): Boolean {
-    return true
-}
-
-fun patchRecipe(id: String, recipe: RecipeEgg): Recipe {
-    return recipe.merge(MOCK_RECIPE)
-}
