@@ -41,7 +41,7 @@ internal class DataModule {
     }
 
     @Provides
-    fun providesGetRecipes(client: TransportClient): Function0<List<Recipe>> {
+    fun providesGetRecipes(client: TransportClient): () -> List<Recipe> {
         return getRecipes(client)
     }
 
@@ -56,7 +56,7 @@ internal class DataModule {
     }
 
     @Provides
-    fun providesDeleteRecipe(client: TransportClient): (String) -> Unit {
+    fun providesDeleteRecipe(client: TransportClient): (String) -> Boolean {
         return deleteRecipe(client)
     }
 

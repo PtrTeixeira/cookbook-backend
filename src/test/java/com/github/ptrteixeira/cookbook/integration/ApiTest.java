@@ -71,7 +71,7 @@ final class ApiTest {
     given()
         .filter(filter)
         .when()
-        .get("/api/v1/recipes/0000")
+        .get("/api/v1/recipes/00000")
         .then()
         .statusCode(200);
   }
@@ -91,7 +91,7 @@ final class ApiTest {
     given()
         .filter(filter)
         .when()
-        .delete("/api/v1/recipes/0000")
+        .delete("/api/v1/recipes/00000")
         .then()
         .statusCode(204);
   }

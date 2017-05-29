@@ -1,10 +1,10 @@
 package com.github.ptrteixeira.cookbook.resources;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.ptrteixeira.cookbook.model.PublicError;
 import com.github.ptrteixeira.cookbook.model.Recipe;
 import com.github.ptrteixeira.cookbook.model.RecipeEgg;
 import io.vertx.ext.web.RoutingContext;
-import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
 import kotlin.jvm.functions.Function1;
 import kotlin.jvm.functions.Function2;
@@ -20,10 +20,10 @@ public class RecipesResource {
   private final Function1<String, Optional<Recipe>> getRecipe;
   private final Function1<Recipe, String> createRecipe;
   private final Function2<String, RecipeEgg, Recipe> modifyRecipe;
-  private final Function1<String, Unit> deleteRecipe;
+  private final Function1<String, Boolean> deleteRecipe;
 
   @Inject
-  RecipesResource(ObjectMapper mapper, Function0<List<Recipe>> getRecipes, Function1<String, Optional<Recipe>> getRecipe, Function1<Recipe, String> createRecipe, Function2<String, RecipeEgg, Recipe> modifyRecipe, Function1<String, Unit> deleteRecipe) {
+  RecipesResource(ObjectMapper mapper, Function0<List<Recipe>> getRecipes, Function1<String, Optional<Recipe>> getRecipe, Function1<Recipe, String> createRecipe, Function2<String, RecipeEgg, Recipe> modifyRecipe, Function1<String, Boolean> deleteRecipe) {
     this.mapper = mapper;
     this.getRecipes = getRecipes;
     this.getRecipe = getRecipe;
@@ -49,7 +49,7 @@ public class RecipesResource {
     } else {
       context.response()
              .setStatusCode(404)
-             .end();
+             .end(mapper.writeValueAsString(notFound(id)));
     }
   }
 
@@ -73,12 +73,23 @@ public class RecipesResource {
            .end(mapper.writeValueAsString(built));
   }
 
-  public void deleteRecipeResource(RoutingContext context) {
+  public void deleteRecipeResource(RoutingContext context) throws Exception {
     String id = context.request().getParam("id");
-    deleteRecipe.invoke(id);
+    if (deleteRecipe.invoke(id)) {
+      context.response()
+             .setStatusCode(204)
+             .end();
+    } else {
+      context.response()
+             .setStatusCode(404)
+             .end(mapper.writeValueAsString(notFound(id)));
+    }
+  }
 
-    context.response()
-           .setStatusCode(204)
-           .end();
+  private PublicError notFound(String id) {
+    return new PublicError(
+        "RecipeNotFound",
+        String.format("Could not locate recipe with ID %s", id),
+        "...");
   }
 }

@@ -39,8 +39,13 @@ internal class MockDataModule {
     }
 
     @Provides
-    fun providesDeleteRecipe(): Function1<String, Unit> {
-        return { }
+    fun providesDeleteRecipe(): Function1<String, Boolean> {
+        return { id ->
+            when (id) {
+                "00000" -> true
+                else -> false
+            }
+        }
     }
 
     @Provides

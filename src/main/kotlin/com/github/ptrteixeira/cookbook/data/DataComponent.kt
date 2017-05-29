@@ -15,6 +15,6 @@ interface DataComponent {
     fun getRecipes(): () -> List<Recipe>
     fun getRecipe(): (String) -> Optional<Recipe>
     fun createRecipe(): (Recipe) -> String
-    fun deleteRecipe(): (String) -> Unit
+    fun deleteRecipe(): (String) -> Boolean
     fun updateRecipe(): (String, RecipeEgg) -> Recipe
 }

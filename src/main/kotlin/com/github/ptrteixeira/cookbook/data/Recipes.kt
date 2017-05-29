@@ -29,7 +29,7 @@ internal fun createRecipe(client: TransportClient) = { recipe: Recipe ->
 }
 
 internal fun deleteRecipe(client: TransportClient) = { id: String ->
-
+    true
 }
 
 internal fun patchRecipe(client: TransportClient) = { id: String, recipe: RecipeEgg ->
@@ -51,8 +51,9 @@ fun createRecipe(recipe: Recipe): String {
     return "/recipes/$id"
 }
 
-fun deleteRecipe(id: String) {
-    // Whee ...
+// TODO need a better way of propagating errors
+fun deleteRecipe(id: String): Boolean {
+    return true
 }
 
 fun patchRecipe(id: String, recipe: RecipeEgg): Recipe {
