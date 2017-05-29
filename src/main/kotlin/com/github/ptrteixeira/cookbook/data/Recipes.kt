@@ -2,6 +2,7 @@ package com.github.ptrteixeira.cookbook.data
 
 import com.github.ptrteixeira.cookbook.model.Recipe
 import com.github.ptrteixeira.cookbook.model.RecipeEgg
+import org.elasticsearch.client.transport.TransportClient
 import java.util.*
 
 val MOCK_RECIPE = Recipe(
@@ -13,24 +14,24 @@ val MOCK_RECIPE = Recipe(
     description = "They were invented right here in Massachusetts, you know."
 )
 
-fun getRecipes(): List<Recipe> {
-    return emptyList()
+internal fun getRecipes(client: TransportClient): () -> List<Recipe> = { ->
+    emptyList()
 }
 
-fun getRecipe(id: String): Optional<Recipe> {
-    return Optional.of(MOCK_RECIPE)
+internal fun getRecipe(client: TransportClient) = { id : String ->
+    Optional.of(MOCK_RECIPE)
 }
 
-fun createRecipe(recipe: Recipe): String {
+internal fun createRecipe(client: TransportClient) = { recipe: Recipe ->
     val id = UUID.randomUUID()
 
-    return "/recipes/$id"
+    "/recipes/$id"
 }
 
-fun deleteRecipe(id: String) {
-    // Whee ...
+internal fun deleteRecipe(client: TransportClient) = { id: String ->
+    true
 }
 
-fun patchRecipe(id: String, recipe: RecipeEgg): Recipe {
-    return recipe.merge(MOCK_RECIPE)
+internal fun patchRecipe(client: TransportClient) = { id: String, recipe: RecipeEgg ->
+    recipe.merge(MOCK_RECIPE)
 }
