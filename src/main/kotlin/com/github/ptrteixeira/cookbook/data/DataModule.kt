@@ -1,5 +1,6 @@
 package com.github.ptrteixeira.cookbook.data
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.ptrteixeira.cookbook.model.Recipe
 import com.github.ptrteixeira.cookbook.model.RecipeEgg
 import dagger.Module
@@ -41,18 +42,18 @@ internal class DataModule {
     }
 
     @Provides
-    fun providesGetRecipes(client: TransportClient): () -> List<Recipe> {
-        return getRecipes(client)
+    fun providesGetRecipes(client: TransportClient, objectMapper: ObjectMapper): () -> List<Recipe> {
+        return getRecipes(client, objectMapper)
     }
 
     @Provides
-    fun providesGetRecipe(client: TransportClient): (String) -> Optional<Recipe> {
-        return getRecipe(client)
+    fun providesGetRecipe(client: TransportClient, objectMapper: ObjectMapper): (String) -> Optional<Recipe> {
+        return getRecipe(client, objectMapper)
     }
 
     @Provides
-    fun providesCreateRecipe(client: TransportClient): (Recipe) -> String {
-        return createRecipe(client)
+    fun providesCreateRecipe(client: TransportClient, objectMapper: ObjectMapper): (Recipe) -> String {
+        return createRecipe(client, objectMapper)
     }
 
     @Provides
@@ -61,8 +62,8 @@ internal class DataModule {
     }
 
     @Provides
-    fun providesPatchRecipe(client: TransportClient): (String, RecipeEgg) -> Recipe {
-        return patchRecipe(client)
+    fun providesPatchRecipe(client: TransportClient, objectMapper: ObjectMapper): (String, RecipeEgg) -> Recipe {
+        return patchRecipe(client, objectMapper)
     }
 
     companion object {
