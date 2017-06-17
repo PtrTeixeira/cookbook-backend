@@ -1,0 +1,8 @@
+elasticSearchHost: localhost
+elasticSearchPort: 9300
+server:
+  type: default
+  requestLog:
+    appenders:
+      - type: console
+

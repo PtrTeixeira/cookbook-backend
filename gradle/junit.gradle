@@ -7,7 +7,6 @@ apply {
 }
 
 junitPlatform {
-  logManager 'org.apache.logging.log4j.jul.LogManager'
   filters {
     if (!System.getenv('CI')) {
       tags {

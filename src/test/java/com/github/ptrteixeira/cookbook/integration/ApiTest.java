@@ -1,13 +1,11 @@
 package com.github.ptrteixeira.cookbook.integration;
 
 import com.atlassian.oai.validator.restassured.SwaggerValidationFilter;
-import com.github.ptrteixeira.cookbook.ApplicationComponent;
 import com.github.ptrteixeira.cookbook.DaggerApplicationComponent;
 import com.github.ptrteixeira.cookbook.base.BaseComponent;
 import com.github.ptrteixeira.cookbook.base.DaggerBaseComponent;
 import com.github.ptrteixeira.cookbook.data.DataComponent;
 import com.github.ptrteixeira.cookbook.resources.DaggerResourcesComponent;
-import com.github.ptrteixeira.cookbook.resources.ResourcesComponent;
 import io.restassured.filter.Filter;
 import io.vertx.core.http.HttpServer;
 import io.vertx.ext.web.Router;
