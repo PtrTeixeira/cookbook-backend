@@ -1,49 +1,36 @@
 package com.github.ptrteixeira.cookbook
 
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.github.ptrteixeira.cookbook.data.*
-import com.github.ptrteixeira.cookbook.resources.RecipesResource
-import io.vertx.core.Vertx
-import io.vertx.ext.web.Router
+import com.github.ptrteixeira.cookbook.base.DaggerBaseComponent
+import com.github.ptrteixeira.cookbook.data.DaggerDataComponent
+import com.github.ptrteixeira.cookbook.resources.DaggerResourcesComponent
+import org.apache.logging.log4j.LogManager
 
 
 fun main(args: Array<String>) {
-    val vertx = Vertx.vertx()
-    val server = vertx.createHttpServer()
-    val mainRouter = Router.router(vertx)
-    val apiRouter = Router.router(vertx)
-    val objectMapper = jacksonObjectMapper()
+    val LOG = LogManager.getLogger()
 
-    val recipes = RecipesResource(
-        router = apiRouter,
-        mapper = objectMapper,
-        getRecipes = ::getRecipes,
-        getRecipe = ::getRecipe,
-        createRecipe = ::createRecipe,
-        modifyRecipe = ::patchRecipe,
-        deleteRecipe = ::deleteRecipe
-        )
+    val baseComponent = DaggerBaseComponent.create()
+    val dataComponent = DaggerDataComponent.builder()
+            .baseComponent(baseComponent)
+            .build()
+    val resourcesComponent = DaggerResourcesComponent.builder()
+            .baseComponent(baseComponent)
+            .dataComponent(dataComponent)
+            .build()
+    val applicationComponent = DaggerApplicationComponent.builder()
+            .baseComponent(baseComponent)
+            .resourcesComponent(resourcesComponent)
+            .build()
 
-    mainRouter.mountSubRouter("/api/v1", recipes.get())
+    val server = applicationComponent.server()
+    val router = applicationComponent.parentRouter()
+
     server
-        .requestHandler(mainRouter::accept)
+        .requestHandler(router::accept)
         .listen(8080)
-}
 
-fun getRouter(vertx: Vertx): Router {
-    val mainRouter = Router.router(vertx)
-    val apiRouter = Router.router(vertx)
-    val objectMapper = jacksonObjectMapper()
-
-    val recipes = RecipesResource(
-        router = apiRouter,
-        mapper = objectMapper,
-        getRecipes = ::getRecipes,
-        getRecipe = ::getRecipe,
-        createRecipe = ::createRecipe,
-        modifyRecipe = ::patchRecipe,
-        deleteRecipe = ::deleteRecipe
-    )
-
-    return mainRouter.mountSubRouter("/api/v1", recipes.get())
+    Runtime.getRuntime().addShutdownHook(Thread {
+        LOG.info("Closing connection to database")
+        dataComponent.elasticSearchClient().close()
+    })
 }
