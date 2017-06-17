@@ -1,5 +1,6 @@
 package com.github.ptrteixeira.cookbook.data
 
+import com.fasterxml.jackson.core.type.TypeReference
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.github.ptrteixeira.cookbook.model.Recipe
@@ -30,8 +31,10 @@ internal fun getRecipe(client: TransportClient, objectMapper: ObjectMapper) = { 
 }
 
 internal fun createRecipe(client: TransportClient, objectMapper: ObjectMapper) = { recipe: Recipe ->
+    val mapType = object : TypeReference<Map<String, Any?>>() {}
+    val toAdd: Map<String, Any> = objectMapper.convertValue(recipe, mapType)
     val id = client.prepareIndex("cookbook", "recipe")
-        .setSource(recipe)
+        .setSource(toAdd)
         .get()
         .id
 

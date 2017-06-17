@@ -5,6 +5,7 @@ import dagger.Provides
 import io.vertx.core.Vertx
 import io.vertx.core.http.HttpMethod
 import io.vertx.ext.web.Router
+import io.vertx.ext.web.handler.BodyHandler
 import javax.inject.Named
 
 @Module
@@ -13,6 +14,7 @@ internal class ResourcesModule {
     @Provides
     fun apiRouter(vertx: Vertx, recipesResource: RecipesResource): Router {
         val router = Router.router(vertx)
+        router.route().handler(BodyHandler.create())
         val addRoute = withRouter(router)
 
         addRoute("/recipes", HttpMethod.GET, recipesResource::getRecipesResource)
