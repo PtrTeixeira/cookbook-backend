@@ -46,6 +46,7 @@ enum Dependency {
   ELASTICSEARCH('5.4.0'),
   DAGGER('2.11'),
   ASSERTJ('3.6.1'),
+  MOCKITO('2.8.9'),
   SWAGGER_REQUEST('1.0.11'),
   REST_ASSURED('3.0.2'),
   JACKSON('2.8.7'),
@@ -70,6 +71,8 @@ dependencies {
   kapt "com.google.dagger:dagger-compiler:${Dependency.DAGGER}"
 
   testCompile "org.assertj:assertj-core:${Dependency.ASSERTJ}"
+  testCompile "io.dropwizard:dropwizard-testing:${Dependency.DROPWIZARD}"
+  testCompile "org.mockito:mockito-core:${Dependency.MOCKITO}"
   testCompile "com.atlassian.oai:swagger-request-validator-restassured:${Dependency.SWAGGER_REQUEST}"
   testCompile "io.rest-assured:rest-assured:${Dependency.REST_ASSURED}"
   testCompile "com.google.dagger:dagger:${Dependency.DAGGER}"

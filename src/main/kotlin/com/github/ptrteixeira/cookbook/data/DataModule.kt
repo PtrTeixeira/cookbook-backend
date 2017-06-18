@@ -35,6 +35,9 @@ internal class DataModule(private val configuration: CookbookConfiguration) {
             .addTransportAddress(InetSocketTransportAddress(address, port))
     }
 
+    @Provides
+    fun recipeData(impl: RecipeDataImpl): RecipeData = impl
+
     companion object {
         const val ELASTIC_SEARCH_HOST = "elastic.host"
         const val ELASTIC_SEARCH_PORT = "elastic.port"
