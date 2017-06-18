@@ -6,13 +6,9 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import dagger.Module
 import dagger.Provides
 import dagger.Reusable
-import io.vertx.core.Vertx
 
 @Module
 internal class BaseModule {
-    @Provides
-    fun vertx() = Vertx.vertx()
-
     @Provides
     @Reusable
     fun objectMapper(): ObjectMapper {

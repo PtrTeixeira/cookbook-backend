@@ -1,8 +1,6 @@
 package com.github.ptrteixeira.cookbook.data
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.github.ptrteixeira.cookbook.model.Recipe
-import com.github.ptrteixeira.cookbook.model.RecipeEgg
+import com.github.ptrteixeira.cookbook.CookbookConfiguration
 import dagger.Module
 import dagger.Provides
 import org.elasticsearch.client.transport.TransportClient
@@ -10,27 +8,23 @@ import org.elasticsearch.common.settings.Settings
 import org.elasticsearch.common.transport.InetSocketTransportAddress
 import org.elasticsearch.transport.client.PreBuiltTransportClient
 import java.net.InetAddress
-import java.util.*
 import javax.inject.Named
 
 
 @Module
-internal class DataModule {
+internal class DataModule(private val configuration: CookbookConfiguration) {
+
 
     @Provides
     @Named(ELASTIC_SEARCH_HOST)
     fun elasticSearchHost(): String {
-        return System.getenv("ELASTIC_HOST") ?: "localhost"
+        return configuration.elasticSearchHost
     }
 
     @Provides
     @Named(ELASTIC_SEARCH_PORT)
     fun elasticSearchPort(): Int {
-        try {
-            return System.getenv("ELASTIC_PORT")?.toInt() ?: 9300
-        } catch (exn: NumberFormatException) {
-            return 9300
-        }
+        return configuration.elasticSearchPort
     }
 
     @Provides
@@ -42,29 +36,7 @@ internal class DataModule {
     }
 
     @Provides
-    fun providesGetRecipes(client: TransportClient, objectMapper: ObjectMapper): () -> List<Recipe> {
-        return getRecipes(client, objectMapper)
-    }
-
-    @Provides
-    fun providesGetRecipe(client: TransportClient, objectMapper: ObjectMapper): (String) -> Optional<Recipe> {
-        return getRecipe(client, objectMapper)
-    }
-
-    @Provides
-    fun providesCreateRecipe(client: TransportClient, objectMapper: ObjectMapper): (Recipe) -> String {
-        return createRecipe(client, objectMapper)
-    }
-
-    @Provides
-    fun providesDeleteRecipe(client: TransportClient): (String) -> Boolean {
-        return deleteRecipe(client)
-    }
-
-    @Provides
-    fun providesPatchRecipe(client: TransportClient, objectMapper: ObjectMapper): (String, RecipeEgg) -> Recipe {
-        return patchRecipe(client, objectMapper)
-    }
+    fun recipeData(impl: RecipeDataImpl): RecipeData = impl
 
     companion object {
         const val ELASTIC_SEARCH_HOST = "elastic.host"
