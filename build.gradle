@@ -42,13 +42,10 @@ repositories {
 }
 
 enum Dependency {
+  ASSERTJ('3.6.1'),
+  DAGGER('2.11'),
   DROPWIZARD('1.1.0'),
   ELASTICSEARCH('5.4.0'),
-  DAGGER('2.11'),
-  ASSERTJ('3.6.1'),
-  MOCKITO('2.8.9'),
-  SWAGGER_REQUEST('1.0.11'),
-  REST_ASSURED('3.0.2'),
   JACKSON('2.8.7'),
   LOG4J('2.8.1'),
   SLF4J('1.7.24')
@@ -63,18 +60,14 @@ enum Dependency {
 dependencies {
   compile "io.dropwizard:dropwizard-core:${Dependency.DROPWIZARD}"
   compile "org.apache.logging.log4j:log4j-to-slf4j:${Dependency.LOG4J}"
-  compile "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${Dependency.JACKSON}"
   compile "com.fasterxml.jackson.module:jackson-module-kotlin:${Dependency.JACKSON}"
   compile "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:${Dependency.JACKSON}"
-  compile("org.elasticsearch.client:transport:${Dependency.ELASTICSEARCH}")
+  compile "org.elasticsearch.client:transport:${Dependency.ELASTICSEARCH}"
   compile "com.google.dagger:dagger:${Dependency.DAGGER}"
   kapt "com.google.dagger:dagger-compiler:${Dependency.DAGGER}"
 
   testCompile "org.assertj:assertj-core:${Dependency.ASSERTJ}"
   testCompile "io.dropwizard:dropwizard-testing:${Dependency.DROPWIZARD}"
-  testCompile "org.mockito:mockito-core:${Dependency.MOCKITO}"
-  testCompile "com.atlassian.oai:swagger-request-validator-restassured:${Dependency.SWAGGER_REQUEST}"
-  testCompile "io.rest-assured:rest-assured:${Dependency.REST_ASSURED}"
   testCompile "com.google.dagger:dagger:${Dependency.DAGGER}"
   kaptTest "com.google.dagger:dagger-compiler:${Dependency.DAGGER}"
 }

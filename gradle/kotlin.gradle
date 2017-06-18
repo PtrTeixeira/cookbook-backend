@@ -10,7 +10,6 @@ kotlin {
 
 kapt {
   correctErrorTypes = true
-  generateStubs = true
 }
 
 compileKotlin {
