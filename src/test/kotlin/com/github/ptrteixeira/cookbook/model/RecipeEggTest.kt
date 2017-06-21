@@ -15,8 +15,7 @@ internal class RecipeEggTest {
             ingredients = listOf("Chocolate", "Chips", "Cookies"),
             instructions = "Mix",
             summary = "They were invented right here in Massachusetts, you know",
-            description = "They're chocolate chip cookies. Waddya want?",
-            tags = setOf()
+            description = "They're chocolate chip cookies. Waddya want?"
     )
 
     @Test

@@ -2,7 +2,7 @@ package com.github.ptrteixeira.cookbook.data
 
 import com.github.ptrteixeira.cookbook.model.Recipe
 import com.github.ptrteixeira.cookbook.model.RecipeEgg
-import java.util.Optional
+import java.util.*
 
 interface RecipeData {
     fun getRecipes(): List<Recipe>

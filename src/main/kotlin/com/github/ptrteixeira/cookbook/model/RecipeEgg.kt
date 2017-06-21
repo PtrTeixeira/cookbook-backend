@@ -10,17 +10,16 @@ data class RecipeEgg (
     val ingredients: List<String>?,
     val instructions: String?,
     val summary: String?,
-    val tags: Set<String>?,
     val description: String?
 ) {
     fun merge(actual: Recipe): Recipe {
-        val name = name ?: actual.name
-        val ingredients = ingredients ?: actual.ingredients
-        val instructions = instructions ?: actual.instructions
-        val tags = tags ?: actual.tags
-        val summary = summary ?: actual.summary
-        val description = description ?: actual.description
-
-        return Recipe(name, ingredients, instructions, tags, summary, description)
+        return Recipe(
+            id = actual.id,
+            name = name ?: actual.name,
+            ingredients = ingredients ?: actual.ingredients,
+            instructions = instructions ?: actual.instructions,
+            summary = summary ?: actual.summary,
+            description = description ?: actual.description
+        )
     }
 }
