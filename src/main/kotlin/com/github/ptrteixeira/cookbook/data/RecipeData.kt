@@ -7,7 +7,7 @@ import java.util.*
 interface RecipeData {
     fun getRecipes(): List<Recipe>
     fun getRecipe(id: String): Optional<Recipe>
-    fun createRecipe(recipe: Recipe): String
+    fun createRecipe(recipe: RecipeEgg): Recipe
     fun deleteRecipe(id: String): Boolean
     fun patchRecipe(id: String, recipe: RecipeEgg): Recipe
 }
