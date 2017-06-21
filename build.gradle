@@ -42,13 +42,13 @@ repositories {
 }
 
 enum Dependency {
-  ASSERTJ('3.6.1'),
+  ASSERTJ('3.8.0'),
   DAGGER('2.11'),
   DROPWIZARD('1.1.0'),
   ELASTICSEARCH('5.4.0'),
-  JACKSON('2.8.7'),
-  LOG4J('2.8.1'),
-  SLF4J('1.7.24')
+  JACKSON('2.8.9'),
+  LOG4J('2.8.2'),
+  SLF4J('1.7.25')
 
   private String version
 
