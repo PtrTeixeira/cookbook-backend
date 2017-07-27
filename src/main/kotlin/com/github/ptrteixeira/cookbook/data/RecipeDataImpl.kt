@@ -7,7 +7,8 @@ import com.github.ptrteixeira.cookbook.model.Recipe
 import com.github.ptrteixeira.cookbook.model.RecipeEgg
 import org.elasticsearch.action.DocWriteResponse
 import org.elasticsearch.client.transport.TransportClient
-import java.util.*
+import java.util.Optional
+import java.util.UUID
 import javax.inject.Inject
 
 internal class RecipeDataImpl @Inject
@@ -39,7 +40,7 @@ constructor(
     }
 
     override fun createRecipe(recipe: RecipeEgg): Recipe {
-        val actual = recipe.toRecipe()
+        val actual = recipe.toRecipe(UUID.randomUUID().toString())
         val toAdd: Map<String, Any> = objectMapper.convertValue(actual, mapType)
         client.prepareIndex("cookbook", "recipe")
             .setSource(toAdd)

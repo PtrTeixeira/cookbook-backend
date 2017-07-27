@@ -1,39 +1,29 @@
 package com.github.ptrteixeira.cookbook.model
 
-import java.util.*
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 
 /**
- * Used for PATCH requests to the API. That is, it allows partial specification
- * of a recipe to be modified, so not every field needs to be re-included. The
- * interpretation of the fields is the same as in [Recipe].
+ * Used for the egg pattern - that is, this is everything that a client would send to the application, at least
+ * initially. It contains all of the information that makes up a recipe, but it does _not_ contain an ID, as that isn't
+ * something that the client should necessarily need to pass along.
+ *
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 data class RecipeEgg (
-    val name: String?,
-    val ingredients: List<String>?,
-    val instructions: String?,
-    val summary: String?,
-    val description: String?
+    val name: String = "",
+    val ingredients: List<String> = listOf(),
+    val instructions: String = "",
+    val summary: String = "",
+    val description: String = ""
 ) {
-    fun merge(actual: Recipe): Recipe {
-        return Recipe(
-            id = actual.id,
-            name = name ?: actual.name,
-            ingredients = ingredients ?: actual.ingredients,
-            instructions = instructions ?: actual.instructions,
-            summary = summary ?: actual.summary,
-            description = description ?: actual.description
-        )
-    }
-
-    fun toRecipe(): Recipe {
-        val id = UUID.randomUUID().toString()
+    fun toRecipe(id: String): Recipe {
         return Recipe(
             id = id,
-            name = name ?: "",
-            ingredients = ingredients ?: listOf(),
-            instructions = instructions ?: "",
-            summary = summary ?: "",
-            description = description ?: ""
+            name = name,
+            ingredients = ingredients,
+            instructions = instructions,
+            summary = summary,
+            description = description
         )
     }
 }
