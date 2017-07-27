@@ -1,26 +1,29 @@
 package com.github.ptrteixeira.cookbook.model
 
-/**
- * Used for PATCH requests to the API. That is, it allows partial specification
- * of a recipe to be modified, so not every field needs to be re-included. The
- * interpretation of the fields is the same as in [Recipe].
- */
-data class RecipeEgg (
-    val name: String?,
-    val ingredients: List<String>?,
-    val instructions: String?,
-    val summary: String?,
-    val tags: Set<String>?,
-    val description: String?
-) {
-    fun merge(actual: Recipe): Recipe {
-        val name = name ?: actual.name
-        val ingredients = ingredients ?: actual.ingredients
-        val instructions = instructions ?: actual.instructions
-        val tags = tags ?: actual.tags
-        val summary = summary ?: actual.summary
-        val description = description ?: actual.description
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 
-        return Recipe(name, ingredients, instructions, tags, summary, description)
+/**
+ * Used for the egg pattern - that is, this is everything that a client would send to the application, at least
+ * initially. It contains all of the information that makes up a recipe, but it does _not_ contain an ID, as that isn't
+ * something that the client should necessarily need to pass along.
+ *
+ */
+@JsonIgnoreProperties(ignoreUnknown = true)
+data class RecipeEgg (
+    val name: String = "",
+    val ingredients: List<String> = listOf(),
+    val instructions: String = "",
+    val summary: String = "",
+    val description: String = ""
+) {
+    fun toRecipe(id: String): Recipe {
+        return Recipe(
+            id = id,
+            name = name,
+            ingredients = ingredients,
+            instructions = instructions,
+            summary = summary,
+            description = description
+        )
     }
 }

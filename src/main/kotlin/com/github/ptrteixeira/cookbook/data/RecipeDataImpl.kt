@@ -7,7 +7,8 @@ import com.github.ptrteixeira.cookbook.model.Recipe
 import com.github.ptrteixeira.cookbook.model.RecipeEgg
 import org.elasticsearch.action.DocWriteResponse
 import org.elasticsearch.client.transport.TransportClient
-import java.util.*
+import java.util.Optional
+import java.util.UUID
 import javax.inject.Inject
 
 internal class RecipeDataImpl @Inject
@@ -15,6 +16,8 @@ constructor(
     val client: TransportClient,
     val objectMapper: ObjectMapper
 ) : RecipeData {
+    private val mapType = object : TypeReference<Map<String, Any?>>() {}
+
     override fun getRecipes(): List<Recipe> {
         return client.prepareSearch("cookbook")
             .setTypes("recipe")
@@ -36,15 +39,15 @@ constructor(
         }
     }
 
-    override fun createRecipe(recipe: Recipe): String {
-        val mapType = object : TypeReference<Map<String, Any?>>() {}
-        val toAdd: Map<String, Any> = objectMapper.convertValue(recipe, mapType)
-        val id = client.prepareIndex("cookbook", "recipe")
+    override fun createRecipe(recipe: RecipeEgg): Recipe {
+        val actual = recipe.toRecipe(UUID.randomUUID().toString())
+        val toAdd: Map<String, Any> = objectMapper.convertValue(actual, mapType)
+        client.prepareIndex("cookbook", "recipe")
             .setSource(toAdd)
             .get()
             .id
 
-        return "/recipes/$id"
+        return actual
     }
 
     override fun deleteRecipe(id: String): Boolean {

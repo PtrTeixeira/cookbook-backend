@@ -15,8 +15,7 @@ internal class RecipeEggTest {
             ingredients = listOf("Chocolate", "Chips", "Cookies"),
             instructions = "Mix",
             summary = "They were invented right here in Massachusetts, you know",
-            description = "They're chocolate chip cookies. Waddya want?",
-            tags = setOf()
+            description = "They're chocolate chip cookies. Waddya want?"
     )
 
     @Test
@@ -36,5 +35,21 @@ internal class RecipeEggTest {
 
         assertThat(deserialized)
                 .isEqualTo(sampleRecipeEgg)
+    }
+
+    @Test
+    fun itFillsInAbsentFieldsWithDefaultValues() {
+        val deserialized: RecipeEgg = objectMapper.readValue(fixture("fixtures/recipe-egg-absent-field.json"))
+
+        assertThat(deserialized.description)
+            .isEqualTo("")
+    }
+
+    @Test
+    fun itCanAddAnId() {
+        val recipe = sampleRecipeEgg.toRecipe("12345")
+
+        assertThat(recipe.id)
+            .isEqualTo("12345")
     }
 }
