@@ -3,43 +3,24 @@ package com.github.ptrteixeira.cookbook.data
 import com.github.ptrteixeira.cookbook.CookbookConfiguration
 import dagger.Module
 import dagger.Provides
-import org.elasticsearch.client.transport.TransportClient
-import org.elasticsearch.common.settings.Settings
-import org.elasticsearch.common.transport.InetSocketTransportAddress
-import org.elasticsearch.transport.client.PreBuiltTransportClient
-import java.net.InetAddress
-import javax.inject.Named
+import io.dropwizard.setup.Environment
+import org.jdbi.v3.core.Jdbi
 
 
 @Module
-internal class DataModule(private val configuration: CookbookConfiguration) {
-
-
+internal class DataModule(
+    private val configuration: CookbookConfiguration,
+    private val environment: Environment
+) {
     @Provides
-    @Named(ELASTIC_SEARCH_HOST)
-    fun elasticSearchHost(): String {
-        return configuration.elasticSearchHost
+    fun jdbi(): Jdbi {
+        return Jdbi
+            .create(configuration.database.build(environment.metrics(), "h2"))
+            .installPlugins()
+            .registerArrayType(String::class.java, "varchar")
     }
 
     @Provides
-    @Named(ELASTIC_SEARCH_PORT)
-    fun elasticSearchPort(): Int {
-        return configuration.elasticSearchPort
-    }
-
-    @Provides
-    fun elasticSearchClient(@Named(ELASTIC_SEARCH_HOST) host: String,
-                            @Named(ELASTIC_SEARCH_PORT) port: Int): TransportClient {
-        val address = InetAddress.getByName(host)
-        return PreBuiltTransportClient(Settings.EMPTY)
-            .addTransportAddress(InetSocketTransportAddress(address, port))
-    }
-
-    @Provides
-    fun recipeData(impl: RecipeDataImpl): RecipeData = impl
-
-    companion object {
-        const val ELASTIC_SEARCH_HOST = "elastic.host"
-        const val ELASTIC_SEARCH_PORT = "elastic.port"
-    }
+    fun recipeData(jdbi: Jdbi): RecipeData
+        = jdbi.onDemand(RecipeData::class.java)
 }

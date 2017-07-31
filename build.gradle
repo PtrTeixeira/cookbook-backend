@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 buildscript {
   group = 'com.github.ptrteixeira.cookbook'
   version = '0.1.0'
@@ -26,6 +28,12 @@ apply {
 mainClassName = "com.github.ptrteixeira.cookbook.CookbookApplicationKt"
 distTar.compression = Compression.GZIP
 
+tasks.withType(KotlinCompile).all {
+  kotlinOptions {
+    jvmTarget = '1.8'
+  }
+}
+
 idea {
   module {
     sourceDirs += file('build/generated/source/kapt/main')
@@ -46,7 +54,9 @@ enum Dependency {
   DAGGER('2.11'),
   DROPWIZARD('1.1.0'),
   ELASTICSEARCH('5.4.0'),
+  H2('1.4.196'),
   JACKSON('2.8.9'),
+  JDBI('3.0.0-beta2'),
   LOG4J('2.8.2'),
   SLF4J('1.7.25')
 
@@ -59,10 +69,15 @@ enum Dependency {
 
 dependencies {
   compile "io.dropwizard:dropwizard-core:${Dependency.DROPWIZARD}"
+  compile "io.dropwizard:dropwizard-jdbi:${Dependency.DROPWIZARD}"
+  compile "io.dropwizard:dropwizard-migrations:${Dependency.DROPWIZARD}"
+  compile "io.dropwizard:dropwizard-hibernate:${Dependency.DROPWIZARD}"
+  compile "org.jdbi:jdbi3-kotlin-sqlobject:${Dependency.JDBI}"
   compile "org.apache.logging.log4j:log4j-to-slf4j:${Dependency.LOG4J}"
   compile "com.fasterxml.jackson.module:jackson-module-kotlin:${Dependency.JACKSON}"
   compile "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:${Dependency.JACKSON}"
   compile "org.elasticsearch.client:transport:${Dependency.ELASTICSEARCH}"
+  compile "com.h2database:h2:${Dependency.H2}"
   compile "com.google.dagger:dagger:${Dependency.DAGGER}"
   kapt "com.google.dagger:dagger-compiler:${Dependency.DAGGER}"
 

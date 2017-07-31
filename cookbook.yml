@@ -1,8 +1,11 @@
-elasticSearchHost: localhost
-elasticSearchPort: 9300
 server:
   type: default
   requestLog:
     appenders:
       - type: console
+database:
+  driverClass: org.h2.Driver
+  user: sa
+  password: sa
+  url: jdbc:h2:./db
 
