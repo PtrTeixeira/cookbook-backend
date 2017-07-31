@@ -4,23 +4,19 @@ import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import com.github.ptrteixeira.cookbook.base.DaggerBaseComponent
 import com.github.ptrteixeira.cookbook.data.DaggerDataComponent
 import com.github.ptrteixeira.cookbook.data.DataModule
+import com.github.ptrteixeira.cookbook.data.migrationsBundle
 import com.github.ptrteixeira.cookbook.resources.DaggerResourcesComponent
 import io.dropwizard.Application
-import io.dropwizard.db.DataSourceFactory
-import io.dropwizard.migrations.MigrationsBundle
+import io.dropwizard.jdbi.bundles.DBIExceptionsBundle
 import io.dropwizard.setup.Bootstrap
 import io.dropwizard.setup.Environment
 
 class CookbookApplication: Application<CookbookConfiguration>() {
     override fun initialize(bootstrap: Bootstrap<CookbookConfiguration>?) {
-        bootstrap?.addBundle(object: MigrationsBundle<CookbookConfiguration>() {
-            override fun getDataSourceFactory(configuration: CookbookConfiguration?): DataSourceFactory {
-                val database = configuration
-                    ?.database
-                    ?: throw IllegalStateException("No configuration given!")
-                return database
-            }
-        })
+        bootstrap
+            ?.addBundle(migrationsBundle())
+        bootstrap
+            ?.addBundle(DBIExceptionsBundle())
 
         bootstrap
             ?.objectMapper
