@@ -1,14 +1,16 @@
 package com.github.ptrteixeira.cookbook.model
 
 import com.fasterxml.jackson.module.kotlin.readValue
-import com.github.ptrteixeira.cookbook.base.BaseModule
+import com.github.ptrteixeira.cookbook.base.DaggerBaseComponent
 import io.dropwizard.testing.FixtureHelpers.fixture
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
 
 internal class RecipeEggTest {
-    private val objectMapper = BaseModule().objectMapper()
+    private val objectMapper = DaggerBaseComponent
+        .create()
+        .objectMapper()
 
     private val sampleRecipeEgg = RecipeEgg(
             name="Chocolate Chip Cookies",
@@ -47,9 +49,9 @@ internal class RecipeEggTest {
 
     @Test
     fun itCanAddAnId() {
-        val recipe = sampleRecipeEgg.toRecipe("12345")
+        val recipe = sampleRecipeEgg.toRecipe(12345)
 
         assertThat(recipe.id)
-            .isEqualTo("12345")
+            .isEqualTo(12345)
     }
 }

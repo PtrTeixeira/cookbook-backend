@@ -11,7 +11,7 @@ package com.github.ptrteixeira.cookbook.model
  * @property [description] Short description of the recipe
  */
 data class Recipe(
-    val id : String,
+    val id : Int,
     val name: String = "",
     val ingredients: List<String> = listOf(),
     val instructions: String = "",

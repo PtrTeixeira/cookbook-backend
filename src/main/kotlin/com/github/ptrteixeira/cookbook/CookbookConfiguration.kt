@@ -1,8 +1,9 @@
 package com.github.ptrteixeira.cookbook
 
 import io.dropwizard.Configuration
+import io.dropwizard.db.DataSourceFactory
 
-data class CookbookConfiguration(
-    val elasticSearchHost: String = "localhost",
-    val elasticSearchPort: Int = 9300
-): Configuration()
+
+class CookbookConfiguration: Configuration() {
+    var database: DataSourceFactory = DataSourceFactory()
+}
