@@ -1,5 +1,6 @@
 package com.github.ptrteixeira.cookbook.data
 
+import com.codahale.metrics.health.HealthCheck
 import com.github.ptrteixeira.cookbook.base.BaseComponent
 import dagger.Component
 
@@ -8,4 +9,5 @@ import dagger.Component
         dependencies = arrayOf(BaseComponent::class))
 internal interface DataComponent {
     fun recipeData(): RecipeData
+    fun healthCheck(): HealthCheck
 }

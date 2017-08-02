@@ -36,6 +36,9 @@ class CookbookApplication: Application<CookbookConfiguration>() {
         environment
             .jersey()
             .register(resourcesComponent.recipesResource())
+        environment
+            .healthChecks()
+            .register("database", dataComponent.healthCheck())
     }
 
     override fun getName(): String {
