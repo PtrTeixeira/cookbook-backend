@@ -14,8 +14,8 @@ plugins {
   id 'application'
   id 'project-report'
   id 'idea'
-  id 'org.jetbrains.kotlin.jvm' version '1.1.2-2'
-  id 'org.jetbrains.kotlin.kapt' version '1.1.2-2'
+  id 'org.jetbrains.kotlin.jvm' version '1.1.2-5'
+  id 'org.jetbrains.kotlin.kapt' version '1.1.2-5'
 }
 
 apply {
@@ -23,10 +23,7 @@ apply {
   from 'gradle/junit.gradle'
 }
 
-mainClassName = "com.github.ptrteixeira.cookbook.MainKt"
-applicationDefaultJvmArgs = [
-    "-Dvertx.logger-delegate-factory-class-name=io.vertx.core.logging.Log4j2LogDelegateFactory"
-    ]
+mainClassName = "com.github.ptrteixeira.cookbook.CookbookApplicationKt"
 distTar.compression = Compression.GZIP
 
 idea {
@@ -45,15 +42,15 @@ repositories {
 }
 
 enum Dependency {
-  VERTX('3.4.1'),
-  ELASTICSEARCH('5.4.0'),
+  ASSERTJ('3.8.0'),
   DAGGER('2.11'),
-  ASSERTJ('3.6.1'),
-  SWAGGER_REQUEST('1.0.11'),
-  REST_ASSURED('3.0.2'),
-  JACKSON('2.8.7'),
-  LOG4J('2.8.1'),
-  SLF4J('1.7.24')
+  DROPWIZARD('1.1.0'),
+  H2('1.4.196'),
+  JACKSON('2.8.9'),
+  JDBI('3.0.0-beta2'),
+  LOG4J('2.8.2'),
+  MOCKITO("2.8.47"),
+  SLF4J('1.7.25')
 
   private String version
 
@@ -63,23 +60,20 @@ enum Dependency {
 }
 
 dependencies {
-  compile "io.vertx:vertx-core:${Dependency.VERTX}"
-  compile "io.vertx:vertx-web:${Dependency.VERTX}"
-  compileOnly "org.apache.logging.log4j:log4j-api:${Dependency.LOG4J}"
-  compileOnly "org.slf4j:slf4j-api:${Dependency.SLF4J}"
-  compile "org.apache.logging.log4j:log4j-core:${Dependency.LOG4J}"
-  compile "org.apache.logging.log4j:log4j-jul:${Dependency.LOG4J}"
-  compile "org.apache.logging.log4j:log4j-slf4j-impl:${Dependency.LOG4J}"
-  compile "com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:${Dependency.JACKSON}"
+  compile "io.dropwizard:dropwizard-core:${Dependency.DROPWIZARD}"
+  compile "io.dropwizard:dropwizard-jdbi:${Dependency.DROPWIZARD}"
+  compile "io.dropwizard:dropwizard-migrations:${Dependency.DROPWIZARD}"
+  compile "org.jdbi:jdbi3-kotlin-sqlobject:${Dependency.JDBI}"
+  compile "org.apache.logging.log4j:log4j-to-slf4j:${Dependency.LOG4J}"
   compile "com.fasterxml.jackson.module:jackson-module-kotlin:${Dependency.JACKSON}"
   compile "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:${Dependency.JACKSON}"
-  compile("org.elasticsearch.client:transport:${Dependency.ELASTICSEARCH}")
+  compile "com.h2database:h2:${Dependency.H2}"
   compile "com.google.dagger:dagger:${Dependency.DAGGER}"
   kapt "com.google.dagger:dagger-compiler:${Dependency.DAGGER}"
 
   testCompile "org.assertj:assertj-core:${Dependency.ASSERTJ}"
-  testCompile "com.atlassian.oai:swagger-request-validator-restassured:${Dependency.SWAGGER_REQUEST}"
-  testCompile "io.rest-assured:rest-assured:${Dependency.REST_ASSURED}"
+  testCompile "io.dropwizard:dropwizard-testing:${Dependency.DROPWIZARD}"
   testCompile "com.google.dagger:dagger:${Dependency.DAGGER}"
+  testCompile "org.mockito:mockito-core:${Dependency.MOCKITO}"
   kaptTest "com.google.dagger:dagger-compiler:${Dependency.DAGGER}"
 }

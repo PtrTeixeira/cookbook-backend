@@ -1,11 +1,13 @@
 package com.github.ptrteixeira.cookbook.base
 
+import com.codahale.metrics.MetricRegistry
 import com.fasterxml.jackson.databind.ObjectMapper
 import dagger.Component
-import io.vertx.core.Vertx
+import io.dropwizard.db.DataSourceFactory
 
 @Component(modules = arrayOf(BaseModule::class))
 interface BaseComponent {
-    fun vertx(): Vertx
     fun objectMapper(): ObjectMapper
+    fun dataSourceFactory(): DataSourceFactory
+    fun metrics(): MetricRegistry
 }

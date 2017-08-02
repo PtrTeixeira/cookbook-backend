@@ -16,3 +16,6 @@ hs_err_pid*
 
 # Vertx's cache
 .vertx
+
+# H2 database files
+*.db

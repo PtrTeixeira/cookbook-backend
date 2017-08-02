@@ -1,73 +1,50 @@
 package com.github.ptrteixeira.cookbook.data
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.github.ptrteixeira.cookbook.model.Recipe
-import com.github.ptrteixeira.cookbook.model.RecipeEgg
+import com.codahale.metrics.MetricRegistry
+import com.codahale.metrics.health.HealthCheck
+import com.github.ptrteixeira.cookbook.base.Raw
+import com.google.common.util.concurrent.MoreExecutors
 import dagger.Module
 import dagger.Provides
-import org.elasticsearch.client.transport.TransportClient
-import org.elasticsearch.common.settings.Settings
-import org.elasticsearch.common.transport.InetSocketTransportAddress
-import org.elasticsearch.transport.client.PreBuiltTransportClient
-import java.net.InetAddress
-import java.util.*
-import javax.inject.Named
+import io.dropwizard.db.DataSourceFactory
+import io.dropwizard.util.Duration
+import org.jdbi.v3.core.Jdbi
+import java.util.concurrent.ExecutorService
 
 
 @Module
 internal class DataModule {
-
     @Provides
-    @Named(ELASTIC_SEARCH_HOST)
-    fun elasticSearchHost(): String {
-        return System.getenv("ELASTIC_HOST") ?: "localhost"
+    @Raw
+    fun jdbi(database: DataSourceFactory, metrics: MetricRegistry): Jdbi {
+        return Jdbi
+            .create(database.build(metrics, "h2"))
     }
 
     @Provides
-    @Named(ELASTIC_SEARCH_PORT)
-    fun elasticSearchPort(): Int {
-        try {
-            return System.getenv("ELASTIC_PORT")?.toInt() ?: 9300
-        } catch (exn: NumberFormatException) {
-            return 9300
+    fun configuredJdbi(@Raw jdbi: Jdbi): Jdbi {
+        return jdbi
+            .installPlugins()
+            .registerArrayType(String::class.java, "varchar")
+    }
+
+    @Provides
+    fun databaseHealthCheckExecutor(): ExecutorService
+        = MoreExecutors.newDirectExecutorService()
+
+    @Provides
+    fun recipeData(jdbi: Jdbi): RecipeData
+        = jdbi.onDemand(RecipeData::class.java)
+
+    @Provides
+    fun healthCheck(jdbi: Jdbi, executor: ExecutorService, database: DataSourceFactory): HealthCheck {
+        val duration = database.validationQueryTimeout
+        val query = database.validationQuery
+
+        return if (duration.isPresent) {
+            Jdbi3HealthCheck(jdbi, query, executor, duration.get())
+        } else {
+            Jdbi3HealthCheck(jdbi, query, executor, Duration.seconds(0))
         }
-    }
-
-    @Provides
-    fun elasticSearchClient(@Named(ELASTIC_SEARCH_HOST) host: String,
-                            @Named(ELASTIC_SEARCH_PORT) port: Int): TransportClient {
-        val address = InetAddress.getByName(host)
-        return PreBuiltTransportClient(Settings.EMPTY)
-            .addTransportAddress(InetSocketTransportAddress(address, port))
-    }
-
-    @Provides
-    fun providesGetRecipes(client: TransportClient, objectMapper: ObjectMapper): () -> List<Recipe> {
-        return getRecipes(client, objectMapper)
-    }
-
-    @Provides
-    fun providesGetRecipe(client: TransportClient, objectMapper: ObjectMapper): (String) -> Optional<Recipe> {
-        return getRecipe(client, objectMapper)
-    }
-
-    @Provides
-    fun providesCreateRecipe(client: TransportClient, objectMapper: ObjectMapper): (Recipe) -> String {
-        return createRecipe(client, objectMapper)
-    }
-
-    @Provides
-    fun providesDeleteRecipe(client: TransportClient): (String) -> Boolean {
-        return deleteRecipe(client)
-    }
-
-    @Provides
-    fun providesPatchRecipe(client: TransportClient, objectMapper: ObjectMapper): (String, RecipeEgg) -> Recipe {
-        return patchRecipe(client, objectMapper)
-    }
-
-    companion object {
-        const val ELASTIC_SEARCH_HOST = "elastic.host"
-        const val ELASTIC_SEARCH_PORT = "elastic.port"
     }
 }
