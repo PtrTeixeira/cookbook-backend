@@ -1,6 +1,7 @@
 package com.github.ptrteixeira.cookbook
 
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
+import com.github.ptrteixeira.cookbook.base.BaseModule
 import com.github.ptrteixeira.cookbook.base.DaggerBaseComponent
 import com.github.ptrteixeira.cookbook.data.DaggerDataComponent
 import com.github.ptrteixeira.cookbook.data.DataModule
@@ -24,10 +25,12 @@ class CookbookApplication: Application<CookbookConfiguration>() {
     }
 
     override fun run(configuration: CookbookConfiguration, environment: Environment) {
-        val baseComponent = DaggerBaseComponent.create()
+        val baseComponent = DaggerBaseComponent.builder()
+            .baseModule(BaseModule(configuration, environment))
+            .build()
         val dataComponent = DaggerDataComponent.builder()
             .baseComponent(baseComponent)
-            .dataModule(DataModule(configuration, environment))
+            .dataModule(DataModule())
             .build()
         val resourcesComponent = DaggerResourcesComponent.builder()
             .dataComponent(dataComponent)

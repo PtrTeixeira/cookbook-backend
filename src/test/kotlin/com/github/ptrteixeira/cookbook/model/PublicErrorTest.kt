@@ -1,15 +1,13 @@
 package com.github.ptrteixeira.cookbook.model
 
 import com.fasterxml.jackson.module.kotlin.readValue
-import com.github.ptrteixeira.cookbook.base.DaggerBaseComponent
 import io.dropwizard.testing.FixtureHelpers
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
+import com.github.ptrteixeira.cookbook.base.objectMapper as mapperFactory
 
 internal class PublicErrorTest {
-    private val objectMapper = DaggerBaseComponent
-        .create()
-        .objectMapper()
+    private val objectMapper = mapperFactory()
 
     private val sampleError = PublicError(ErrorType.NOT_FOUND, "Recipe 101 could not be found")
 

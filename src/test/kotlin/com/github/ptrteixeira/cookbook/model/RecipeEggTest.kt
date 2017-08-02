@@ -1,16 +1,14 @@
 package com.github.ptrteixeira.cookbook.model
 
 import com.fasterxml.jackson.module.kotlin.readValue
-import com.github.ptrteixeira.cookbook.base.DaggerBaseComponent
 import io.dropwizard.testing.FixtureHelpers.fixture
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import com.github.ptrteixeira.cookbook.base.objectMapper as mapperFactory
 
 
 internal class RecipeEggTest {
-    private val objectMapper = DaggerBaseComponent
-        .create()
-        .objectMapper()
+    private val objectMapper = mapperFactory()
 
     private val sampleRecipeEgg = RecipeEgg(
             name="Chocolate Chip Cookies",

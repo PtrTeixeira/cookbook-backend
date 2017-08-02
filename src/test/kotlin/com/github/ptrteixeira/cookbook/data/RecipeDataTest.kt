@@ -1,5 +1,6 @@
 package com.github.ptrteixeira.cookbook.data
 
+import com.github.ptrteixeira.cookbook.jdbi
 import com.github.ptrteixeira.cookbook.model.RecipeEgg
 import org.assertj.core.api.Assertions.assertThat
 import org.jdbi.v3.sqlobject.kotlin.onDemand
@@ -97,7 +98,7 @@ class RecipeDataTest {
         @JvmStatic
         fun migrate() {
             logger.info("Running migrations before DaoTest")
-            migrate(dbi)
+            com.github.ptrteixeira.cookbook.migrate(dbi)
         }
     }
 }
