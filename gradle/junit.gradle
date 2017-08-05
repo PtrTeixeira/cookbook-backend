@@ -1,5 +1,5 @@
 buildscript {
-  ext.junit_version = '5.0.0-M5'
+  ext.junit_version = '5.0.0-RC2'
 }
 
 apply {
