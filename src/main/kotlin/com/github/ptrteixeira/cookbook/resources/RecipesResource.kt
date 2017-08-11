@@ -3,6 +3,7 @@ package com.github.ptrteixeira.cookbook.resources
 import com.github.ptrteixeira.cookbook.data.RecipeData
 import com.github.ptrteixeira.cookbook.model.Recipe
 import com.github.ptrteixeira.cookbook.model.RecipeEgg
+import com.github.ptrteixeira.cookbook.model.User
 import java.util.Optional
 import javax.inject.Inject
 import javax.ws.rs.DELETE
@@ -19,32 +20,35 @@ import javax.ws.rs.core.MediaType
 internal class RecipesResource @Inject constructor(
         private val recipeData: RecipeData
 ) {
+    private val FAKE_USER = User("test")
 
     @GET
     fun getRecipes(): List<Recipe> {
-        return recipeData.getRecipes()
+        return recipeData.getRecipes(FAKE_USER.id)
     }
 
     @POST
     fun createRecipe(recipe: RecipeEgg): Recipe {
-        return recipeData.createRecipe(recipe)
+        val id = recipeData.createRecipeKeys(FAKE_USER.id, recipe)
+        return recipe.toRecipe(id, FAKE_USER.id)
     }
 
     @GET
     @Path("/{id}")
     fun getRecipe(@PathParam("id") id: Int): Optional<Recipe> {
-        return recipeData.getRecipe(id)
+        return recipeData.getRecipe(FAKE_USER.id, id)
     }
 
     @PUT
     @Path("/{id}")
     fun updateRecipe(@PathParam("id") id: Int, update: RecipeEgg): Recipe {
-        return recipeData.patchRecipe(id, update)
+        recipeData.patchRecipeKeys(FAKE_USER.id, id, update)
+        return update.toRecipe(id, FAKE_USER.id)
     }
 
     @DELETE
     @Path("/{id}")
     fun deleteRecipe(@PathParam("id") id: Int) {
-        recipeData.deleteRecipe(id)
+        recipeData.deleteRecipe(FAKE_USER.id, id)
     }
 }

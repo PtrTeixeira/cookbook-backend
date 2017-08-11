@@ -10,17 +10,19 @@ import org.junit.jupiter.api.Test
 import org.slf4j.LoggerFactory
 
 class RecipeDataTest {
+    private val ID = 0
+    private val USER_ID = "test-user"
 
     @Test
     fun itReturnsMissingRecipesAsAbsent() {
-        val result = recipeDao.getRecipe(0)
+        val result = recipeDao.getRecipe(USER_ID, ID)
         assertThat(result)
             .isEmpty()
     }
 
     @Test
     fun whenNoRecipesItReturnsEmptyList() {
-        val result = recipeDao.getRecipes()
+        val result = recipeDao.getRecipes(USER_ID)
 
         assertThat(result)
             .isEmpty()
@@ -28,15 +30,19 @@ class RecipeDataTest {
 
     @Test
     fun itAllowsRecipesToBeCreated() {
-        val result = recipeDao.createRecipe(sampleRecipeEgg)
-        assertThat(recipeDao.getRecipe(result.id))
-            .contains(result)
+        val id = recipeDao.createRecipeKeys(USER_ID, sampleRecipeEgg)
+        val recipe = recipeDao.getRecipe(USER_ID, id)
+            .get()
+
+        assertThat(recipe)
+            .isEqualTo(sampleRecipeEgg.toRecipe(id, USER_ID))
     }
 
     @Test
     fun whenRecipesAddedReturnedListContainsRecipes() {
-        recipeDao.createRecipe(sampleRecipeEgg)
-        val allRecipes = recipeDao.getRecipes()
+        recipeDao.createRecipeKeys(USER_ID, sampleRecipeEgg)
+        val allRecipes = recipeDao.getRecipes(USER_ID)
+
         assertThat(allRecipes)
             .hasSize(1)
             .extracting<String> { it.name }
@@ -45,30 +51,30 @@ class RecipeDataTest {
 
     @Test
     fun itAllowsRecipesToBeDeleted() {
-        val createResult = recipeDao.createRecipe(sampleRecipeEgg)
+        val id = recipeDao.createRecipeKeys(USER_ID, sampleRecipeEgg)
 
-        recipeDao.deleteRecipe(createResult.id)
+        recipeDao.deleteRecipe(USER_ID, id)
 
-        val getResult = recipeDao.getRecipe(createResult.id)
+        val getResult = recipeDao.getRecipe(USER_ID, id)
         assertThat(getResult)
             .isEmpty()
     }
 
     @Test
     fun itAllowsRecipesToBeUpdated() {
-        val createResult = recipeDao.createRecipe(sampleRecipeEgg)
+        val id = recipeDao.createRecipeKeys(USER_ID, sampleRecipeEgg)
         val newIngredients = listOf(
             "Eggs", "White Sugar", "Brown Sugar",
             "Butter", "Flour", "Chocolate Chips"
         )
 
         val updated = sampleRecipeEgg.copy(ingredients = newIngredients)
-        val patchResult = recipeDao.patchRecipe(createResult.id, updated)
-        val getResult = recipeDao.getRecipe(createResult.id)
+        recipeDao.patchRecipeKeys(USER_ID, id, updated)
+        val getResult = recipeDao.getRecipe(USER_ID, id)
 
         assertThat(getResult)
-            .contains(patchResult)
-        assertThat(patchResult.ingredients)
+            .contains(updated.toRecipe(id, USER_ID))
+        assertThat(getResult.get().ingredients)
             .containsExactlyInAnyOrder(*newIngredients.toTypedArray())
     }
 

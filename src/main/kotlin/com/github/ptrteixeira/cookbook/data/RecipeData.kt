@@ -9,27 +9,28 @@ import java.util.Optional
 
 interface RecipeData {
     @SqlQuery("""
-SELECT `id`, `name`, `ingredients`, `instructions`, `summary`, `description`
+SELECT `userId`, `id`, `name`, `ingredients`, `instructions`, `summary`, `description`
 FROM RECIPES
+WHERE `userId` = :userId
 """)
-    fun getRecipes(): List<Recipe>
+    fun getRecipes(userId: String): List<Recipe>
 
     @SqlQuery("""
-SELECT `id`, `name`, `ingredients`, `instructions`, `summary`, `description`
+SELECT `userId`, `id`, `name`, `ingredients`, `instructions`, `summary`, `description`
 FROM RECIPES
-WHERE id = :id
+WHERE `id` = :id AND `userId` = :userId
 """)
-    fun getRecipe(id: Int): Optional<Recipe>
+    fun getRecipe(userId: String, id: Int): Optional<Recipe>
 
     @GetGeneratedKeys
     @SqlUpdate("""
-INSERT INTO RECIPES (`name`, `ingredients`, `instructions`, `summary`, `description`)
-VALUES (:recipe.name, :recipe.ingredients, :recipe.instructions, :recipe.summary, :recipe.description)
+INSERT INTO RECIPES (`userId`, `name`, `ingredients`, `instructions`, `summary`, `description`)
+VALUES (:userId, :recipe.name, :recipe.ingredients, :recipe.instructions, :recipe.summary, :recipe.description)
     """)
-    fun createRecipeKeys(recipe: RecipeEgg): Int
+    fun createRecipeKeys(userId: String, recipe: RecipeEgg): Int
 
-    @SqlUpdate("DELETE FROM RECIPES WHERE id = :id")
-    fun deleteRecipe(id: Int)
+    @SqlUpdate("DELETE FROM RECIPES WHERE id = :id AND userId = :userId")
+    fun deleteRecipe(userId: String, id: Int)
 
     @SqlUpdate("""
 UPDATE RECIPES
@@ -39,18 +40,7 @@ SET
   `instructions` = :recipe.instructions,
   `summary` = :recipe.summary,
   `description` = :recipe.description
-WHERE
-  `id` = :id
+WHERE `id` = :id AND `userId` = :userId
     """)
-    fun patchRecipeKeys(id: Int, recipe: RecipeEgg)
-
-    fun createRecipe(recipe: RecipeEgg): Recipe {
-        val key = createRecipeKeys(recipe)
-        return recipe.toRecipe(key)
-    }
-
-    fun patchRecipe(id: Int, recipe: RecipeEgg): Recipe {
-        patchRecipeKeys(id, recipe)
-        return recipe.toRecipe(id)
-    }
+    fun patchRecipeKeys(userId: String, id: Int, recipe: RecipeEgg)
 }

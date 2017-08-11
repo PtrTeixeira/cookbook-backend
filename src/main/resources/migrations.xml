@@ -28,4 +28,16 @@
     </createTable>
   </changeSet>
 
+  <changeSet id="2" author="PtrTeixeira">
+    <comment>Prepare for adding authentication to users</comment>
+    <addColumn tableName="RECIPES">
+      <column name="userId" type="varchar(50)">
+        <constraints nullable="false" />
+      </column>
+    </addColumn>
+    <createIndex tableName="RECIPES" indexName="userIndex">
+      <column name="userId" />
+    </createIndex>
+  </changeSet>
+
 </databaseChangeLog>

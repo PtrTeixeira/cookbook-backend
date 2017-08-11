@@ -24,8 +24,10 @@ class RecipesResourceTest {
         summary = "They were invented right here in Massachusetts, you know",
         description = "They're chocolate chip cookies. Waddya want?"
     )
+    private val id = 12345
+    private val userId = "test"
     private val sampleRecipe = sampleRecipeEgg
-        .toRecipe(1)
+        .toRecipe(id = id, userId = userId)
 
     @Before
     fun setUp() {
@@ -39,7 +41,7 @@ class RecipesResourceTest {
             .get()
 
         verify(dao)
-            .getRecipes()
+            .getRecipes("test")
     }
 
     @Test
@@ -49,7 +51,7 @@ class RecipesResourceTest {
             .get()
 
         verify(dao)
-            .getRecipe(12345)
+            .getRecipe(anyString(), eq(id))
     }
 
     @Test
@@ -59,13 +61,13 @@ class RecipesResourceTest {
             .delete()
 
         verify(dao)
-            .deleteRecipe(12345)
+            .deleteRecipe(anyString(), eq(id))
     }
 
     @Test
     fun whenCreateItReturnsRecipeWithId() {
-        given(dao.createRecipe(sampleRecipeEgg))
-            .willReturn(sampleRecipe)
+        given(dao.createRecipeKeys("test", sampleRecipeEgg))
+            .willReturn(id)
 
         val response = resource.target("/recipes")
             .request()
@@ -81,7 +83,8 @@ class RecipesResourceTest {
             .request()
             .put(Entity.entity(sampleRecipeEgg, MediaType.APPLICATION_JSON), Recipe::class.java)
 
-        verify(dao).patchRecipe(12345, sampleRecipeEgg)
+        verify(dao)
+            .patchRecipeKeys(anyString(), eq(id), eq(sampleRecipeEgg))
     }
 
     companion object {
@@ -94,4 +97,14 @@ class RecipesResourceTest {
             .setMapper(objectMapper())
             .build()
     }
+}
+
+fun anyString(): String {
+    Mockito.anyString()
+    return ""
+}
+
+fun <T> eq(actual: T): T {
+    Mockito.eq(actual)
+    return actual
 }
