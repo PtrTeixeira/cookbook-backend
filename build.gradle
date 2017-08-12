@@ -48,6 +48,7 @@ enum Dependency {
   H2('1.4.196'),
   JACKSON('2.8.10'),
   JDBI('3.0.0-beta2'),
+  JERSEY('2.25.1'),
   LOG4J('2.8.2'),
   MOCKITO("2.9.0"),
   SLF4J('1.7.25')
@@ -63,6 +64,7 @@ dependencies {
   compile "io.dropwizard:dropwizard-core:${Dependency.DROPWIZARD}"
   compile "io.dropwizard:dropwizard-jdbi:${Dependency.DROPWIZARD}"
   compile "io.dropwizard:dropwizard-migrations:${Dependency.DROPWIZARD}"
+  compile "io.dropwizard:dropwizard-auth:${Dependency.DROPWIZARD}"
   compile "org.jdbi:jdbi3-kotlin-sqlobject:${Dependency.JDBI}"
   compile "org.apache.logging.log4j:log4j-to-slf4j:${Dependency.LOG4J}"
   compile "com.fasterxml.jackson.module:jackson-module-kotlin:${Dependency.JACKSON}"
@@ -73,6 +75,10 @@ dependencies {
 
   testCompile "org.assertj:assertj-core:${Dependency.ASSERTJ}"
   testCompile "io.dropwizard:dropwizard-testing:${Dependency.DROPWIZARD}"
+  testCompile("org.glassfish.jersey.test-framework.providers:jersey-test-framework-provider-grizzly2:${Dependency.JERSEY}") {
+    exclude group: 'junit', module: 'junit'
+    exclude group: 'javax.servlet', module: 'javax.servlet-api'
+  }
   testCompile "com.google.dagger:dagger:${Dependency.DAGGER}"
   testCompile "org.mockito:mockito-core:${Dependency.MOCKITO}"
   kaptTest "com.google.dagger:dagger-compiler:${Dependency.DAGGER}"

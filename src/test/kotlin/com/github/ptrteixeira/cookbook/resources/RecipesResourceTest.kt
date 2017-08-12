@@ -1,23 +1,30 @@
 package com.github.ptrteixeira.cookbook.resources
 
+import com.github.ptrteixeira.cookbook.auth.TrivialAuth
 import com.github.ptrteixeira.cookbook.base.objectMapper
 import com.github.ptrteixeira.cookbook.data.RecipeData
 import com.github.ptrteixeira.cookbook.mock
 import com.github.ptrteixeira.cookbook.model.Recipe
 import com.github.ptrteixeira.cookbook.model.RecipeEgg
 import com.github.ptrteixeira.cookbook.model.User
+import io.dropwizard.auth.AuthDynamicFeature
+import io.dropwizard.auth.AuthValueFactoryProvider
+import io.dropwizard.auth.basic.BasicCredentialAuthFilter
 import io.dropwizard.testing.junit.ResourceTestRule
 import org.assertj.core.api.Assertions.assertThat
+import org.glassfish.jersey.test.grizzly.GrizzlyWebTestContainerFactory
 import org.junit.Before
 import org.junit.ClassRule
 import org.junit.Test
 import org.mockito.BDDMockito.given
 import org.mockito.Mockito
 import org.mockito.Mockito.verify
+import java.util.Base64
 import javax.ws.rs.client.Entity
 import javax.ws.rs.core.MediaType
 
 class RecipesResourceTest {
+    private val encoder = Base64.getEncoder()
     private val sampleRecipeEgg = RecipeEgg(
         name="Chocolate Chip Cookies",
         ingredients = listOf("Chocolate", "Chips", "Cookies"),
@@ -27,6 +34,7 @@ class RecipesResourceTest {
     )
     private val id = 12345
     private val user = User("test")
+    private val userKey = String(encoder.encode("${user.id}:password".toByteArray()))
     private val sampleRecipe = sampleRecipeEgg
         .toRecipe(id = id, user = user)
 
@@ -39,30 +47,33 @@ class RecipesResourceTest {
     fun whenDatabaseIsEmptyResultIsEmpty() {
         resource.target("/recipes")
             .request()
+            .header("Authorization", "Basic $userKey")
             .get()
 
         verify(dao)
-            .getRecipes(User("test"))
+            .getRecipes(user)
     }
 
     @Test
     fun whenGetWithIdItPassesIdToDao() {
         resource.target("/recipes/12345")
             .request()
+            .header("Authorization", "Basic $userKey")
             .get()
 
         verify(dao)
-            .getRecipe(sameTypeAs(user), eq(id))
+            .getRecipe(user, id)
     }
 
     @Test
     fun whenDeleteItPassesIdToDao() {
         resource.target("/recipes/12345")
             .request()
+            .header("Authorization", "Basic $userKey")
             .delete()
 
         verify(dao)
-            .deleteRecipe(sameTypeAs(user), eq(id))
+            .deleteRecipe(user, id)
     }
 
     @Test
@@ -72,6 +83,7 @@ class RecipesResourceTest {
 
         val response = resource.target("/recipes")
             .request()
+            .header("Authorization", "Basic $userKey")
             .post(Entity.entity(sampleRecipeEgg, MediaType.APPLICATION_JSON), Recipe::class.java)
 
         assertThat(response)
@@ -82,10 +94,11 @@ class RecipesResourceTest {
     fun whenUpdateItModifiesTheCorrectRecipe() {
         resource.target("/recipes/12345")
             .request()
+            .header("Authorization", "Basic $userKey")
             .put(Entity.entity(sampleRecipeEgg, MediaType.APPLICATION_JSON), Recipe::class.java)
 
         verify(dao)
-            .patchRecipeKeys(sameTypeAs(user), eq(id), eq(sampleRecipeEgg))
+            .patchRecipeKeys(user, id, sampleRecipeEgg)
     }
 
     companion object {
@@ -94,18 +107,14 @@ class RecipesResourceTest {
         @JvmStatic
         @get:ClassRule
         val resource: ResourceTestRule = ResourceTestRule.builder()
+            .setTestContainerFactory(GrizzlyWebTestContainerFactory())
+            .addProvider(AuthDynamicFeature(BasicCredentialAuthFilter.Builder<User>()
+                .setAuthenticator(TrivialAuth())
+                .buildAuthFilter()
+            ))
+            .addProvider(AuthValueFactoryProvider.Binder<User>(User::class.java))
             .addResource(RecipesResource(dao))
             .setMapper(objectMapper())
             .build()
     }
-}
-
-inline fun <reified T: Any> sameTypeAs(instance: T): T {
-    Mockito.any(T::class.java)
-    return instance
-}
-
-fun <T> eq(actual: T): T {
-    Mockito.eq(actual)
-    return actual
 }
