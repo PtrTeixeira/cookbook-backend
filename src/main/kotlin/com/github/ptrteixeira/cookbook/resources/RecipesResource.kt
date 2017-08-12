@@ -24,31 +24,31 @@ internal class RecipesResource @Inject constructor(
 
     @GET
     fun getRecipes(): List<Recipe> {
-        return recipeData.getRecipes(FAKE_USER.id)
+        return recipeData.getRecipes(FAKE_USER)
     }
 
     @POST
     fun createRecipe(recipe: RecipeEgg): Recipe {
-        val id = recipeData.createRecipeKeys(FAKE_USER.id, recipe)
-        return recipe.toRecipe(id, FAKE_USER.id)
+        val id = recipeData.createRecipeKeys(FAKE_USER, recipe)
+        return recipe.toRecipe(id, FAKE_USER)
     }
 
     @GET
     @Path("/{id}")
     fun getRecipe(@PathParam("id") id: Int): Optional<Recipe> {
-        return recipeData.getRecipe(FAKE_USER.id, id)
+        return recipeData.getRecipe(FAKE_USER, id)
     }
 
     @PUT
     @Path("/{id}")
     fun updateRecipe(@PathParam("id") id: Int, update: RecipeEgg): Recipe {
-        recipeData.patchRecipeKeys(FAKE_USER.id, id, update)
-        return update.toRecipe(id, FAKE_USER.id)
+        recipeData.patchRecipeKeys(FAKE_USER, id, update)
+        return update.toRecipe(id, FAKE_USER)
     }
 
     @DELETE
     @Path("/{id}")
     fun deleteRecipe(@PathParam("id") id: Int) {
-        recipeData.deleteRecipe(FAKE_USER.id, id)
+        recipeData.deleteRecipe(FAKE_USER, id)
     }
 }

@@ -52,7 +52,7 @@ internal class RecipeEggTest {
 
     @Test
     fun itCanAddAnId() {
-        val recipe = sampleRecipeEgg.toRecipe(12345, "test")
+        val recipe = sampleRecipeEgg.toRecipe(12345, User("test"))
 
         assertThat(recipe) {
             returns(12345, from { it.id })

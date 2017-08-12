@@ -5,6 +5,7 @@ import com.github.ptrteixeira.cookbook.data.RecipeData
 import com.github.ptrteixeira.cookbook.mock
 import com.github.ptrteixeira.cookbook.model.Recipe
 import com.github.ptrteixeira.cookbook.model.RecipeEgg
+import com.github.ptrteixeira.cookbook.model.User
 import io.dropwizard.testing.junit.ResourceTestRule
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -25,9 +26,9 @@ class RecipesResourceTest {
         description = "They're chocolate chip cookies. Waddya want?"
     )
     private val id = 12345
-    private val userId = "test"
+    private val user = User("test")
     private val sampleRecipe = sampleRecipeEgg
-        .toRecipe(id = id, userId = userId)
+        .toRecipe(id = id, user = user)
 
     @Before
     fun setUp() {
@@ -41,7 +42,7 @@ class RecipesResourceTest {
             .get()
 
         verify(dao)
-            .getRecipes("test")
+            .getRecipes(User("test"))
     }
 
     @Test
@@ -51,7 +52,7 @@ class RecipesResourceTest {
             .get()
 
         verify(dao)
-            .getRecipe(anyString(), eq(id))
+            .getRecipe(sameTypeAs(user), eq(id))
     }
 
     @Test
@@ -61,12 +62,12 @@ class RecipesResourceTest {
             .delete()
 
         verify(dao)
-            .deleteRecipe(anyString(), eq(id))
+            .deleteRecipe(sameTypeAs(user), eq(id))
     }
 
     @Test
     fun whenCreateItReturnsRecipeWithId() {
-        given(dao.createRecipeKeys("test", sampleRecipeEgg))
+        given(dao.createRecipeKeys(User("test"), sampleRecipeEgg))
             .willReturn(id)
 
         val response = resource.target("/recipes")
@@ -84,7 +85,7 @@ class RecipesResourceTest {
             .put(Entity.entity(sampleRecipeEgg, MediaType.APPLICATION_JSON), Recipe::class.java)
 
         verify(dao)
-            .patchRecipeKeys(anyString(), eq(id), eq(sampleRecipeEgg))
+            .patchRecipeKeys(sameTypeAs(user), eq(id), eq(sampleRecipeEgg))
     }
 
     companion object {
@@ -99,9 +100,9 @@ class RecipesResourceTest {
     }
 }
 
-fun anyString(): String {
-    Mockito.anyString()
-    return ""
+inline fun <reified T: Any> sameTypeAs(instance: T): T {
+    Mockito.any(T::class.java)
+    return instance
 }
 
 fun <T> eq(actual: T): T {
