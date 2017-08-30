@@ -6,34 +6,6 @@ apply {
   plugin 'org.junit.platform.gradle.plugin'
 }
 
-configurations {
-  junitXmlToHtml
-}
-
-task generateHtmlTestReport {
-  doLast {
-    def reportsDir = new File(buildDir, 'test-reports')
-    reportsDir.mkdirs()
-
-    ant.taskdef(
-        name: 'junitReport',
-        classname: 'org.apache.tools.ant.taskdefs.optional.junit.XMLResultAggregator',
-        classpath: configurations.junitXmlToHtml.asPath
-    )
-
-    ant.junitReport(todir: "$buildDir/test-results/junit-platform") {
-      fileset(dir: "$buildDir/test-results/junit-platform")
-      report(format: 'frames', todir: reportsDir)
-    }
-  }
-}
-
-afterEvaluate {
-  generateHtmlTestReport.dependsOn junitPlatformTest
-  check.dependsOn generateHtmlTestReport
-}
-
-
 dependencies {
   testCompileOnly "org.junit.jupiter:junit-jupiter-api:$junit_version"
   testRuntime "org.junit.jupiter:junit-jupiter-engine:$junit_version"
@@ -41,6 +13,4 @@ dependencies {
   // Vintage systems, required to work with Dropwizard resource tests :c
   testCompile "junit:junit:4.12"
   testRuntime "org.junit.vintage:junit-vintage-engine:4.12.0-RC3"
-
-  junitXmlToHtml 'org.apache.ant:ant-junit:1.10.1'
 }
