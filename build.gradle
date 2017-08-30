@@ -6,7 +6,7 @@ buildscript {
     mavenCentral()
   }
   dependencies {
-    classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.0-RC2'
+    classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.0-RC3'
   }
 }
 
@@ -14,8 +14,8 @@ plugins {
   id 'application'
   id 'project-report'
   id 'idea'
-  id 'nebula.kotlin' version '1.1.3-2'
-  id 'org.jetbrains.kotlin.kapt' version '1.1.3-2'
+  id 'nebula.kotlin' version '1.1.4-2'
+  id 'org.jetbrains.kotlin.kapt' version '1.1.4-2'
 }
 
 apply {
@@ -44,12 +44,12 @@ repositories {
 enum Dependency {
   ASSERTJ('3.8.0'),
   DAGGER('2.11'),
-  DROPWIZARD('1.1.0'),
+  DROPWIZARD('1.1.4'),
   H2('1.4.196'),
-  JACKSON('2.8.9'),
+  JACKSON('2.8.10'),
   JDBI('3.0.0-beta2'),
   LOG4J('2.8.2'),
-  MOCKITO("2.8.47"),
+  MOCKITO("2.9.0"),
   SLF4J('1.7.25')
 
   private String version
