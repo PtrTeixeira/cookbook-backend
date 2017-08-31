@@ -45,6 +45,7 @@ enum Dependency {
   ASSERTJ('3.8.0'),
   DAGGER('2.11'),
   DROPWIZARD('1.1.4'),
+  GOOGLE_API('1.22.0'),
   H2('1.4.196'),
   JACKSON('2.8.10'),
   JDBI('3.0.0-beta2'),
@@ -71,6 +72,9 @@ dependencies {
   compile "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:${Dependency.JACKSON}"
   compile "com.h2database:h2:${Dependency.H2}"
   compile "com.google.dagger:dagger:${Dependency.DAGGER}"
+  compile("com.google.api-client:google-api-client:${Dependency.GOOGLE_API}") {
+    exclude group: 'com.google.guava', module: 'guava-jdk5'
+  }
   kapt "com.google.dagger:dagger-compiler:${Dependency.DAGGER}"
 
   testCompile "org.assertj:assertj-core:${Dependency.ASSERTJ}"

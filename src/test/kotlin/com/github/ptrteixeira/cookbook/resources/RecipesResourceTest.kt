@@ -9,7 +9,7 @@ import com.github.ptrteixeira.cookbook.model.RecipeEgg
 import com.github.ptrteixeira.cookbook.model.User
 import io.dropwizard.auth.AuthDynamicFeature
 import io.dropwizard.auth.AuthValueFactoryProvider
-import io.dropwizard.auth.basic.BasicCredentialAuthFilter
+import io.dropwizard.auth.oauth.OAuthCredentialAuthFilter
 import io.dropwizard.testing.junit.ResourceTestRule
 import org.assertj.core.api.Assertions.assertThat
 import org.glassfish.jersey.test.grizzly.GrizzlyWebTestContainerFactory
@@ -19,12 +19,10 @@ import org.junit.Test
 import org.mockito.BDDMockito.given
 import org.mockito.Mockito
 import org.mockito.Mockito.verify
-import java.util.Base64
 import javax.ws.rs.client.Entity
 import javax.ws.rs.core.MediaType
 
 class RecipesResourceTest {
-    private val encoder = Base64.getEncoder()
     private val sampleRecipeEgg = RecipeEgg(
         name="Chocolate Chip Cookies",
         ingredients = listOf("Chocolate", "Chips", "Cookies"),
@@ -34,7 +32,7 @@ class RecipesResourceTest {
     )
     private val id = 12345
     private val user = User("test")
-    private val userKey = String(encoder.encode("${user.id}:password".toByteArray()))
+    private val userKey = user.id
     private val sampleRecipe = sampleRecipeEgg
         .toRecipe(id = id, user = user)
 
@@ -47,7 +45,7 @@ class RecipesResourceTest {
     fun whenDatabaseIsEmptyResultIsEmpty() {
         resource.target("/recipes")
             .request()
-            .header("Authorization", "Basic $userKey")
+            .header("Authorization", "Bearer $userKey")
             .get()
 
         verify(dao)
@@ -58,7 +56,7 @@ class RecipesResourceTest {
     fun whenGetWithIdItPassesIdToDao() {
         resource.target("/recipes/12345")
             .request()
-            .header("Authorization", "Basic $userKey")
+            .header("Authorization", "Bearer $userKey")
             .get()
 
         verify(dao)
@@ -69,7 +67,7 @@ class RecipesResourceTest {
     fun whenDeleteItPassesIdToDao() {
         resource.target("/recipes/12345")
             .request()
-            .header("Authorization", "Basic $userKey")
+            .header("Authorization", "Bearer $userKey")
             .delete()
 
         verify(dao)
@@ -83,7 +81,7 @@ class RecipesResourceTest {
 
         val response = resource.target("/recipes")
             .request()
-            .header("Authorization", "Basic $userKey")
+            .header("Authorization", "Bearer $userKey")
             .post(Entity.entity(sampleRecipeEgg, MediaType.APPLICATION_JSON), Recipe::class.java)
 
         assertThat(response)
@@ -94,7 +92,7 @@ class RecipesResourceTest {
     fun whenUpdateItModifiesTheCorrectRecipe() {
         resource.target("/recipes/12345")
             .request()
-            .header("Authorization", "Basic $userKey")
+            .header("Authorization", "Bearer $userKey")
             .put(Entity.entity(sampleRecipeEgg, MediaType.APPLICATION_JSON), Recipe::class.java)
 
         verify(dao)
@@ -108,7 +106,8 @@ class RecipesResourceTest {
         @get:ClassRule
         val resource: ResourceTestRule = ResourceTestRule.builder()
             .setTestContainerFactory(GrizzlyWebTestContainerFactory())
-            .addProvider(AuthDynamicFeature(BasicCredentialAuthFilter.Builder<User>()
+            .addProvider(AuthDynamicFeature(OAuthCredentialAuthFilter.Builder<User>()
+                .setPrefix("Bearer")
                 .setAuthenticator(TrivialAuth())
                 .buildAuthFilter()
             ))

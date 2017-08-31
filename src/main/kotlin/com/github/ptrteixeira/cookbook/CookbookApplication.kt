@@ -1,6 +1,7 @@
 package com.github.ptrteixeira.cookbook
 
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
+import com.github.ptrteixeira.cookbook.auth.AuthModule
 import com.github.ptrteixeira.cookbook.auth.DaggerAuthComponent
 import com.github.ptrteixeira.cookbook.base.BaseModule
 import com.github.ptrteixeira.cookbook.base.DaggerBaseComponent
@@ -12,34 +13,45 @@ import com.github.ptrteixeira.cookbook.resources.DaggerResourcesComponent
 import io.dropwizard.Application
 import io.dropwizard.auth.AuthDynamicFeature
 import io.dropwizard.auth.AuthValueFactoryProvider
-import io.dropwizard.auth.basic.BasicCredentialAuthFilter
+import io.dropwizard.auth.oauth.OAuthCredentialAuthFilter
+import io.dropwizard.configuration.EnvironmentVariableSubstitutor
+import io.dropwizard.configuration.SubstitutingSourceProvider
 import io.dropwizard.jdbi.bundles.DBIExceptionsBundle
 import io.dropwizard.setup.Bootstrap
 import io.dropwizard.setup.Environment
 
 class CookbookApplication: Application<CookbookConfiguration>() {
     override fun initialize(bootstrap: Bootstrap<CookbookConfiguration>?) {
-        bootstrap
-            ?.addBundle(migrationsBundle())
-        bootstrap
-            ?.addBundle(DBIExceptionsBundle())
+        bootstrap?.apply {
+            addBundle(migrationsBundle())
+            addBundle(DBIExceptionsBundle())
 
-        bootstrap
-            ?.objectMapper
-            ?.registerKotlinModule()
+            configurationSourceProvider = SubstitutingSourceProvider(
+                configurationSourceProvider,
+                EnvironmentVariableSubstitutor(false)
+            )
+
+            objectMapper
+                ?.registerKotlinModule()
+        }
     }
 
     override fun run(configuration: CookbookConfiguration, environment: Environment) {
         val baseComponent = DaggerBaseComponent.builder()
             .baseModule(BaseModule(configuration, environment))
             .build()
-        val authComponent = DaggerAuthComponent.create()
+        val authComponent = DaggerAuthComponent.builder()
+            .baseComponent(baseComponent)
+            .authModule(AuthModule())
+            .build()
         val dataComponent = DaggerDataComponent.builder()
             .baseComponent(baseComponent)
             .dataModule(DataModule())
             .build()
         val resourcesComponent = DaggerResourcesComponent.builder()
             .dataComponent(dataComponent)
+            .authComponent(authComponent)
+            .baseComponent(baseComponent)
             .build()
 
         environment
@@ -49,9 +61,9 @@ class CookbookApplication: Application<CookbookConfiguration>() {
         environment
             .jersey()
             .register(AuthDynamicFeature(
-                BasicCredentialAuthFilter.Builder<User>()
-                    .setAuthenticator(authComponent.auth())
-                    .setRealm("com.github.ptrteixeira.cookbook")
+                OAuthCredentialAuthFilter.Builder<User>()
+                    .setAuthenticator(authComponent.tokenAuth())
+                    .setPrefix("Bearer")
                     .buildAuthFilter()
             ))
         environment
