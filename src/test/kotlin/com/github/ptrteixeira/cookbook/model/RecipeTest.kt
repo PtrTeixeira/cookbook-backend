@@ -10,6 +10,7 @@ internal class RecipeTest {
     private val objectMapper = mapperFactory()
 
     private val sampleRecipe = Recipe(
+        userId = "test",
         id = 101,
         name="Chocolate Chip Cookies",
         ingredients = listOf("Chocolate", "Chips", "Cookies"),

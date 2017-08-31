@@ -12,6 +12,7 @@ package com.github.ptrteixeira.cookbook.model
  */
 data class Recipe(
     val id : Int,
+    val userId: String,
     val name: String = "",
     val ingredients: List<String> = listOf(),
     val instructions: String = "",
