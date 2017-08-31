@@ -16,9 +16,10 @@ data class RecipeEgg (
     val summary: String = "",
     val description: String = ""
 ) {
-    fun toRecipe(id: Int): Recipe {
+    fun toRecipe(id: Int, user: User): Recipe {
         return Recipe(
             id = id,
+            userId = user.id,
             name = name,
             ingredients = ingredients,
             instructions = instructions,

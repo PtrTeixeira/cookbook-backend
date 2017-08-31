@@ -2,6 +2,7 @@ package com.github.ptrteixeira.cookbook.data
 
 import com.github.ptrteixeira.cookbook.jdbi
 import com.github.ptrteixeira.cookbook.model.RecipeEgg
+import com.github.ptrteixeira.cookbook.model.User
 import org.assertj.core.api.Assertions.assertThat
 import org.jdbi.v3.sqlobject.kotlin.onDemand
 import org.junit.jupiter.api.BeforeAll
@@ -10,17 +11,19 @@ import org.junit.jupiter.api.Test
 import org.slf4j.LoggerFactory
 
 class RecipeDataTest {
+    private val ID = 0
+    private val USER = User("test-user")
 
     @Test
     fun itReturnsMissingRecipesAsAbsent() {
-        val result = recipeDao.getRecipe(0)
+        val result = recipeDao.getRecipe(USER, ID)
         assertThat(result)
             .isEmpty()
     }
 
     @Test
     fun whenNoRecipesItReturnsEmptyList() {
-        val result = recipeDao.getRecipes()
+        val result = recipeDao.getRecipes(USER)
 
         assertThat(result)
             .isEmpty()
@@ -28,15 +31,19 @@ class RecipeDataTest {
 
     @Test
     fun itAllowsRecipesToBeCreated() {
-        val result = recipeDao.createRecipe(sampleRecipeEgg)
-        assertThat(recipeDao.getRecipe(result.id))
-            .contains(result)
+        val id = recipeDao.createRecipeKeys(USER, sampleRecipeEgg)
+        val recipe = recipeDao.getRecipe(USER, id)
+            .get()
+
+        assertThat(recipe)
+            .isEqualTo(sampleRecipeEgg.toRecipe(id, USER))
     }
 
     @Test
     fun whenRecipesAddedReturnedListContainsRecipes() {
-        recipeDao.createRecipe(sampleRecipeEgg)
-        val allRecipes = recipeDao.getRecipes()
+        recipeDao.createRecipeKeys(USER, sampleRecipeEgg)
+        val allRecipes = recipeDao.getRecipes(USER)
+
         assertThat(allRecipes)
             .hasSize(1)
             .extracting<String> { it.name }
@@ -45,31 +52,61 @@ class RecipeDataTest {
 
     @Test
     fun itAllowsRecipesToBeDeleted() {
-        val createResult = recipeDao.createRecipe(sampleRecipeEgg)
+        val id = recipeDao.createRecipeKeys(USER, sampleRecipeEgg)
 
-        recipeDao.deleteRecipe(createResult.id)
+        recipeDao.deleteRecipe(USER, id)
 
-        val getResult = recipeDao.getRecipe(createResult.id)
+        val getResult = recipeDao.getRecipe(USER, id)
         assertThat(getResult)
             .isEmpty()
     }
 
     @Test
     fun itAllowsRecipesToBeUpdated() {
-        val createResult = recipeDao.createRecipe(sampleRecipeEgg)
+        val id = recipeDao.createRecipeKeys(USER, sampleRecipeEgg)
         val newIngredients = listOf(
             "Eggs", "White Sugar", "Brown Sugar",
             "Butter", "Flour", "Chocolate Chips"
         )
 
         val updated = sampleRecipeEgg.copy(ingredients = newIngredients)
-        val patchResult = recipeDao.patchRecipe(createResult.id, updated)
-        val getResult = recipeDao.getRecipe(createResult.id)
+        recipeDao.patchRecipeKeys(USER, id, updated)
+        val getResult = recipeDao.getRecipe(USER, id)
 
         assertThat(getResult)
-            .contains(patchResult)
-        assertThat(patchResult.ingredients)
+            .contains(updated.toRecipe(id, USER))
+        assertThat(getResult.get().ingredients)
             .containsExactlyInAnyOrder(*newIngredients.toTypedArray())
+    }
+
+    @Test
+    fun itOnlyListsRecipesForTheGivenUser() {
+        recipeDao.createRecipeKeys(User("user-1"), sampleRecipeEgg)
+
+        assertThat(recipeDao.getRecipes(User("user-2")))
+            .isEmpty()
+        assertThat(recipeDao.getRecipes(User("user-1")))
+            .isNotEmpty()
+    }
+
+    @Test
+    fun itForbidsAccessToAnotherUsersRecipes() {
+        val id = recipeDao.createRecipeKeys(User("user-1"), sampleRecipeEgg)
+
+        assertThat(recipeDao.getRecipe(User("user-2"), id))
+            .isEmpty()
+        assertThat(recipeDao.getRecipe(User("user-1"), id))
+            .isNotEmpty()
+    }
+
+    @Test
+    fun itForbidsUpdatesToAnotherUsersRecipes() {
+        val id = recipeDao.createRecipeKeys(User("user-1"), sampleRecipeEgg)
+
+        recipeDao.deleteRecipe(User("user-2"), id)
+
+        assertThat(recipeDao.getRecipe(User("user-1"), id))
+            .isNotEmpty()
     }
 
     @BeforeEach

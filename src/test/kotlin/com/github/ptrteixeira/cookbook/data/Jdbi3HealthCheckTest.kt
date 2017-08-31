@@ -3,6 +3,8 @@ package com.github.ptrteixeira.cookbook.data
 import com.codahale.metrics.health.HealthCheck.Result
 import io.dropwizard.util.Duration
 import org.assertj.core.api.Assertions.assertThat
+import org.jdbi.v3.core.Handle
+import org.jdbi.v3.core.HandleCallback
 import org.jdbi.v3.core.Jdbi
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -16,20 +18,26 @@ import java.util.concurrent.TimeUnit
 
 internal class Jdbi3HealthCheckTest {
     val validationQuery = "select 1"
-    val jdbi = mock(Jdbi::class.java)
+    val jdbi: Jdbi = mock(Jdbi::class.java)
+    val handle: Handle = mock(Handle::class.java)
 
     @BeforeEach
     fun resetMock() {
-        reset(jdbi)
+        reset(jdbi, handle)
+
+        `when`(jdbi.withHandle<Result, Exception>(any())).then { invocation ->
+            invocation
+                .getArgument<HandleCallback<Result, Exception>>(0)
+                .withHandle(handle)
+        }
     }
 
     @Test
     fun itTimesOutProperly() {
-        `when`(jdbi.withHandle<Result, Exception>(any()))
-            .then {
-                TimeUnit.SECONDS.sleep(10)
-                return@then null
-            }
+        `when`(handle.execute(validationQuery)).then {
+            TimeUnit.SECONDS.sleep(10)
+            return@then null
+        }
 
         val executor = newSingleThreadExecutor()
         val healthCheck = Jdbi3HealthCheck(jdbi, validationQuery, executor, Duration.milliseconds(5))
@@ -43,7 +51,7 @@ internal class Jdbi3HealthCheckTest {
 
     @Test
     fun itMarksExceptionsAsFailures() {
-        `when`(jdbi.withHandle<Result, Exception>(any()))
+        `when`(handle.execute(validationQuery))
             .then {
                 throw SQLException()
             }
