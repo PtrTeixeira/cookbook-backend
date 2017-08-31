@@ -79,6 +79,36 @@ class RecipeDataTest {
             .containsExactlyInAnyOrder(*newIngredients.toTypedArray())
     }
 
+    @Test
+    fun itOnlyListsRecipesForTheGivenUser() {
+        recipeDao.createRecipeKeys(User("user-1"), sampleRecipeEgg)
+
+        assertThat(recipeDao.getRecipes(User("user-2")))
+            .isEmpty()
+        assertThat(recipeDao.getRecipes(User("user-1")))
+            .isNotEmpty()
+    }
+
+    @Test
+    fun itForbidsAccessToAnotherUsersRecipes() {
+        val id = recipeDao.createRecipeKeys(User("user-1"), sampleRecipeEgg)
+
+        assertThat(recipeDao.getRecipe(User("user-2"), id))
+            .isEmpty()
+        assertThat(recipeDao.getRecipe(User("user-1"), id))
+            .isNotEmpty()
+    }
+
+    @Test
+    fun itForbidsUpdatesToAnotherUsersRecipes() {
+        val id = recipeDao.createRecipeKeys(User("user-1"), sampleRecipeEgg)
+
+        recipeDao.deleteRecipe(User("user-2"), id)
+
+        assertThat(recipeDao.getRecipe(User("user-1"), id))
+            .isNotEmpty()
+    }
+
     @BeforeEach
     fun truncateTable() {
         dbi.withHandle<Unit, Nothing> {

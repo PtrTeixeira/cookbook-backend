@@ -19,6 +19,7 @@ import org.junit.Test
 import org.mockito.BDDMockito.given
 import org.mockito.Mockito
 import org.mockito.Mockito.verify
+import java.util.Optional
 import javax.ws.rs.client.Entity
 import javax.ws.rs.core.MediaType
 
@@ -39,6 +40,41 @@ class RecipesResourceTest {
     @Before
     fun setUp() {
         Mockito.reset(dao)
+    }
+
+    @Test
+    fun itPassesGivenUserTokenToDao() {
+        resource.target("/recipes")
+            .request()
+            .header("Authorization", "Bearer fake_user")
+            .get()
+
+        verify(dao)
+            .getRecipes(User("fake_user"))
+    }
+
+    @Test
+    fun itRaisesAnHttpExnWhenNoAuthPassed() {
+        val response = resource.target("/recipes")
+            .request()
+            .get()
+
+        assertThat(response.status)
+            .isEqualTo(401)
+    }
+
+    @Test
+    fun whenUserRequestsUnownedResourceItReturns404() {
+        given(dao.getRecipe(User("user-1"), 1))
+            .willReturn(Optional.empty())
+
+        val response = resource.target("/recipes/1")
+            .request()
+            .header("Authorization", "Bearer user-1")
+            .get()
+
+        assertThat(response.status)
+            .isEqualTo(404)
     }
 
     @Test
