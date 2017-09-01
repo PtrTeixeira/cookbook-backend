@@ -9,8 +9,8 @@ jobs:
       - restore_cache:
           key: v1-{{ checksum "build.gradle" }}
       - run: |
-              bash gradlew :core:check -Pkotlin.incremental=false --no-daemon
-              bash gradlew :server:check -Pkotlin.incremental=false --no-daemon
+              bash gradlew :core:check -Pkotlin.incremental=false --no-daemon --info
+              bash gradlew :server:check -Pkotlin.incremental=false --no-daemon --info
       - save_cache:
           paths:
             - ~/.m2
