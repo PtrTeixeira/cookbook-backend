@@ -9,16 +9,12 @@ jobs:
       - restore_cache:
           key: v1-{{ checksum "build.gradle" }}
       - run: |
-              bash gradlew assemble -Pkotlin.incremental=false --info
-              bash gradlew check -Pkotlin.incremental=false --info
+              bash gradlew check -Pkotlin.incremental=false --no-daemon
       - save_cache:
           paths:
             - ~/.m2
           key: v1-{{ checksum "build.gradle" }}
-      - store_artifacts:
-          path: build/project/dependencies
-          destination: dependencies
       - store_test_results:
-          path: build/test-results
+          path: server/build/test-results
           destination: test-results
 
