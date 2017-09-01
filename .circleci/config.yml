@@ -4,12 +4,13 @@ jobs:
     working_directory: ~/cookbook
     docker:
       - image: openjdk:8u121
+    environment:
+      JVM_OPTS: -Xmx1024m -XX:ParallelGCThreads=2 -XX:ConcGCThreads=2 -XX:ParallelGCThreads=2 -Djava.util.concurrent.ForkJoinPool.common.parallelism=2
     steps:
       - checkout
       - restore_cache:
           key: v1-{{ checksum "build.gradle" }}
       - run: |
-              export GRADLE_OPTS='-Dorg.gradle.jvmargs="-Xmx2048m -XX:+HeapDumpOnOutOfMemoryError"'
               bash gradlew check -Pkotlin.incremental=false --no-daemon --info
       - save_cache:
           paths:
