@@ -20,7 +20,7 @@ import io.dropwizard.jdbi.bundles.DBIExceptionsBundle
 import io.dropwizard.setup.Bootstrap
 import io.dropwizard.setup.Environment
 
-class CookbookApplication: Application<CookbookConfiguration>() {
+class CookbookApplication : Application<CookbookConfiguration>() {
     override fun initialize(bootstrap: Bootstrap<CookbookConfiguration>?) {
         bootstrap?.apply {
             addBundle(migrationsBundle())

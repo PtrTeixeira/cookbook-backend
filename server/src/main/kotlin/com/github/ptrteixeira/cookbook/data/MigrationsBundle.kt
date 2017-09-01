@@ -4,8 +4,6 @@ import com.github.ptrteixeira.cookbook.CookbookConfiguration
 import io.dropwizard.db.DataSourceFactory
 import io.dropwizard.migrations.MigrationsBundle
 
-
-
 fun migrationsBundle(migrationFileName: String = "migrations.xml"): MigrationsBundle<CookbookConfiguration> {
     return object : MigrationsBundle<CookbookConfiguration>() {
         override fun getDataSourceFactory(configuration: CookbookConfiguration?): DataSourceFactory {

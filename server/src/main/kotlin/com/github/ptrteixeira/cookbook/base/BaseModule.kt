@@ -41,7 +41,6 @@ internal class BaseModule(
     @Named(BaseComponent.BASE_URL)
     fun baseUrl(): String = config.baseUrl
 
-
     @Provides
     fun jacksonFactory(): JsonFactory = JacksonFactory()
 }
