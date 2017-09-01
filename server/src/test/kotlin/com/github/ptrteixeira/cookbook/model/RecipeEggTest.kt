@@ -10,7 +10,6 @@ import org.assertj.core.api.Assertions.from
 import org.junit.jupiter.api.Test
 import com.github.ptrteixeira.cookbook.base.objectMapper as mapperFactory
 
-
 internal class RecipeEggTest {
     private val objectMapper = mapperFactory()
 

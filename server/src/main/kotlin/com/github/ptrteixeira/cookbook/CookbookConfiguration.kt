@@ -4,7 +4,6 @@ import com.github.ptrteixeira.cookbook.config.OauthConfiguration
 import io.dropwizard.Configuration
 import io.dropwizard.db.DataSourceFactory
 
-
 class CookbookConfiguration(
     val database: DataSourceFactory = DataSourceFactory(),
     val oauthConfig: OauthConfiguration,

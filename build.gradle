@@ -1,6 +1,10 @@
 buildscript {
   group = 'com.github.ptrteixeira.cookbook'
   version = '0.2.2'
+
+  repositories {
+    mavenCentral()
+  }
 }
 
 subprojects {

@@ -25,7 +25,7 @@ internal class Jdbi3HealthCheckTest {
     fun resetMock() {
         reset(jdbi, handle)
 
-        given(jdbi.withHandle<Result,Exception>(any()))
+        given(jdbi.withHandle<Result, Exception>(any()))
             .will { invocation ->
                 invocation
                     .getArgument<HandleCallback<Result, Exception>>(0)

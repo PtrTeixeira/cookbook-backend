@@ -117,7 +117,6 @@ class RecipeDataTest {
         }
     }
 
-
     companion object {
         private val logger = LoggerFactory.getLogger(RecipeDataTest::class.java)
         private val dbi = jdbi()
