@@ -9,7 +9,6 @@ buildscript {
 
 plugins {
   id 'application'
-  id 'project-report'
   id 'idea'
   id 'nebula.kotlin' version '1.1.4-2'
   id 'org.jetbrains.kotlin.kapt' version '1.1.4-2'
@@ -39,7 +38,6 @@ dependencies {
   compile "io.dropwizard:dropwizard-migrations:${Dependencies.DROPWIZARD}"
   compile "io.dropwizard:dropwizard-auth:${Dependencies.DROPWIZARD}"
   compile "org.jdbi:jdbi3-kotlin-sqlobject:${Dependencies.JDBI}"
-  compile "org.apache.logging.log4j:log4j-to-slf4j:${Dependencies.LOG4J}"
   compile "com.fasterxml.jackson.module:jackson-module-kotlin:${Dependencies.JACKSON}"
   compile "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:${Dependencies.JACKSON}"
   compile "com.h2database:h2:${Dependencies.H2}"

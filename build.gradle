@@ -18,7 +18,6 @@ subprojects {
       JACKSON   : '2.8.10',
       JDBI      : '3.0.0-beta2',
       JERSEY    : '2.25.1',
-      LOG4J     : '2.8.2',
       MOCKITO   : '2.9.0',
       SLF4J     : '1.7.25'
   ]

@@ -6,11 +6,6 @@ apply {
   from "$rootDir/gradle/kotlin.gradle"
 }
 
-repositories {
-  mavenCentral()
-  jcenter()
-}
-
 dependencies {
   compile "com.fasterxml.jackson.module:jackson-module-kotlin:${Dependencies.JACKSON}"
   compile "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:${Dependencies.JACKSON}"
