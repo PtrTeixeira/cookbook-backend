@@ -52,6 +52,7 @@ distributions {
 
 dependencies {
   compile project(':core')
+  compile project(':support')
   compile "io.dropwizard:dropwizard-core:${Dependencies.DROPWIZARD}"
   compile "io.dropwizard:dropwizard-jdbi:${Dependencies.DROPWIZARD}"
   compile "io.dropwizard:dropwizard-migrations:${Dependencies.DROPWIZARD}"
