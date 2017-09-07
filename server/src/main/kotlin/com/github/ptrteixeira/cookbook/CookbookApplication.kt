@@ -19,6 +19,10 @@ import io.dropwizard.configuration.SubstitutingSourceProvider
 import io.dropwizard.jdbi.bundles.DBIExceptionsBundle
 import io.dropwizard.setup.Bootstrap
 import io.dropwizard.setup.Environment
+import liquibase.Contexts
+import liquibase.Liquibase
+import liquibase.database.jvm.JdbcConnection
+import liquibase.resource.ClassLoaderResourceAccessor
 
 class CookbookApplication : Application<CookbookConfiguration>() {
     override fun initialize(bootstrap: Bootstrap<CookbookConfiguration>?) {
@@ -72,6 +76,14 @@ class CookbookApplication : Application<CookbookConfiguration>() {
         environment
             .healthChecks()
             .register("database", dataComponent.healthCheck())
+
+        if (configuration.autoRunMigration) {
+            dataComponent.jdbi().useTransaction<Exception> {
+                val connection = JdbcConnection(it.connection)
+                val liquibase = Liquibase("migrations.xml", ClassLoaderResourceAccessor(), connection)
+                liquibase.update(Contexts())
+            }
+        }
     }
 
     override fun getName(): String {
