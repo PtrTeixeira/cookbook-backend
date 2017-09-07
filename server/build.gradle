@@ -40,6 +40,16 @@ spotless {
 mainClassName = "com.github.ptrteixeira.cookbook.CookbookApplicationKt"
 distTar.compression = Compression.GZIP
 
+startScripts {
+  applicationName = "cookbook"
+}
+
+distributions {
+  main {
+    baseName = 'cookbook'
+  }
+}
+
 dependencies {
   compile project(':core')
   compile "io.dropwizard:dropwizard-core:${Dependencies.DROPWIZARD}"
