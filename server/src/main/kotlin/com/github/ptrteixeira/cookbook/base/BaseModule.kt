@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.github.ptrteixeira.cookbook.CookbookConfiguration
-import com.github.ptrteixeira.cookbook.config.OauthConfiguration
+import com.github.ptrteixeira.cookbook.config.AuthConfiguration
 import com.google.api.client.json.JsonFactory
 import com.google.api.client.json.jackson2.JacksonFactory
 import dagger.Module
@@ -35,7 +35,7 @@ internal class BaseModule(
     fun metrics(): MetricRegistry = environment.metrics()
 
     @Provides
-    fun oauthConfig(): OauthConfiguration = config.oauthConfig
+    fun authConfig(): AuthConfiguration = config.auth
 
     @Provides
     @Named(BaseComponent.BASE_URL)

@@ -2,7 +2,7 @@ package com.github.ptrteixeira.cookbook.base
 
 import com.codahale.metrics.MetricRegistry
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.github.ptrteixeira.cookbook.config.OauthConfiguration
+import com.github.ptrteixeira.cookbook.config.AuthConfiguration
 import com.google.api.client.json.JsonFactory
 import dagger.Component
 import io.dropwizard.db.DataSourceFactory
@@ -18,7 +18,7 @@ interface BaseComponent {
     fun jacksonFactory(): JsonFactory
     fun dataSourceFactory(): DataSourceFactory
     fun metrics(): MetricRegistry
-    fun oauthConfig(): OauthConfiguration
+    fun authConfig(): AuthConfiguration
 
     @Named(BASE_URL)
     fun baseUrl(): String

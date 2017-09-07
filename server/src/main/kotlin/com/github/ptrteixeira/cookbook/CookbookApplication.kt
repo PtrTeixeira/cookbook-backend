@@ -1,17 +1,18 @@
 package com.github.ptrteixeira.cookbook
 
 import com.fasterxml.jackson.module.kotlin.registerKotlinModule
+import com.github.ptrteixeira.cookbook.auth.AuthComponent
 import com.github.ptrteixeira.cookbook.auth.AuthModule
 import com.github.ptrteixeira.cookbook.auth.DaggerAuthComponent
 import com.github.ptrteixeira.cookbook.base.BaseModule
 import com.github.ptrteixeira.cookbook.base.DaggerBaseComponent
+import com.github.ptrteixeira.cookbook.config.AuthType
 import com.github.ptrteixeira.cookbook.core.User
 import com.github.ptrteixeira.cookbook.data.DaggerDataComponent
 import com.github.ptrteixeira.cookbook.data.DataModule
 import com.github.ptrteixeira.cookbook.data.migrationsBundle
 import com.github.ptrteixeira.cookbook.resources.DaggerResourcesComponent
 import io.dropwizard.Application
-import io.dropwizard.auth.AuthDynamicFeature
 import io.dropwizard.auth.AuthValueFactoryProvider
 import io.dropwizard.auth.oauth.OAuthCredentialAuthFilter
 import io.dropwizard.configuration.EnvironmentVariableSubstitutor
@@ -64,12 +65,7 @@ class CookbookApplication : Application<CookbookConfiguration>() {
 
         environment
             .jersey()
-            .register(AuthDynamicFeature(
-                OAuthCredentialAuthFilter.Builder<User>()
-                    .setAuthenticator(authComponent.tokenAuth())
-                    .setPrefix("Bearer")
-                    .buildAuthFilter()
-            ))
+            .register(authFilter(configuration.auth.type, authComponent))
         environment
             .jersey()
             .register(AuthValueFactoryProvider.Binder(User::class.java))
@@ -88,6 +84,16 @@ class CookbookApplication : Application<CookbookConfiguration>() {
 
     override fun getName(): String {
         return "cookbook"
+    }
+
+    private fun authFilter(authType: AuthType, authComponent: AuthComponent) = when (authType) {
+        AuthType.USERNAME -> authComponent.usernameAuth()
+        AuthType.OAUTH -> authComponent.tokenAuth()
+    }.let {
+        OAuthCredentialAuthFilter.Builder<User>()
+            .setAuthenticator(it)
+            .setPrefix("Bearer")
+            .buildAuthFilter()
     }
 }
 
