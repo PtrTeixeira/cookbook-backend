@@ -12,6 +12,14 @@ This is largely intended for _me_ to run on an infrastructure provider
 (eg, DigitalOcean), but I am working to make sure that it can be reasonably 
 run locally ([self-hosted](https://github.com/Kickball/awesome-selfhosted)) as well.
 
+Table of Contents
+-----------------
+1. [Usage](#usage)
+1. [Development](#development)
+1. [Running the Server](#running-the-server)
+1. [Configuration](#configuration)
+1. [How I run the application with Docker](#how-i-run-the-application-with-docker)
+
 Usage
 -----
 At the moment, there isn't a binary distribution of this project. Eventually, it 
