@@ -83,22 +83,17 @@ config file, which is set up to be configurable with environment variables,
 as per 12-factor principles. 
 
 Properties configurable with environment variables:
+
+
 | Property Name | Environment Variable | Default Value | Description |
 |---------------|----------------------|---------------|-------------|
 | baseUrl       | COOKBOOK_BASE_URL    | http://localhost:8080 | URL at which server will be accessed. |
-|---------------|----------------------|-----------------------|-----|
 | database.driverClass | DB_DRIVER_CLASS | org.h2.Driver | JDBC Driver class. If you change this to something other than H2, you will need to put the jar on the classpath yourself. |
-|--------------| ----------------------|----------------------|------|
 |database.user | DB_USER | sa | Username for database connection. Irrelvant for H2 |
-|--------------|---------|----|--------------------------------------|
 |database.password | DB_PASSWORD | sa | Password for database connection. Irrelevant for H2 |
-|------------------|-------------|----|------------------------------|
 |database.url | DB_JDBC_URL | jdbc:h2:./db | URL for JDBC connection. Must include "jdbc" and database protocol |
-|-------------|-------------|--------------|-------------------------|
 |autoRunMigration| AUTO_RUN_MIGRATION | no | Whether to run the database migration when the application starts. This is mstly to handle starting the Docker image with no pre-initialized database |
-|----------------|----------|--------------|-------------------------|
 |oauthConfig.clientId|COOKBOOK_CLIENT_ID| <none> | Client ID for working with Google APIs. See [Google's guide](https://developers.google.com/identity/sign-in/web/devconsole-project)|
-|----------------|----------|--------------|-------------------------|
 
 
 How I run the application with Docker
