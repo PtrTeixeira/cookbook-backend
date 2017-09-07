@@ -5,9 +5,10 @@ server:
       - type: console
 baseUrl: ${COOKBOOK_BASE_URL:-"http://localhost:8080"}
 database:
-  driverClass: org.h2.Driver
-  user: sa
-  password: sa
-  url: jdbc:h2:./db
+  driverClass: ${DB_DRIVER_CLASS:-org.h2.Driver}
+  user: ${DB_USER:-sa}
+  password: ${DB_PASSWORD:-sa}
+  url: ${DB_JDBC_URL:-jdbc:h2:./db}
+autoRunMigration: ${AUTO_RUN_MIGRATION:-no}
 oauthConfig:
   clientId: ${COOKBOOK_CLIENT_ID}
