@@ -1,0 +1,9 @@
+# Compiled files
+dist/
+
+# Test results/coverage, from Jest
+coverage/
+
+# Dependencies
+node_modules/
+

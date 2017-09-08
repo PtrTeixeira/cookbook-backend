@@ -1,0 +1,32 @@
+plugins {
+  id 'com.moowork.node' version '1.2.0'
+}
+
+node {
+  version = '8.4.0'
+  yarnVersion = '1.0.1'
+  download = true
+}
+
+task build(type: YarnTask) {
+  dependsOn yarn_install
+  args = ['run', 'webpack']
+}
+
+task dev(type: YarnTask) {
+  dependsOn yarn_install
+  args = ['run', 'dev']
+}
+
+task test(type: YarnTask) {
+  dependsOn yarn_install
+  if (System.getenv("CI") == null) {
+    args = ['run', 'jest', '--', '--colors']
+  } else {
+    args = ['run', 'jest', '--', '--coverage', '--ci']
+  }
+}
+
+task check() {
+  dependsOn test
+}

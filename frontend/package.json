@@ -1,0 +1,42 @@
+{
+  "name": "frontend",
+  "version": "0.3.0",
+  "author": "Peter Teixeira <PtrTeixeira@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/jest": "^20.0.8",
+    "awesome-typescript-loader": "^3.2.0",
+    "jest": "^21.0.1",
+    "source-map-loader": "^0.2.1",
+    "ts-jest": "^21.0.0",
+    "typescript": "^2.5.2",
+    "webpack": "^3.5.6",
+    "webpack-dev-server": "^2.7.1"
+  },
+  "dependencies": {
+    "@types/hyperscript": "0.0.3",
+    "hyperscript": "^2.0.2",
+    "inferno": "^3.9.0",
+    "inferno-hyperscript": "^3.9.0",
+    "inferno-redux": "^3.9.0",
+    "inferno-router": "^3.9.0",
+    "redux": "^3.7.2"
+  },
+  "scripts": {
+    "dev": "webpack-dev-server --open --history-api-fallback",
+    "build": "webpack",
+    "test": "jest"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.tsx?$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+    },
+    "testRegex": "test/.*\\.?test\\.tsx?$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "json"
+    ]
+  }
+}
