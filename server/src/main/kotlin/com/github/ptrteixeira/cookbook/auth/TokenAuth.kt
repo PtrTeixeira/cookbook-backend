@@ -6,7 +6,7 @@ import io.dropwizard.auth.Authenticator
 import java.util.Optional
 import javax.inject.Inject
 
-class TokenAuth @Inject constructor(private val googleTokenVerifier: GoogleIdTokenVerifier)
+class TokenAuth @Inject internal constructor(private val googleTokenVerifier: GoogleIdTokenVerifier)
     : Authenticator<String, User> {
     override fun authenticate(credentials: String?): Optional<User> {
         return when (credentials) {

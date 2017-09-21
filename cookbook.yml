@@ -10,5 +10,6 @@ database:
   password: ${DB_PASSWORD:-sa}
   url: ${DB_JDBC_URL:-jdbc:h2:./db}
 autoRunMigration: ${AUTO_RUN_MIGRATION:-no}
-oauthConfig:
+auth:
+  type: username
   clientId: ${COOKBOOK_CLIENT_ID}

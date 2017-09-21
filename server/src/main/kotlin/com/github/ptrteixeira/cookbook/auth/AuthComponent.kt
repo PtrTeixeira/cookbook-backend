@@ -11,7 +11,11 @@ interface AuthComponent {
     @Named(TOKEN_AUTH)
     fun tokenAuth(): Authenticator<String, User>
 
+    @Named(USERNAME_AUTH)
+    fun usernameAuth(): Authenticator<String, User>
+
     companion object {
         const val TOKEN_AUTH = "com.github.ptrteixeira.cookbook.auth.tokenAuth"
+        const val USERNAME_AUTH = "com.github.ptrteixeira.cookbook.auth.usernameAuth"
     }
 }
