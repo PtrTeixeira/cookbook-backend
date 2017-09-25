@@ -16,8 +16,6 @@ import com.github.ptrteixeira.cookbook.resources.DaggerResourcesComponent
 import com.github.ptrteixeira.cookbook.resources.ResourcesComponent
 import com.github.ptrteixeira.dropwizard.support.configure
 import io.dropwizard.Application
-import io.dropwizard.configuration.EnvironmentVariableSubstitutor
-import io.dropwizard.configuration.SubstitutingSourceProvider
 import io.dropwizard.jdbi.bundles.DBIExceptionsBundle
 import io.dropwizard.setup.Bootstrap
 import io.dropwizard.setup.Environment
@@ -28,7 +26,7 @@ class CookbookApplication : Application<CookbookConfiguration>() {
             bundles(migrationsBundle(), DBIExceptionsBundle())
 
             configurationSource {
-                SubstitutingSourceProvider(it, EnvironmentVariableSubstitutor(false))
+                useEnvironmentVariables()
             }
 
             objectMapper {
