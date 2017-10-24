@@ -18,8 +18,8 @@ jobs:
           key: v1-{{ checksum "build.gradle" }}
       - store_test_results:
           path: server/build/test-results
-          destination: test-results
       - store_test_results:
           path: core/build/test-results
-          destination: test-results
+      - store_test_results:
+          path: frontend/coverage
 

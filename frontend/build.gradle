@@ -1,0 +1,88 @@
+plugins {
+  id 'com.moowork.node' version '1.2.0'
+}
+
+node {
+  version = '8.4.0'
+  yarnVersion = '1.0.1'
+  download = true
+}
+
+task yarnInstall(type: YarnTask) {
+  inputs.files(fileTree('package.json'))
+  inputs.files(fileTree('yarn.lock'))
+  outputs.dir('node_modules')
+
+  args = ['install']
+}
+
+task build(type: YarnTask) {
+  dependsOn yarnInstall
+  inputs.files(fileTree('node_modules'))
+  inputs.files(fileTree('src'))
+  inputs.files(fileTree('webpack.config.common.js'))
+  inputs.files(fileTree('webpack.config.prod.js'))
+  outputs.dir('dist')
+
+  args = [
+      'run', 'webpack',
+      '--config', 'webpack.config.prod.js'
+  ]
+}
+
+task dev(type: YarnTask) {
+  dependsOn yarnInstall
+  inputs.files(fileTree('node_modules'))
+  inputs.files(fileTree('src'))
+  inputs.files(fileTree('webpack.config.common.js'))
+  inputs.files(fileTree('webpack.config.dev.js'))
+  outputs.dir('dist')
+
+  args = [
+      'run', 'webpack-dev-server',
+      '--history-api-fallback',
+      '--config', 'webpack.config.dev.js'
+  ]
+}
+
+task test(type: YarnTask) {
+  dependsOn yarnInstall
+  inputs.files(fileTree('node_modules'))
+  inputs.files(fileTree('src'))
+  inputs.files(fileTree('test'))
+  inputs.files(fileTree('package.json'))
+  outputs.dir('coverage')
+
+  if (System.getenv("CI") == null) {
+    args = ['run', 'jest', '--colors']
+  } else {
+    args = [
+        'run', 'jest',
+        '--coverage',
+        '--ci'
+    ]
+  }
+}
+
+task lint(type: YarnTask) {
+  dependsOn yarnInstall
+  inputs.files(fileTree('src'))
+  inputs.files(fileTree('test'))
+  outputs.upToDateWhen { false }
+
+  args = ['run', 'standard', '**/*.ts']
+}
+
+task lintApply(type: YarnTask) {
+  dependsOn yarnInstall
+  inputs.files(fileTree('src'))
+  inputs.files(fileTree('test'))
+  outputs.upToDateWhen { false }
+
+  args = ['run', 'standard', '--fix', '**/*.ts']
+}
+
+task check() {
+  dependsOn test
+  dependsOn lint
+}
