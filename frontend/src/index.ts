@@ -1,11 +1,9 @@
 import Inferno from 'inferno'
+import 'bootstrap/dist/css/bootstrap.min.css'
 import h from 'inferno-hyperscript'
-
-const TestComponent = () => {
-  return h('p', 'Hello World!')
-}
+import Body from './components/Body'
 
 Inferno.render(
-  h(TestComponent),
+  h(Body),
   document.getElementById('app')
 )
