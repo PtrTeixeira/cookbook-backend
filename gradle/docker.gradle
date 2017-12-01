@@ -2,10 +2,15 @@ apply plugin: 'com.bmuschko.docker-java-application'
 
 docker {
   javaApplication {
-    baseImage = 'openjdk:8u141-jre'
+    baseImage = 'openjdk:8u151-jre'
     maintainer = 'Peter Teixeira "PtrTeixeira@gmail.com"'
     ports = [8080, 8081]
     tag = "ptrteixeira/cookbook:$version"
+    exec {
+      // I changed the application name elsewhere, which makes
+      // this behave a little funny
+      entryPoint '/cookbook/bin/cookbook'
+    }
   }
 }
 
