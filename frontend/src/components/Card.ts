@@ -5,7 +5,7 @@ import { Recipe } from '../data/Recipe' // eslint-disable-line
 const {div, a, p} = factory(h)
 
 const SAMPLE_RECIPE: Recipe = {
-  id: 1,
+  id: '1',
   userId: 'xxx',
   name: 'SAMPLE',
   ingredients: [],

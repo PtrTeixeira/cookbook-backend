@@ -1,7 +1,7 @@
 
 /* eslint-disable no-undef */
 export interface Recipe {
-  id: number,
+  id: string,
   userId: string,
   name: string,
   ingredients: string[],
