@@ -5,6 +5,7 @@ import com.github.ptrteixeira.cookbook.core.RecipeEgg
 import com.github.ptrteixeira.cookbook.core.User
 import com.github.ptrteixeira.cookbook.data.RecipeData
 import io.dropwizard.auth.Auth
+import org.slf4j.LoggerFactory
 import java.util.Optional
 import javax.inject.Inject
 import javax.ws.rs.DELETE
@@ -49,5 +50,9 @@ internal class RecipesResource @Inject constructor(
     @Path("/{id}")
     fun deleteRecipe(@Auth user: User, @PathParam("id") id: Int) {
         recipeData.deleteRecipe(user, id)
+    }
+
+    companion object {
+        private val LOGGER = LoggerFactory.getLogger(RecipesResource::class.java)
     }
 }
