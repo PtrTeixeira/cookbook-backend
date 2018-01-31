@@ -1,72 +1,70 @@
-import { Recipe } from '../data/Recipe'   // eslint-disable-line
-import { RecipeState } from "../data/State" // eslint-disable-line
+import {Recipe} from '../data/Recipe'   // eslint-disable-line
+import {combineReducers} from 'redux'
 
-const SELECT_RECIPE = 'cookbook/recipes/SELECT_RECIPE'
+export type RecipeState = {
+  readonly isFetching: boolean,
+  readonly error: string | null,
+  readonly recipes: Recipe[]
+}
 
-const FETCH_BULK_FETCHING = 'cookbook/recipes/FETCH_BULK_FETCHING'
-const FETCH_BULK_SUCCESS = 'cookbook/recipes/FETCH_BULK_SUCCESS'
-const FETCH_BULK_FAILURE = 'cookbook/recipes/FETCH_BULK_FAILURE'
+export const initialRecipeState: RecipeState = {
+  isFetching: false,
+  error: null,
+  recipes: [] as Recipe[]
+}
 
-const FETCH_SINGLE_FETCHING = 'cookbook/recipes/FETCH_BULK_FETCHING'
-const FETCH_SINGLE_SUCCESS = 'cookbook/recipes/FETCH_SINGLE_SUCCESS'
-const FETCH_SINGLE_FAILURE = 'cookbook/recipes/FETCH_SINGLE_FAILURE'
+export type RecipeAction =
+  Action<'FETCH_RECIPE', string> |
+  Action<'RECEIVE_RECIPE', Recipe> |
+  Action<'FETCH_RECIPE_FAILED', string>
 
-export default function reducer (state: RecipeState, action = {}): RecipeState {
-  switch (action.type) {
-    case SELECT_RECIPE: return state
-    case FETCH_BULK_FETCHING: return { isLoading: true, items: state.items }
-    case FETCH_BULK_FAILURE:  return { isLoading: false, items: state.items }
-    case FETCH_BULK_SUCCESS: return {
-      isLoading: false,
-      items: {
-        ...state.items,
-        ...action.payload
-      }
+export type Action<Type, Payload> = {type: Type, payload: Payload}
+
+export type ActionCreator<Type, Payload> = (value: Payload) => Action<Type, Payload>
+
+export const fetchRecipeAction: ActionCreator<'FETCH_RECIPE', string> = (payload: string) => ({
+  type: 'FETCH_RECIPE' as 'FETCH_RECIPE',
+  payload
+})
+
+export const receiveRecipeAction: ActionCreator<'RECEIVE_RECIPE', Recipe> = (payload: Recipe) => ({
+  type: 'RECEIVE_RECIPE' as 'RECEIVE_RECIPE',
+  payload
+})
+
+export const fetchRecipeFailedAction: ActionCreator<'FETCH_RECIPE_FAILED', string> = (payload: string) => ({
+  type: 'FETCH_RECIPE_FAILED' as 'FETCH_RECIPE_FAILED',
+  payload
+})
+
+export const recipeReducer = combineReducers<RecipeState>({
+  isFetching: (state = false, action: RecipeAction) => {
+    switch (action.type) {
+      case 'FETCH_RECIPE':
+        return true
+      case 'RECEIVE_RECIPE':
+      case 'FETCH_RECIPE_FAILED':
+        return false
+      default:
+        return state
     }
-    case FETCH_SINGLE_FETCHING: return { isLoading: true, items: state.items }
-    case FETCH_SINGLE_FAILURE: return { isLoading: false, items: state.items }
-    case FETCH_SINGLE_SUCCESS: return {
-      isLoading: false,
-      items: {
-        [action.payload.id]: action.payload,
-        ...state.items
-      }
+  },
+  recipes: (state = [], action: RecipeAction) => {
+    switch (action.type) {
+      case 'RECEIVE_RECIPE':
+        return [...state, action.payload]
+      default:
+        return state
     }
-    default: return state
+  },
+  error: (state = null, action: RecipeAction) => {
+    switch (action.type) {
+      case 'FETCH_RECIPE_FAILED':
+        return action.payload
+      case 'RECEIVE_RECIPE':
+        return null
+      default:
+        return state
+    }
   }
-}
-
-/* Action Creators */
-export function selectRecipe(id: string) {
-  return { type: SELECT_RECIPE, id }
-}
-
-export function fetchBulk() {
-  return { type: FETCH_BULK_FETCHING }
-}
-
-export function fetchSingle(id: string) {
-  return { type: FETCH_SINGLE_FETCHING, id }
-}
-
-export function fetchBulkSuccess(recipes: [Recipe]) {
-  return {
-    type: FETCH_BULK_SUCCESS,
-    payload: recipes
-  }
-}
-
-export function fetchBulkFailure() {
-  return { type: FETCH_BULK_FAILURE }
-}
-
-export function fetchSingleSuccess(recipe: Recipe) {
-  return {
-    type: FETCH_SINGLE_SUCCESS,
-    payload: recipe
-  }
-}
-
-export function fetchSingleFailure() {
-  return { type: FETCH_SINGLE_FAILURE }
-}
+})

@@ -1,20 +1,24 @@
-import h from 'inferno-hyperscript'
+import h from 'react-hyperscript'
 import factory from 'hyperscript-helpers'
-import Card from './Card'
+import {
+  BrowserRouter as Router,
+  Route
+} from 'react-router-dom'
+
+import Topmatter from './Topmatter'
+import Home from './home/Home'
+import Detail from './detail/Detail'
 
 const {div} = factory(h)
 
 export default () => {
-  return div({className: 'content-area'},
-    div({className: 'row'}, [
-      h(Card),
-      h(Card),
-      h(Card),
-      h(Card),
-      h(Card),
-      h(Card),
-      h(Card),
-      h(Card)
+  return h(Router, {}, [
+    div({className: 'main-container'}, [
+      h(Topmatter, {}),
+      div({className: 'content-container'}, [
+        h(Route, {exact: true, path: '/', component: Home}),
+        h(Route, {path: '/rabbit', component: Detail})
+      ])
     ])
-  )
+  ])
 }

@@ -1,4 +1,4 @@
-import h from 'inferno-hyperscript'
+import h from 'react-hyperscript'
 import factory from 'hyperscript-helpers'
 
 const {div, a, span, form, label, input} = factory(h)

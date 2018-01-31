@@ -1,10 +1,14 @@
 /* eslint-disable no-undef */
 import {Recipe} from './Recipe'
 
-export interface RecipeState {
-  isLoading: boolean,
-  items: {
-    [id: string]: Recipe
-  }
+export type State = {
+  readonly recipes: Recipe[],
+  readonly loading: boolean
 }
+
+export const initialState: State = {
+  recipes: [] as Recipe[],
+  loading: false
+}
+
 /* eslint-enable no-undef */

@@ -1,6 +1,7 @@
-import h from 'inferno-hyperscript'
+import h from 'react-hyperscript'
 import factory from 'hyperscript-helpers'
-import { Recipe } from '../data/Recipe' // eslint-disable-line
+
+import { Recipe } from '../../data/Recipe' // eslint-disable-line
 
 const {div, a, p} = factory(h)
 

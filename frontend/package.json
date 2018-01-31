@@ -12,7 +12,6 @@
     "jest": "^21.2.1",
     "jest-junit": "^3.3.0",
     "source-map-loader": "^0.2.3",
-    "standard": "^10.0.3",
     "style-loader": "^0.19.0",
     "ts-jest": "^21.2.4",
     "typescript": "^2.6.2",
@@ -24,16 +23,25 @@
   },
   "dependencies": {
     "@types/hyperscript": "^0.0.3",
+    "@types/history": "^4.6.2",
+    "@types/react": "^16.0.35",
+    "@types/react-dom": "^16.0.3",
+    "@types/react-hyperscript": "^3.0.1",
+    "@types/react-redux": "^5.0.14",
+    "@types/react-router-dom": "^4.2.3",
     "@webcomponents/custom-elements": "^1.0.6",
     "clarity-icons": "^0.10.16",
     "clarity-ui": "^0.10.16",
     "hyperscript": "^2.0.2",
     "hyperscript-helpers": "^3.0.3",
-    "inferno": "^3.10.1",
-    "inferno-hyperscript": "^3.10.1",
-    "inferno-redux": "^3.10.1",
-    "inferno-router": "^3.10.1",
-    "redux": "^3.7.2"
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
+    "react-hyperscript": "^3.1.0",
+    "react-redux": "^5.0.6",
+    "react-router": "^4.2.0",
+    "react-router-dom": "^4.2.2",
+    "redux": "^3.7.2",
+    "typesafe-actions": "^1.1.2"
   },
   "scripts": {
     "test": "jest"
@@ -53,9 +61,5 @@
   },
   "jest-junit": {
     "output": "./coverage/junit.xml"
-  },
-  "standard": {
-    "parser": "typescript-eslint-parser",
-    "plugins": ["typescript"]
   }
 }

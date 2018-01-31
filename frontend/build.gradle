@@ -3,8 +3,8 @@ plugins {
 }
 
 node {
-  version = '8.4.0'
-  yarnVersion = '1.0.1'
+  version = '9.3.0'
+  yarnVersion = '1.3.2'
   download = true
 }
 
@@ -64,25 +64,6 @@ task test(type: YarnTask) {
   }
 }
 
-task lint(type: YarnTask) {
-  dependsOn yarnInstall
-  inputs.files(fileTree('src'))
-  inputs.files(fileTree('test'))
-  outputs.upToDateWhen { false }
-
-  args = ['run', 'standard', '**/*.ts']
-}
-
-task lintApply(type: YarnTask) {
-  dependsOn yarnInstall
-  inputs.files(fileTree('src'))
-  inputs.files(fileTree('test'))
-  outputs.upToDateWhen { false }
-
-  args = ['run', 'standard', '--fix', '**/*.ts']
-}
-
 task check() {
   dependsOn test
-  dependsOn lint
 }

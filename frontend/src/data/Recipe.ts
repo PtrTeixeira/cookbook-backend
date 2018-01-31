@@ -1,6 +1,6 @@
 
 /* eslint-disable no-undef */
-export interface Recipe {
+export type Recipe = {
   id: string,
   userId: string,
   name: string,
