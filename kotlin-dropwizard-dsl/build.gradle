@@ -23,8 +23,7 @@ spotless {
   }
 }
 
-
 dependencies {
-  compile "com.fasterxml.jackson.module:jackson-module-kotlin:${Dependencies.JACKSON}"
-  compile "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:${Dependencies.JACKSON}"
+  compile "io.dropwizard:dropwizard-core:${Dependencies.DROPWIZARD}"
+  compile "io.dropwizard:dropwizard-auth:${Dependencies.DROPWIZARD}"
 }

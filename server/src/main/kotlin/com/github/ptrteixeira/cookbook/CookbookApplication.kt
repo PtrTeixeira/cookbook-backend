@@ -9,35 +9,45 @@ import com.github.ptrteixeira.cookbook.base.DaggerBaseComponent
 import com.github.ptrteixeira.cookbook.config.AuthType
 import com.github.ptrteixeira.cookbook.core.User
 import com.github.ptrteixeira.cookbook.data.DaggerDataComponent
+import com.github.ptrteixeira.cookbook.data.DataComponent
 import com.github.ptrteixeira.cookbook.data.DataModule
 import com.github.ptrteixeira.cookbook.data.migrationsBundle
 import com.github.ptrteixeira.cookbook.resources.DaggerResourcesComponent
+import com.github.ptrteixeira.cookbook.resources.ResourcesComponent
+import com.github.ptrteixeira.dropwizard.support.configure
 import io.dropwizard.Application
-import io.dropwizard.auth.AuthValueFactoryProvider
-import io.dropwizard.auth.oauth.OAuthCredentialAuthFilter
-import io.dropwizard.configuration.EnvironmentVariableSubstitutor
-import io.dropwizard.configuration.SubstitutingSourceProvider
 import io.dropwizard.jdbi.bundles.DBIExceptionsBundle
 import io.dropwizard.setup.Bootstrap
 import io.dropwizard.setup.Environment
-import liquibase.Contexts
-import liquibase.Liquibase
-import liquibase.database.jvm.JdbcConnection
-import liquibase.resource.ClassLoaderResourceAccessor
 
 class CookbookApplication : Application<CookbookConfiguration>() {
     override fun initialize(bootstrap: Bootstrap<CookbookConfiguration>?) {
-        bootstrap?.apply {
-            addBundle(migrationsBundle())
-            addBundle(DBIExceptionsBundle())
+        configure(bootstrap) {
+            bundles(migrationsBundle(), DBIExceptionsBundle())
 
-            configurationSourceProvider = SubstitutingSourceProvider(
-                configurationSourceProvider,
-                EnvironmentVariableSubstitutor(false)
-            )
+            configurationSource {
+                useEnvironmentVariables()
+            }
 
-            objectMapper
-                ?.registerKotlinModule()
+            objectMapper {
+                registerKotlinModule()
+            }
+        }
+    }
+
+    private fun configureEnvironment(environment: Environment,
+                                     authType: AuthType,
+                                     resourcesComponent: ResourcesComponent,
+                                     authComponent: AuthComponent,
+                                     dataComponent: DataComponent) {
+        configure(environment) {
+            resources(resourcesComponent.recipesResource())
+
+            oauthFilter<User> {
+                setAuthenticator(authFilter(authType, authComponent))
+            }
+
+            healthCheck("database", dataComponent.healthCheck())
         }
     }
 
@@ -59,27 +69,7 @@ class CookbookApplication : Application<CookbookConfiguration>() {
             .baseComponent(baseComponent)
             .build()
 
-        environment
-            .jersey()
-            .register(resourcesComponent.recipesResource())
-
-        environment
-            .jersey()
-            .register(authFilter(configuration.auth.type, authComponent))
-        environment
-            .jersey()
-            .register(AuthValueFactoryProvider.Binder(User::class.java))
-        environment
-            .healthChecks()
-            .register("database", dataComponent.healthCheck())
-
-        if (configuration.autoRunMigration) {
-            dataComponent.jdbi().useTransaction<Exception> {
-                val connection = JdbcConnection(it.connection)
-                val liquibase = Liquibase("migrations.xml", ClassLoaderResourceAccessor(), connection)
-                liquibase.update(Contexts())
-            }
-        }
+        configureEnvironment(environment, configuration.auth.type, resourcesComponent, authComponent, dataComponent)
     }
 
     override fun getName(): String {
@@ -89,11 +79,6 @@ class CookbookApplication : Application<CookbookConfiguration>() {
     private fun authFilter(authType: AuthType, authComponent: AuthComponent) = when (authType) {
         AuthType.USERNAME -> authComponent.usernameAuth()
         AuthType.OAUTH -> authComponent.tokenAuth()
-    }.let {
-        OAuthCredentialAuthFilter.Builder<User>()
-            .setAuthenticator(it)
-            .setPrefix("Bearer")
-            .buildAuthFilter()
     }
 }
 
