@@ -16,16 +16,16 @@ subprojects {
   }
 
   ext.Dependencies = [
-      ASSERTJ   : '3.8.0',
-      DAGGER    : '2.13',
-      DROPWIZARD: '1.2.2',
+      ASSERTJ   : '3.9.1',
+      DAGGER    : '2.14.1',
+      DROPWIZARD: '1.2.4',
       GOOGLE_API: '1.22.0',
       H2        : '1.4.196',
-      JACKSON   : '2.9.2',
-      JDBI      : '3.0.0',
+      JACKSON   : '2.9.4',
+      JDBI      : '3.1.0',
       JERSEY    : '2.25.1',
-      MOCKITO   : '2.12.0',
-      SENTRY    : '1.6.3',
+      MOCKITO   : '2.15.0',
+      SENTRY    : '1.7.0',
       SLF4J     : '1.7.25'
   ]
 }
