@@ -1,2 +1,2 @@
 rootProject.name = 'cookbook'
-include 'core', 'server', 'support'
+include 'core', 'server', 'kotlin-dropwizard-dsl'
