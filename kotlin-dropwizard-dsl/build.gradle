@@ -2,19 +2,15 @@ buildscript {
   repositories {
     mavenCentral()
   }
-  dependencies {
-    classpath 'org.junit.platform:junit-platform-gradle-plugin:1.1.0'
-  }
 }
 
 plugins {
-  id 'nebula.kotlin' version '1.2.21'
+  id 'nebula.kotlin' version '1.2.30'
   id 'com.diffplug.gradle.spotless' version '3.6.0'
 }
 
 apply {
   from "$rootDir/gradle/kotlin.gradle"
-  from "$rootDir/gradle/junit.gradle"
 }
 
 spotless {
@@ -24,6 +20,6 @@ spotless {
 }
 
 dependencies {
-  compile "io.dropwizard:dropwizard-core:${Dependencies.DROPWIZARD}"
-  compile "io.dropwizard:dropwizard-auth:${Dependencies.DROPWIZARD}"
+  implementation "io.dropwizard:dropwizard-core:${Dependencies.DROPWIZARD}"
+  implementation "io.dropwizard:dropwizard-auth:${Dependencies.DROPWIZARD}"
 }
