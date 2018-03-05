@@ -38,9 +38,7 @@ dependencies {
     compile project(':core')
     compile project(':kotlin-dropwizard-dsl')
     compile "io.dropwizard:dropwizard-core:${Dependencies.DROPWIZARD}"
-    compile "io.dropwizard:dropwizard-jdbi:${Dependencies.DROPWIZARD}"
     compile "io.dropwizard:dropwizard-migrations:${Dependencies.DROPWIZARD}"
-    compile "io.dropwizard:dropwizard-auth:${Dependencies.DROPWIZARD}"
     compile "io.sentry:sentry-logback:${Dependencies.SENTRY}"
     compile "org.jdbi:jdbi3-kotlin-sqlobject:${Dependencies.JDBI}"
     compile "com.fasterxml.jackson.module:jackson-module-kotlin:${Dependencies.JACKSON}"

@@ -2,7 +2,7 @@ package com.github.ptrteixeira.cookbook.auth
 
 import com.github.ptrteixeira.cookbook.core.User
 import io.dropwizard.auth.Authenticator
-import java.util.*
+import java.util.Optional
 import javax.inject.Inject
 
 class TrivialAuth @Inject internal constructor() : Authenticator<String, User> {

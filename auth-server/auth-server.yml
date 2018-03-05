@@ -3,3 +3,4 @@ server:
   requestLog:
     appenders:
       - type: console
+googleAppToken: ${COOKBOOK_CLIENT_ID}

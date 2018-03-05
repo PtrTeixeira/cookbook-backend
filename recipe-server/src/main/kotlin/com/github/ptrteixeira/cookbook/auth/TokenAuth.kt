@@ -3,7 +3,7 @@ package com.github.ptrteixeira.cookbook.auth
 import com.github.ptrteixeira.cookbook.core.User
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier
 import io.dropwizard.auth.Authenticator
-import java.util.*
+import java.util.Optional
 import javax.inject.Inject
 
 class TokenAuth @Inject internal constructor(private val googleTokenVerifier: GoogleIdTokenVerifier)
