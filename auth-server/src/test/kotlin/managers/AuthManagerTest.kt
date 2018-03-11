@@ -4,6 +4,9 @@ import com.github.ptrteixeira.cookbook.auth.data.UserDao
 import com.github.ptrteixeira.cookbook.core.User
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier
+import io.jsonwebtoken.Jwts
+import io.jsonwebtoken.SignatureAlgorithm
+import io.jsonwebtoken.impl.crypto.MacProvider
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -22,11 +25,14 @@ internal class AuthManagerTest {
 
     private lateinit var authManager: AuthManager
 
+    private val algorithm = SignatureAlgorithm.HS512
+    private val key = MacProvider.generateKey(algorithm)
+
     @BeforeEach
     fun initMocks() {
         MockitoAnnotations.initMocks(this)
 
-        authManager = AuthManager(tokenVerifier, dao)
+        authManager = AuthManager(tokenVerifier, algorithm, key, dao)
     }
 
     @Test
@@ -81,5 +87,21 @@ internal class AuthManagerTest {
         // then
         assertThat(foundUser?.userName).isEqualTo("user-email")
         assertThat(foundUser?.id).isEqualTo("0")
+    }
+
+    @Test
+    fun `it signs the JWT token with the given algorithm`() {
+        val user = User(id = "12345", userName = "user-name")
+        val jwt = authManager.buildJwtForUser(user)
+
+        val body = Jwts.parser()
+                .setSigningKey(key)
+                .parseClaimsJws(jwt)
+                .body
+
+        assertThat(body.subject)
+                .isEqualTo(user.id)
+        assertThat(body["userName"])
+                .isEqualTo(user.userName)
     }
 }

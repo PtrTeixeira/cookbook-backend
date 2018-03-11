@@ -24,6 +24,7 @@ subprojects {
       JACKSON   : '2.9.5',
       JDBI      : '3.1.1',
       JERSEY    : '2.25.1',
+      JJWT      : '0.9.0',
       MOCKITO   : '2.18.3',
       RETROFIT  : '2.4.0',
       RXJAVA    : '2.1.14',

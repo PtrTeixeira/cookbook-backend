@@ -45,6 +45,7 @@ dependencies {
     compile "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:${Dependencies.JACKSON}"
     compile "com.h2database:h2:${Dependencies.H2}"
     compile "com.google.dagger:dagger:${Dependencies.DAGGER}"
+    compile "io.jsonwebtoken:jjwt:${Dependencies.JJWT}"
     compile("com.google.api-client:google-api-client:${Dependencies.GOOGLE_API}") {
         exclude group: 'com.google.guava', module: 'guava-jdk5'
     }

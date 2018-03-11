@@ -11,12 +11,25 @@ import dagger.Provides
 import dagger.Reusable
 import io.dropwizard.db.DataSourceFactory
 import io.dropwizard.setup.Environment
+import io.jsonwebtoken.SignatureAlgorithm
+import io.jsonwebtoken.impl.crypto.MacProvider
 import org.jdbi.v3.core.Jdbi
 import org.jdbi.v3.sqlobject.kotlin.onDemand
+import java.security.Key
 
 @Module
 class AuthModule(private val config: AuthConfiguration,
                  private val environment: Environment) {
+
+    @Provides
+    fun signatureAlgorithm(): SignatureAlgorithm {
+        return SignatureAlgorithm.HS512
+    }
+
+    @Provides
+    fun signingKey(algorithm: SignatureAlgorithm): Key {
+        return MacProvider.generateKey(algorithm)
+    }
 
     @Provides
     fun dataSourceFactory(): DataSourceFactory = config.database
