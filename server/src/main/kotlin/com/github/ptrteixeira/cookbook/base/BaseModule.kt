@@ -29,6 +29,9 @@ internal class BaseModule(
     }
 
     @Provides
+    fun environment() = environment
+
+    @Provides
     fun dataSourceFactory(): DataSourceFactory = config.database
 
     @Provides
