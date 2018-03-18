@@ -16,14 +16,14 @@ import com.github.ptrteixeira.cookbook.resources.DaggerResourcesComponent
 import com.github.ptrteixeira.cookbook.resources.ResourcesComponent
 import com.github.ptrteixeira.dropwizard.support.configure
 import io.dropwizard.Application
-import io.dropwizard.jdbi.bundles.DBIExceptionsBundle
+import io.dropwizard.jdbi3.bundles.JdbiExceptionsBundle
 import io.dropwizard.setup.Bootstrap
 import io.dropwizard.setup.Environment
 
 class CookbookApplication : Application<CookbookConfiguration>() {
     override fun initialize(bootstrap: Bootstrap<CookbookConfiguration>?) {
         configure(bootstrap) {
-            bundles(migrationsBundle(), DBIExceptionsBundle())
+            bundles(migrationsBundle(), JdbiExceptionsBundle())
 
             configurationSource {
                 useEnvironmentVariables()
@@ -46,8 +46,6 @@ class CookbookApplication : Application<CookbookConfiguration>() {
             oauthFilter<User> {
                 setAuthenticator(authFilter(authType, authComponent))
             }
-
-            healthCheck("database", dataComponent.healthCheck())
         }
     }
 

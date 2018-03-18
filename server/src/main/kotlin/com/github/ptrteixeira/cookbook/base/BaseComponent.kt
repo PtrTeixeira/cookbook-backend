@@ -6,6 +6,7 @@ import com.github.ptrteixeira.cookbook.config.AuthConfiguration
 import com.google.api.client.json.JsonFactory
 import dagger.Component
 import io.dropwizard.db.DataSourceFactory
+import io.dropwizard.setup.Environment
 import javax.inject.Named
 
 @Component(modules = arrayOf(BaseModule::class))
@@ -19,6 +20,7 @@ interface BaseComponent {
     fun dataSourceFactory(): DataSourceFactory
     fun metrics(): MetricRegistry
     fun authConfig(): AuthConfiguration
+    fun environment(): Environment
 
     @Named(BASE_URL)
     fun baseUrl(): String
