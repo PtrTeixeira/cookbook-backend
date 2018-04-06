@@ -1,5 +1,4 @@
-package com.github.ptrteixeira.cookbook.sentry
-
+import com.github.ptrteixeira.cookbook.sentry.SentryAppenderFactory
 import io.dropwizard.jackson.DiscoverableSubtypeResolver
 import io.dropwizard.logging.BootstrapLogging
 import org.assertj.core.api.Assertions.assertThat
