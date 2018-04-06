@@ -1,0 +1,30 @@
+buildscript {
+  repositories {
+    mavenCentral()
+  }
+}
+
+plugins {
+  id 'nebula.kotlin' version '1.2.30'
+  id 'com.diffplug.gradle.spotless' version '3.6.0'
+}
+
+apply {
+  from "$rootDir/gradle/kotlin.gradle"
+  from "$rootDir/gradle/junit.gradle"
+}
+
+spotless {
+  kotlin {
+    ktlint()
+  }
+}
+
+
+dependencies {
+  compile "io.sentry:sentry-logback:${Dependencies.SENTRY}"
+  compile "com.fasterxml.jackson.core:jackson-annotations:${Dependencies.JACKSON}"
+  compile "io.dropwizard:dropwizard-logging:${Dependencies.DROPWIZARD}"
+
+  testCompile "org.assertj:assertj-core:${Dependencies.ASSERTJ}"
+}

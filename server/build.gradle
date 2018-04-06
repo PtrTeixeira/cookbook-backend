@@ -52,6 +52,7 @@ distributions {
 dependencies {
   compile project(':core')
   compile project(':kotlin-dropwizard-dsl')
+  compile project(':sentry-appender')
   compile "io.dropwizard:dropwizard-core:${Dependencies.DROPWIZARD}"
   compile "io.dropwizard:dropwizard-jdbi3:${Dependencies.DROPWIZARD}"
   compile "io.dropwizard:dropwizard-migrations:${Dependencies.DROPWIZARD}"

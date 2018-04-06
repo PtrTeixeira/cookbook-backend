@@ -1,2 +1,8 @@
 rootProject.name = 'cookbook'
-include 'core', 'server', 'kotlin-dropwizard-dsl'
+include(
+  'core', 
+  'kotlin-dropwizard-dsl',
+  'sentry-appender',
+  'server' 
+)
+
