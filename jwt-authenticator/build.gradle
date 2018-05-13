@@ -1,0 +1,27 @@
+plugins {
+    id 'nebula.kotlin' version '1.2.30'
+    id 'com.diffplug.gradle.spotless' version '3.6.0'
+}
+
+apply {
+    from "$rootDir/gradle/kotlin.gradle"
+    from "$rootDir/gradle/junit.gradle"
+}
+
+
+spotless {
+    kotlin {
+        ktlint()
+    }
+}
+
+dependencies {
+    compile "io.dropwizard:dropwizard-core:${Dependencies.DROPWIZARD}"
+    compile "io.dropwizard:dropwizard-auth:${Dependencies.DROPWIZARD}"
+    implementation "io.jsonwebtoken:jjwt:${Dependencies.JJWT}"
+
+    testImplementation "org.assertj:assertj-core:${Dependencies.ASSERTJ}"
+    testImplementation "org.glassfish.jersey.test-framework:jersey-test-framework-core:${Dependencies.JERSEY}"
+    testImplementation "org.glassfish.jersey.test-framework.providers:jersey-test-framework-provider-grizzly2:${Dependencies.JERSEY}"
+    testImplementation "org.mockito:mockito-core:${Dependencies.MOCKITO}"
+}
