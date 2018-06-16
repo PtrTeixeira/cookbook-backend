@@ -4,5 +4,6 @@ include(
   'kotlin-dropwizard-dsl',
   'sentry-appender',
   'server',
+  'server-punchcard',
   'strava-api'
 )
