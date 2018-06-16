@@ -5,6 +5,7 @@ kotlin {
 }
 
 kapt {
+  useBuildCache = true
   correctErrorTypes = true
 }
 
@@ -17,10 +18,11 @@ compileKotlin {
 compileTestKotlin {
   kotlinOptions {
     jvmTarget = '1.8'
+    freeCompilerArgs = ['-Xprogressive']
   }
 }
 
 dependencies {
-  compile 'org.jetbrains.kotlin:kotlin-stdlib-jre8'
+  compile 'org.jetbrains.kotlin:kotlin-stdlib-jdk8'
   compile 'org.jetbrains.kotlin:kotlin-reflect'
 }

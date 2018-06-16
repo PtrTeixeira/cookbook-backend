@@ -5,7 +5,7 @@ buildscript {
 }
 
 plugins {
-  id 'nebula.kotlin' version '1.2.30'
+  id 'nebula.kotlin' version '1.2.50'
   id 'com.diffplug.gradle.spotless' version '3.6.0'
 }
 
