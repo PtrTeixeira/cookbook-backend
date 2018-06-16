@@ -19,8 +19,6 @@ dependencies {
   compile "com.squareup.retrofit2:retrofit:${Dependencies.RETROFIT}"
   compile "io.reactivex.rxjava2:rxjava:${Dependencies.RXJAVA}"
 
-  implementation "com.squareup.retrofit2:adapter-rxjava2:${Dependencies.RETROFIT}"
-  implementation "com.squareup.retrofit2:converter-jackson:${Dependencies.RETROFIT}"
   implementation "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:${Dependencies.JACKSON}"
   implementation "com.fasterxml.jackson.core:jackson-annotations:${Dependencies.JACKSON}"
   implementation "com.fasterxml.jackson.module:jackson-module-kotlin:${Dependencies.JACKSON}"

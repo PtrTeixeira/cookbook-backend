@@ -33,7 +33,7 @@ interface StravaApi {
             @Query("per_page") itemsPerPage: Int = 30
     ): Single<List<AthleteActivitiesResponse>>
 
-    @POST
+    @POST("https://www.strava.com/oauth/token")
     fun getAuthToken(
             @Query("client_id") clientId: String,
             @Query("client_secret") clientSecret: String,

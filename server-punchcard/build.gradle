@@ -36,7 +36,7 @@ spotless {
   }
 }
 
-mainClassName = "com.github.ptrteixeira.punchcard.StravaPunchcardApplicationKt"
+mainClassName = "com.github.ptrteixeira.punchcard.StravaPunchcardApplication"
 distTar.compression = Compression.GZIP
 
 startScripts {
@@ -62,6 +62,8 @@ dependencies {
   compile "org.jdbi:jdbi3-kotlin-sqlobject:${Dependencies.JDBI}"
   compile "com.fasterxml.jackson.module:jackson-module-kotlin:${Dependencies.JACKSON}"
   compile "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:${Dependencies.JACKSON}"
+  compile "com.squareup.retrofit2:adapter-rxjava2:${Dependencies.RETROFIT}"
+  compile "com.squareup.retrofit2:converter-jackson:${Dependencies.RETROFIT}"
   compile "com.h2database:h2:${Dependencies.H2}"
   compile "com.google.dagger:dagger:${Dependencies.DAGGER}"
   kapt "com.google.dagger:dagger-compiler:${Dependencies.DAGGER}"
