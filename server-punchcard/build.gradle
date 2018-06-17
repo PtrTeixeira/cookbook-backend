@@ -1,12 +1,3 @@
-buildscript {
-  repositories {
-    jcenter()
-  }
-  dependencies {
-    classpath 'com.bmuschko:gradle-docker-plugin:3.2.1'
-  }
-}
-
 plugins {
   id 'application'
   id 'idea'
@@ -18,7 +9,6 @@ plugins {
 apply {
   from "$rootDir/gradle/kotlin.gradle"
   from "$rootDir/gradle/junit.gradle"
-  from "$rootDir/gradle/docker.gradle"
 }
 
 idea {
@@ -50,23 +40,15 @@ distributions {
 }
 
 dependencies {
-  compile project(':core')
   compile project(':kotlin-dropwizard-dsl')
   compile project(':sentry-appender')
   compile project(':strava-api')
   compile "io.dropwizard:dropwizard-core:${Dependencies.DROPWIZARD}"
-  compile "io.dropwizard:dropwizard-jdbi3:${Dependencies.DROPWIZARD}"
-  compile "io.dropwizard:dropwizard-migrations:${Dependencies.DROPWIZARD}"
-  compile "io.dropwizard:dropwizard-auth:${Dependencies.DROPWIZARD}"
   compile "io.sentry:sentry-logback:${Dependencies.SENTRY}"
-  compile "org.jdbi:jdbi3-kotlin-sqlobject:${Dependencies.JDBI}"
   compile "com.fasterxml.jackson.module:jackson-module-kotlin:${Dependencies.JACKSON}"
   compile "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:${Dependencies.JACKSON}"
   compile "com.squareup.retrofit2:adapter-rxjava2:${Dependencies.RETROFIT}"
   compile "com.squareup.retrofit2:converter-jackson:${Dependencies.RETROFIT}"
-  compile "com.h2database:h2:${Dependencies.H2}"
-  compile "com.google.dagger:dagger:${Dependencies.DAGGER}"
-  kapt "com.google.dagger:dagger-compiler:${Dependencies.DAGGER}"
 
   testCompile "org.assertj:assertj-core:${Dependencies.ASSERTJ}"
   testCompile "io.dropwizard:dropwizard-testing:${Dependencies.DROPWIZARD}"
@@ -74,7 +56,6 @@ dependencies {
     exclude group: 'junit', module: 'junit'
     exclude group: 'javax.servlet', module: 'javax.servlet-api'
   }
-  testCompile "com.google.dagger:dagger:${Dependencies.DAGGER}"
   testCompile "org.mockito:mockito-core:${Dependencies.MOCKITO}"
   kaptTest "com.google.dagger:dagger-compiler:${Dependencies.DAGGER}"
 }

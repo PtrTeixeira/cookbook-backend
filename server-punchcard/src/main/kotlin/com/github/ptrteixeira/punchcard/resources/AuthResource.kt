@@ -1,5 +1,6 @@
 package com.github.ptrteixeira.punchcard.resources
 
+import com.github.ptrteixeira.punchcard.StravaPunchcardModule
 import com.github.ptrteixeira.strava.api.StravaApi
 import java.net.URI
 import java.util.concurrent.TimeUnit
@@ -66,10 +67,10 @@ class AuthResource(
     }
 
     private fun buildAuthCookie(value: String) = NewCookie(
-            "StravaAuthToken",
+            StravaPunchcardModule.AUTH_TOKEN_NAME,
             value,
             "/",
-            baseUrl,
+            "",
             "",
             MAX_AGE,
             false,

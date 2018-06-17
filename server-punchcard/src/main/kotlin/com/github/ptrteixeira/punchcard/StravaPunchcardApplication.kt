@@ -3,6 +3,7 @@ package com.github.ptrteixeira.punchcard
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.github.ptrteixeira.dropwizard.support.configure
 import com.github.ptrteixeira.punchcard.resources.AuthResource
+import com.github.ptrteixeira.punchcard.resources.PunchcardResource
 import com.github.ptrteixeira.strava.api.StravaApi
 import io.dropwizard.Application
 import io.dropwizard.setup.Environment
@@ -24,12 +25,15 @@ class StravaPunchcardApplication : Application<StravaPunchcardConfiguration>() {
 
 
         configure(environment) {
-            resources(AuthResource(
-                    baseUrl = configuration.baseUrl,
-                    clientId = configuration.stravaClientId,
-                    clientSecret = configuration.stravaClientSecret,
-                    apiClient = stravaApi
-            ))
+            resources(
+                    AuthResource(
+                            baseUrl = configuration.baseUrl,
+                            clientId = configuration.stravaClientId,
+                            clientSecret = configuration.stravaClientSecret,
+                            apiClient = stravaApi
+                    ),
+                    PunchcardResource(stravaApi))
+
         }
     }
 
