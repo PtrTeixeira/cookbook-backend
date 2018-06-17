@@ -22,8 +22,6 @@ class StravaPunchcardApplication : Application<StravaPunchcardConfiguration>() {
         val stravaApi = retrofit
                 .create(StravaApi::class.java)
 
-
-
         configure(environment) {
             resources(
                     AuthResource(
