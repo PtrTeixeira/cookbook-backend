@@ -26,6 +26,7 @@ class StravaPunchcardApplication : Application<StravaPunchcardConfiguration>() {
             resources(
                     AuthResource(
                             baseUrl = configuration.baseUrl,
+                            dashboardUiUrl = configuration.dashboardUiUrl,
                             clientId = configuration.stravaClientId,
                             clientSecret = configuration.stravaClientSecret,
                             apiClient = stravaApi
