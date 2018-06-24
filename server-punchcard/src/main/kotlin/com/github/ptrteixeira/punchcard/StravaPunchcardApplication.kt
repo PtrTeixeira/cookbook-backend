@@ -5,6 +5,7 @@ import com.github.ptrteixeira.dropwizard.support.configure
 import com.github.ptrteixeira.punchcard.resources.AuthResource
 import com.github.ptrteixeira.punchcard.resources.PunchcardResource
 import com.github.ptrteixeira.strava.api.StravaApi
+import com.github.ptrteixeira.strava.api.StravaService
 import io.dropwizard.Application
 import io.dropwizard.setup.Environment
 import retrofit2.Retrofit
@@ -31,7 +32,7 @@ class StravaPunchcardApplication : Application<StravaPunchcardConfiguration>() {
                             clientSecret = configuration.stravaClientSecret,
                             apiClient = stravaApi
                     ),
-                    PunchcardResource(stravaApi))
+                    PunchcardResource(StravaService(stravaApi)))
 
         }
     }

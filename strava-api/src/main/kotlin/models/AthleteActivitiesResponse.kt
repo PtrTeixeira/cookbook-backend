@@ -12,6 +12,7 @@ data class AthleteActivitiesResponse(
     val movingTime: Int = 0,
     val name: String? = null,
     val startDate: String? = null,
+    val startDateLocal: String? = null,
     val kudosCount: Int = 0,
     val calories: Int = 0,
     val distance: Int = 0

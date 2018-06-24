@@ -1,7 +1,7 @@
 package com.github.ptrteixeira.punchcard.resources
 
 import com.github.ptrteixeira.punchcard.StravaPunchcardModule
-import com.github.ptrteixeira.strava.api.StravaApi
+import com.github.ptrteixeira.strava.api.StravaService
 import com.github.ptrteixeira.strava.api.models.AthleteActivitiesResponse
 import io.reactivex.Observable
 import io.reactivex.observables.GroupedObservable
@@ -22,7 +22,7 @@ import javax.ws.rs.core.Response
 @Path("/punchcard")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-class PunchcardResource(private val apiClient: StravaApi) {
+class PunchcardResource(private val strava: StravaService) {
 
     @GET
     fun getActivities(@CookieParam(StravaPunchcardModule.AUTH_TOKEN_NAME) authToken: String?,
@@ -30,29 +30,28 @@ class PunchcardResource(private val apiClient: StravaApi) {
         if (authToken == null) {
             asyncResponse
                     .resume(WebApplicationException(Response.Status.FORBIDDEN))
+        } else {
+            strava
+                    .getAthleteActivities(authToken, LocalDateTime.now().minusMonths(6))
+                    .groupBy { rollupByTime(it) }
+                    .flatMap { countItems(it) }
+                    .reduce(mapCollector()) { map, countByDayAndHour ->
+                        val (rollup, count) = countByDayAndHour
+                        rollup?.let {
+                            val (weekDay, hour) = it
+
+                            val weekDayKey = map
+                                    .getOrDefault(weekDay, mutableMapOf())
+                            weekDayKey[hour] = count
+                            map[weekDay] = weekDayKey
+                        }
+
+                        map
+                    }.subscribe(
+                            { asyncResponse.resume(it) },
+                            { asyncResponse.resume(it) }
+                    )
         }
-
-        apiClient
-                .getAthleteActivities("Bearer $authToken")
-                .flatMapObservable { Observable.fromIterable(it) }
-                .groupBy { rollupByTime(it) }
-                .flatMap { countItems(it) }
-                .reduce(mapCollector()) { map, countByDayAndHour ->
-                    val (rollup, count) = countByDayAndHour
-                    rollup?.let {
-                        val (weekDay, hour) = it
-
-                        val weekDayKey = map
-                                .getOrDefault(weekDay, mutableMapOf())
-                        weekDayKey[hour] = count
-                        map[weekDay] = weekDayKey
-                    }
-
-                    map
-                }.subscribe(
-                        { asyncResponse.resume(it) },
-                        { asyncResponse.resume(it) }
-                )
     }
 
     data class DayAndHourRollup(
@@ -61,7 +60,7 @@ class PunchcardResource(private val apiClient: StravaApi) {
     )
 
     private fun rollupByTime(activity: AthleteActivitiesResponse): DayAndHourRollup {
-        val startTimeAsString = activity.startDate
+        val startTimeAsString = activity.startDateLocal
         val startTime = LocalDateTime.parse(startTimeAsString, DateTimeFormatter.ISO_OFFSET_DATE_TIME)
 
         return DayAndHourRollup(startTime.dayOfWeek, startTime.hour)
