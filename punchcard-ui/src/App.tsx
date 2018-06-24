@@ -1,37 +1,72 @@
-import * as React from 'react';
-import HeatMap from 'react-heatmap-grid';
-import './App.css';
+import axios, {AxiosResponse} from 'axios'
+import * as React from 'react'
 
-import logo from './logo.svg';
+import './App.css'
+import logo from './logo.svg'
 
-const xLabels = new Array(24).fill(0).map((e, i) => `${i}`)
-const yLabels = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY'];
+import {buildWeeklyGrid, IWeeklyResults} from "./heatmap/actions"
+import {WeekMap} from './heatmap/WeekMap'
 
-const data = new Array(yLabels.length)
-  .fill(0)
-  .map(e => new Array(xLabels.length).fill(0));
-
-data[1][4] = 2;
-
-
-class App extends React.Component {
-  public render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <HeatMap xLabels={xLabels} yLabels={yLabels} data={data} />
-      </div>
-    );
-  }
+interface IAppState {
+  error: any,
+  isLoaded: boolean,
+  weeklyResults: IWeeklyResults | null
 }
 
+class App extends React.Component<{}, IAppState> {
+  constructor(props: any) {
+    super(props)
+    this.state = {
+      error: null,
+      isLoaded: false,
+      weeklyResults: null
+    }
+  }
 
+  public componentDidMount() {
+    axios.get("/api/punchcard")
+      .then(
+        (response: AxiosResponse<IWeeklyResults>) => {
+          this.setState({
+            isLoaded: true,
+            weeklyResults: response.data
+          })
+        },
+        (error) => {
+          this.setState({
+            error: `Failed to load data from server: ${error.response.data}`,
+            isLoaded: true
+          })
+        })
+  }
 
+  public render() {
+    const {error, isLoaded, weeklyResults} = this.state;
+
+    if (isLoaded && weeklyResults != null) {
+      return (
+        <div className="App">
+          <header className="App-header">
+            <img src={logo} className="App-logo" alt="logo" />
+            <h1 className="App-title">Welcome to React</h1>
+          </header>
+          <WeekMap data={buildWeeklyGrid(weeklyResults)}/>
+        </div>
+      );
+    } else {
+      return (
+        <div className="App">
+          <header className="App-header">
+            <img src={logo} className="App-logo" alt="logo" />
+            <h1 className="App-title">Welcome to React</h1>
+          </header>
+          <p className="App-intro">
+            {error}
+          </p>
+        </div>
+      );
+    }
+  }
+}
 
 export default App;
