@@ -1,16 +1,52 @@
-import axios, {AxiosResponse} from 'axios'
+import axios, { AxiosResponse } from 'axios'
 import * as React from 'react'
+import { BrowserRouter as Router, Route } from 'react-router-dom'
 
 import './App.css'
-import logo from './logo.svg'
 
-import {buildWeeklyGrid, IWeeklyResults} from "./heatmap/actions"
-import {WeekMap} from './heatmap/WeekMap'
+import { Dashboard } from './dashboard/Dashboard';
+import { Header } from './header/Header'
+import { IWeeklyResults } from "./heatmap/actions"
+
 
 interface IAppState {
   error: any,
   isLoaded: boolean,
   weeklyResults: IWeeklyResults | null
+}
+
+function withProps(component: JSX.Element) {
+  return (props: {}) => component;
+}
+
+function HomeRoute() {
+  return (
+  <Route exact={true} path="/" render={withProps(
+     <div>Hello World!</div>
+  )} />)
+}
+
+function WeekMapRoute(props: IAppState) {
+  return (
+  <Route path="/dashboard" render={withProps(
+    <Dashboard {...props}/>
+  )} />)
+}
+
+
+function loadWeeklyResults(): Promise<IWeeklyResults> {
+  const storageContents = sessionStorage.getItem("results")
+  if (storageContents != null) {
+    return Promise.resolve(JSON.parse(storageContents))
+  } else {
+    return axios
+      .get("/api/punchcard")
+      .then((response: AxiosResponse<IWeeklyResults>) => response.data)
+      .then((data: IWeeklyResults) => {
+        sessionStorage.setItem("results", JSON.stringify(data))
+        return data
+      });
+  }
 }
 
 class App extends React.Component<{}, IAppState> {
@@ -24,12 +60,12 @@ class App extends React.Component<{}, IAppState> {
   }
 
   public componentDidMount() {
-    axios.get("/api/punchcard")
+    loadWeeklyResults()
       .then(
-        (response: AxiosResponse<IWeeklyResults>) => {
+        (data: IWeeklyResults) => {
           this.setState({
             isLoaded: true,
-            weeklyResults: response.data
+            weeklyResults: data
           })
         },
         (error) => {
@@ -41,31 +77,16 @@ class App extends React.Component<{}, IAppState> {
   }
 
   public render() {
-    const {error, isLoaded, weeklyResults} = this.state;
+    return (
+      <Router>
+        <div className="App">
+            <Header />
 
-    if (isLoaded && weeklyResults != null) {
-      return (
-        <div className="App">
-          <header className="App-header">
-            <img src={logo} className="App-logo" alt="logo" />
-            <h1 className="App-title">Welcome to React</h1>
-          </header>
-          <WeekMap data={buildWeeklyGrid(weeklyResults)}/>
-        </div>
-      );
-    } else {
-      return (
-        <div className="App">
-          <header className="App-header">
-            <img src={logo} className="App-logo" alt="logo" />
-            <h1 className="App-title">Welcome to React</h1>
-          </header>
-          <p className="App-intro">
-            {error}
-          </p>
-        </div>
-      );
-    }
+            <HomeRoute />
+            <WeekMapRoute {...this.state} />
+          </div>
+      </Router>
+    )
   }
 }
 
