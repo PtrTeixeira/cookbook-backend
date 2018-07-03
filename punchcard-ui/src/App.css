@@ -22,6 +22,12 @@
   font-size: large;
 }
 
+.app-strava-logo {
+  height: 100px;
+  width: 250px;
+  float: right;
+}
+
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }

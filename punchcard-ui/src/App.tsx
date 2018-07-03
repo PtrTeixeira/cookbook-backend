@@ -2,7 +2,9 @@ import axios, { AxiosResponse } from 'axios'
 import * as React from 'react'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 
+import stravaLogo from './api_logo_pwrdBy_strava_horiz_gray.svg'
 import './App.css'
+import loginButton from './btn_strava_connectwith_light.svg'
 
 import { Dashboard } from './dashboard/Dashboard';
 import { Header } from './header/Header'
@@ -22,7 +24,9 @@ function withProps(component: JSX.Element) {
 function HomeRoute() {
   return (
   <Route exact={true} path="/" render={withProps(
-     <div>Hello World!</div>
+     <a href="/api/strava/login">
+       <img src={loginButton} alt="Connect with Strava" className="home-connect-btn" />
+     </a>
   )} />)
 }
 
@@ -84,6 +88,9 @@ class App extends React.Component<{}, IAppState> {
 
             <HomeRoute />
             <WeekMapRoute {...this.state} />
+            <footer>
+              <img src={stravaLogo} alt="Powered by Strava" className="app-strava-logo" />
+            </footer>
           </div>
       </Router>
     )
