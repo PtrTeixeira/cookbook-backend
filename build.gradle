@@ -25,6 +25,8 @@ subprojects {
       JDBI      : '3.1.1',
       JERSEY    : '2.25.1',
       MOCKITO   : '2.18.3',
+      RETROFIT  : '2.4.0',
+      RXJAVA    : '2.1.14',
       SENTRY    : '1.7.4',
       SLF4J     : '1.7.25'
   ]

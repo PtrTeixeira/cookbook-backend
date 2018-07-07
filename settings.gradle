@@ -3,6 +3,7 @@ include(
   'core', 
   'kotlin-dropwizard-dsl',
   'sentry-appender',
-  'server' 
+  'server',
+  'server-punchcard',
+  'strava-api'
 )
-
