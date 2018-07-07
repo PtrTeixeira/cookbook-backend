@@ -3,7 +3,7 @@ jobs:
   build:
     working_directory: ~/cookbook
     docker:
-      - image: openjdk:8u121
+      - image: openjdk:8u151
     environment:
       _JAVA_OPTIONS: -Xmx1024m -XX:ParallelGCThreads=2 -XX:ConcGCThreads=2 -XX:ParallelGCThreads=2 -Djava.util.concurrent.ForkJoinPool.common.parallelism=2
     steps:
@@ -11,15 +11,14 @@ jobs:
       - restore_cache:
           key: v1-{{ checksum "build.gradle" }}
       - run: |
-              bash gradlew check -Pkotlin.incremental=false --no-daemon --info
+              bash gradlew check -Pkotlin.incremental=false --no-daemon 
       - save_cache:
           paths:
             - ~/.m2
           key: v1-{{ checksum "build.gradle" }}
       - store_test_results:
           path: server/build/test-results
-          destination: test-results
       - store_test_results:
           path: core/build/test-results
-          destination: test-results
-
+      - store_test_results:
+          path: kotlin-dropwizard-dsl/build/test-results

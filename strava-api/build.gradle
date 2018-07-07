@@ -1,0 +1,27 @@
+plugins {
+  id 'nebula.kotlin' version '1.2.30'
+  id 'org.jetbrains.kotlin.jvm' version '1.2.30'
+  id 'com.diffplug.gradle.spotless' version '3.6.0'
+}
+
+apply {
+  from "$rootDir/gradle/kotlin.gradle"
+  from "$rootDir/gradle/junit.gradle"
+}
+
+spotless {
+  kotlin {
+    ktlint()
+  }
+}
+
+dependencies {
+  compile "com.squareup.retrofit2:retrofit:${Dependencies.RETROFIT}"
+  compile "io.reactivex.rxjava2:rxjava:${Dependencies.RXJAVA}"
+
+  implementation "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:${Dependencies.JACKSON}"
+  implementation "com.fasterxml.jackson.core:jackson-annotations:${Dependencies.JACKSON}"
+  implementation "com.fasterxml.jackson.module:jackson-module-kotlin:${Dependencies.JACKSON}"
+
+  testCompile "org.mockito:mockito-core:${Dependencies.MOCKITO}"
+}

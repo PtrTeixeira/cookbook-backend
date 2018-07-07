@@ -1,2 +1,9 @@
 rootProject.name = 'cookbook'
-include 'core', 'server'
+include(
+  'core', 
+  'kotlin-dropwizard-dsl',
+  'sentry-appender',
+  'server',
+  'server-punchcard',
+  'strava-api'
+)

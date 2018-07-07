@@ -1,19 +1,18 @@
 buildscript {
   repositories {
-    mavenCentral()
+    jcenter()
   }
   dependencies {
-    classpath 'org.junit.platform:junit-platform-gradle-plugin:1.0.0-RC3'
-    classpath 'com.bmuschko:gradle-docker-plugin:3.1.0'
+    classpath 'com.bmuschko:gradle-docker-plugin:3.2.1'
   }
 }
 
 plugins {
   id 'application'
   id 'idea'
-  id 'nebula.kotlin' version '1.1.4-3'
-  id 'org.jetbrains.kotlin.kapt' version '1.1.4-3'
-  id 'com.diffplug.gradle.spotless' version '3.5.1'
+  id 'nebula.kotlin' version '1.2.50'
+  id 'org.jetbrains.kotlin.kapt' version '1.2.50'
+  id 'com.diffplug.gradle.spotless' version '3.6.0'
 }
 
 apply {
@@ -33,19 +32,32 @@ idea {
 
 spotless {
   kotlin {
-    ktlint('0.9.1')
+    ktlint()
   }
 }
 
 mainClassName = "com.github.ptrteixeira.cookbook.CookbookApplicationKt"
 distTar.compression = Compression.GZIP
 
+startScripts {
+  applicationName = "cookbook"
+}
+
+distributions {
+  main {
+    baseName = 'cookbook'
+  }
+}
+
 dependencies {
   compile project(':core')
+  compile project(':kotlin-dropwizard-dsl')
+  compile project(':sentry-appender')
   compile "io.dropwizard:dropwizard-core:${Dependencies.DROPWIZARD}"
-  compile "io.dropwizard:dropwizard-jdbi:${Dependencies.DROPWIZARD}"
+  compile "io.dropwizard:dropwizard-jdbi3:${Dependencies.DROPWIZARD}"
   compile "io.dropwizard:dropwizard-migrations:${Dependencies.DROPWIZARD}"
   compile "io.dropwizard:dropwizard-auth:${Dependencies.DROPWIZARD}"
+  compile "io.sentry:sentry-logback:${Dependencies.SENTRY}"
   compile "org.jdbi:jdbi3-kotlin-sqlobject:${Dependencies.JDBI}"
   compile "com.fasterxml.jackson.module:jackson-module-kotlin:${Dependencies.JACKSON}"
   compile "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:${Dependencies.JACKSON}"

@@ -1,0 +1,61 @@
+plugins {
+  id 'application'
+  id 'idea'
+  id 'nebula.kotlin' version '1.2.30'
+  id 'org.jetbrains.kotlin.kapt' version '1.2.30'
+  id 'com.diffplug.gradle.spotless' version '3.6.0'
+}
+
+apply {
+  from "$rootDir/gradle/kotlin.gradle"
+  from "$rootDir/gradle/junit.gradle"
+}
+
+idea {
+  module {
+    sourceDirs += file('build/generated/source/kapt/main')
+    testSourceDirs += file('build/generated/source/kapt/test')
+    generatedSourceDirs += file('build/generated/source/kapt/main')
+    generatedSourceDirs += file('build/generated/source/kapt/test')
+  }
+}
+
+spotless {
+  kotlin {
+    ktlint()
+  }
+}
+
+mainClassName = "com.github.ptrteixeira.punchcard.StravaPunchcardApplication"
+distTar.compression = Compression.GZIP
+
+startScripts {
+  applicationName = "punchcard"
+}
+
+distributions {
+  main {
+    baseName = 'punchcard'
+  }
+}
+
+dependencies {
+  compile project(':kotlin-dropwizard-dsl')
+  compile project(':sentry-appender')
+  compile project(':strava-api')
+  compile "io.dropwizard:dropwizard-core:${Dependencies.DROPWIZARD}"
+  compile "io.sentry:sentry-logback:${Dependencies.SENTRY}"
+  compile "com.fasterxml.jackson.module:jackson-module-kotlin:${Dependencies.JACKSON}"
+  compile "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:${Dependencies.JACKSON}"
+  compile "com.squareup.retrofit2:adapter-rxjava2:${Dependencies.RETROFIT}"
+  compile "com.squareup.retrofit2:converter-jackson:${Dependencies.RETROFIT}"
+
+  testCompile "org.assertj:assertj-core:${Dependencies.ASSERTJ}"
+  testCompile "io.dropwizard:dropwizard-testing:${Dependencies.DROPWIZARD}"
+  testCompile("org.glassfish.jersey.test-framework.providers:jersey-test-framework-provider-grizzly2:${Dependencies.JERSEY}") {
+    exclude group: 'junit', module: 'junit'
+    exclude group: 'javax.servlet', module: 'javax.servlet-api'
+  }
+  testCompile "org.mockito:mockito-core:${Dependencies.MOCKITO}"
+  kaptTest "com.google.dagger:dagger-compiler:${Dependencies.DAGGER}"
+}

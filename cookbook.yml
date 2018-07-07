@@ -3,6 +3,11 @@ server:
   requestLog:
     appenders:
       - type: console
+logging:
+  appenders:
+    - type: sentry
+      threshold: ERROR
+    - type: console
 baseUrl: ${COOKBOOK_BASE_URL:-"http://localhost:8080"}
 database:
   driverClass: ${DB_DRIVER_CLASS:-org.h2.Driver}
@@ -10,5 +15,6 @@ database:
   password: ${DB_PASSWORD:-sa}
   url: ${DB_JDBC_URL:-jdbc:h2:./db}
 autoRunMigration: ${AUTO_RUN_MIGRATION:-no}
-oauthConfig:
+auth:
+  type: username
   clientId: ${COOKBOOK_CLIENT_ID}
