@@ -25,7 +25,7 @@ import javax.ws.rs.core.MediaType
 
 class RecipesResourceTest {
     private val sampleRecipeEgg = RecipeEgg(
-        name="Chocolate Chip Cookies",
+        name = "Chocolate Chip Cookies",
         ingredients = listOf("Chocolate", "Chips", "Cookies"),
         instructions = "Mix",
         summary = "They were invented right here in Massachusetts, you know",

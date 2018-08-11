@@ -17,9 +17,11 @@ internal class AuthModule {
     fun httpTransport(): HttpTransport = NetHttpTransport()
 
     @Provides
-    fun googleTokenVerifier(authConfig: AuthConfiguration,
-                            httpTransport: HttpTransport,
-                            jsonFactory: JsonFactory): GoogleIdTokenVerifier {
+    fun googleTokenVerifier(
+        authConfig: AuthConfiguration,
+        httpTransport: HttpTransport,
+        jsonFactory: JsonFactory
+    ): GoogleIdTokenVerifier {
         return authConfig.clientId.map {
             GoogleIdTokenVerifier.Builder(httpTransport, jsonFactory)
                 .setAudience(listOf(it))

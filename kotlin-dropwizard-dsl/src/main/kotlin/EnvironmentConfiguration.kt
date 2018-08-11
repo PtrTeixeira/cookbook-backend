@@ -29,7 +29,8 @@ internal constructor(val environment: Environment) {
     }
 
     inline fun <reified P : Principal> oauthFilter(
-        fn: (@EnvironmentConfigurationDsl OAuthCredentialAuthFilter.Builder<P>).() -> Unit) {
+        fn: (@EnvironmentConfigurationDsl OAuthCredentialAuthFilter.Builder<P>).() -> Unit
+    ) {
 
         val builder = OAuthCredentialAuthFilter.Builder<P>()
         builder.run(fn)
@@ -42,7 +43,8 @@ internal constructor(val environment: Environment) {
     }
 
     inline fun <reified P : Principal> basicFilter(
-        fn: (@EnvironmentConfigurationDsl BasicCredentialAuthFilter.Builder<P>).() -> Unit) {
+        fn: (@EnvironmentConfigurationDsl BasicCredentialAuthFilter.Builder<P>).() -> Unit
+    ) {
 
         val builder = BasicCredentialAuthFilter.Builder<P>()
         builder.run(fn)
@@ -53,4 +55,3 @@ internal constructor(val environment: Environment) {
             .register(AuthValueFactoryProvider.Binder(P::class.java))
     }
 }
-

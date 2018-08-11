@@ -35,11 +35,13 @@ class CookbookApplication : Application<CookbookConfiguration>() {
         }
     }
 
-    private fun configureEnvironment(environment: Environment,
-                                     authType: AuthType,
-                                     resourcesComponent: ResourcesComponent,
-                                     authComponent: AuthComponent,
-                                     dataComponent: DataComponent) {
+    private fun configureEnvironment(
+        environment: Environment,
+        authType: AuthType,
+        resourcesComponent: ResourcesComponent,
+        authComponent: AuthComponent,
+        dataComponent: DataComponent
+    ) {
         configure(environment) {
             resources(resourcesComponent.recipesResource())
 

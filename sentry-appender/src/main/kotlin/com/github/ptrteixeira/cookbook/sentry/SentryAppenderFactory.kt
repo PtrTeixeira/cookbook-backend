@@ -15,10 +15,13 @@ import io.sentry.logback.SentryAppender
 @JsonTypeName("sentry")
 class SentryAppenderFactory : AbstractAppenderFactory<ILoggingEvent>() {
 
-    override fun build(context: LoggerContext, applicationName: String,
-                       layoutFactory: LayoutFactory<ILoggingEvent>,
-                       levelFilterFactory: LevelFilterFactory<ILoggingEvent>,
-                       asyncAppenderFactory: AsyncAppenderFactory<ILoggingEvent>): Appender<ILoggingEvent> {
+    override fun build(
+        context: LoggerContext,
+        applicationName: String,
+        layoutFactory: LayoutFactory<ILoggingEvent>,
+        levelFilterFactory: LevelFilterFactory<ILoggingEvent>,
+        asyncAppenderFactory: AsyncAppenderFactory<ILoggingEvent>
+    ): Appender<ILoggingEvent> {
         val appender = SentryAppender()
         appender.name = "sentry-appender"
         appender.context = context

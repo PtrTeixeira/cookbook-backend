@@ -21,11 +21,11 @@ import javax.ws.rs.core.UriBuilder
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 class AuthResource(
-        baseUrl: String,
-        private val dashboardUiUrl: String,
-        private val clientId: String,
-        private val clientSecret: String,
-        private val apiClient: StravaApi
+    baseUrl: String,
+    private val dashboardUiUrl: String,
+    private val clientId: String,
+    private val clientSecret: String,
+    private val apiClient: StravaApi
 ) {
     private val random = Random()
     private val redirectUri = URI("$baseUrl/strava/callback")
@@ -51,10 +51,11 @@ class AuthResource(
 
     @GET
     @Path("/callback")
-    fun authCallback(@CookieParam("AuthNonce") authNonce: String?,
-                     @QueryParam("code") code: String?,
-                     @QueryParam("error") error: String?,
-                     @QueryParam("state") state: String?
+    fun authCallback(
+        @CookieParam("AuthNonce") authNonce: String?,
+        @QueryParam("code") code: String?,
+        @QueryParam("error") error: String?,
+        @QueryParam("state") state: String?
     ): Response {
         if (error != null || code == null || authNonce == null || state == null) {
             return Response

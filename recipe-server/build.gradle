@@ -10,9 +10,9 @@ buildscript {
 plugins {
   id 'application'
   id 'idea'
-  id 'nebula.kotlin' version '1.2.50'
-  id 'org.jetbrains.kotlin.kapt' version '1.2.50'
-  id 'com.diffplug.gradle.spotless' version '3.6.0'
+  id 'nebula.kotlin' version '1.2.60'
+  id 'org.jetbrains.kotlin.kapt' version '1.2.60'
+  id 'com.diffplug.gradle.spotless' version '3.14.0'
 }
 
 apply {
@@ -50,7 +50,7 @@ distributions {
 }
 
 dependencies {
-  compile project(':core')
+  compile project(':recipe-api')
   compile project(':kotlin-dropwizard-dsl')
   compile project(':sentry-appender')
   compile "io.dropwizard:dropwizard-core:${Dependencies.DROPWIZARD}"

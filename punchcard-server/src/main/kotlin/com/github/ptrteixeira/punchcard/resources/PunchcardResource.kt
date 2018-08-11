@@ -25,8 +25,10 @@ import javax.ws.rs.core.Response
 class PunchcardResource(private val strava: StravaService) {
 
     @GET
-    fun getActivities(@CookieParam(StravaPunchcardModule.AUTH_TOKEN_NAME) authToken: String?,
-                      @Suspended asyncResponse: AsyncResponse) {
+    fun getActivities(
+        @CookieParam(StravaPunchcardModule.AUTH_TOKEN_NAME) authToken: String?,
+        @Suspended asyncResponse: AsyncResponse
+    ) {
         if (authToken == null) {
             asyncResponse
                     .resume(WebApplicationException(Response.Status.FORBIDDEN))
@@ -55,8 +57,8 @@ class PunchcardResource(private val strava: StravaService) {
     }
 
     data class DayAndHourRollup(
-            val day: DayOfWeek,
-            val hour: Int
+        val day: DayOfWeek,
+        val hour: Int
     )
 
     private fun rollupByTime(activity: AthleteActivitiesResponse): DayAndHourRollup {

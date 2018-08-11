@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy::class)
 data class TokenResponse(
-        val accessToken: String,
-        val tokenType: String,
-        val athlete: Athlete
+    val accessToken: String,
+    val tokenType: String,
+    val athlete: Athlete
 )

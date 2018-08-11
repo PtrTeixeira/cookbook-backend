@@ -8,8 +8,10 @@ import java.time.LocalDateTime
 import java.time.ZoneOffset
 
 open class StravaService(private val strava: StravaApi) {
-    fun getAthleteActivities(authToken: String,
-                             after: LocalDateTime): Observable<AthleteActivitiesResponse> {
+    fun getAthleteActivities(
+        authToken: String,
+        after: LocalDateTime
+    ): Observable<AthleteActivitiesResponse> {
         return getAthleteActivities(authToken, 1, after)
     }
 
@@ -17,9 +19,11 @@ open class StravaService(private val strava: StravaApi) {
         return strava.getAuthToken(clientId, clientSecret, code)
     }
 
-    private fun getAthleteActivities(authToken: String,
-                                     page: Int,
-                                     after: LocalDateTime): Observable<AthleteActivitiesResponse> {
+    private fun getAthleteActivities(
+        authToken: String,
+        page: Int,
+        after: LocalDateTime
+    ): Observable<AthleteActivitiesResponse> {
         val header = buildAuthHeader(authToken)
         val afterUtcSeconds: Long = after.toEpochSecond(ZoneOffset.UTC)
         val response = strava

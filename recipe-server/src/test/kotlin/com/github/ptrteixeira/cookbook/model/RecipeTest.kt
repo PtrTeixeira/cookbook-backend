@@ -13,7 +13,7 @@ internal class RecipeTest {
     private val sampleRecipe = Recipe(
         userId = "test",
         id = 101,
-        name="Chocolate Chip Cookies",
+        name = "Chocolate Chip Cookies",
         ingredients = listOf("Chocolate", "Chips", "Cookies"),
         instructions = "Mix",
         summary = "They were invented right here in Massachusetts, you know",

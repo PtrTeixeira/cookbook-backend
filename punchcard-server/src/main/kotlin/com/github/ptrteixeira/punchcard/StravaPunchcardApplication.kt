@@ -33,7 +33,6 @@ class StravaPunchcardApplication : Application<StravaPunchcardConfiguration>() {
                             apiClient = stravaApi
                     ),
                     PunchcardResource(StravaService(stravaApi)))
-
         }
     }
 
