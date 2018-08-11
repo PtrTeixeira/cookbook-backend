@@ -21,10 +21,10 @@ internal class DataModule {
     }
 
     @Provides
-    fun databaseHealthCheckExecutor(): ExecutorService
-        = MoreExecutors.newDirectExecutorService()
+    fun databaseHealthCheckExecutor(): ExecutorService =
+        MoreExecutors.newDirectExecutorService()
 
     @Provides
-    fun recipeData(jdbi: Jdbi): RecipeData
-        = jdbi.onDemand(RecipeData::class.java)
+    fun recipeData(jdbi: Jdbi): RecipeData =
+        jdbi.onDemand(RecipeData::class.java)
 }

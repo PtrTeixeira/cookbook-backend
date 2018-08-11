@@ -1,9 +1,9 @@
 plugins {
   id 'application'
   id 'idea'
-  id 'nebula.kotlin' version '1.2.30'
-  id 'org.jetbrains.kotlin.kapt' version '1.2.30'
-  id 'com.diffplug.gradle.spotless' version '3.6.0'
+  id 'nebula.kotlin' version '1.2.60'
+  id 'org.jetbrains.kotlin.kapt' version '1.2.60'
+  id 'com.diffplug.gradle.spotless' version '3.14.0'
 }
 
 apply {

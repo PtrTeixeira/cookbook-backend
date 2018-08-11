@@ -19,7 +19,7 @@ import javax.inject.Named
 internal class BaseModule(
     private val config: CookbookConfiguration,
     private val environment: Environment
-    ) {
+) {
     @Provides
     @Reusable
     fun objectMapper(): ObjectMapper {

@@ -22,7 +22,7 @@ import javax.ws.rs.core.MediaType
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 internal class RecipesResource @Inject constructor(
-        private val recipeData: RecipeData
+    private val recipeData: RecipeData
 ) {
     @GET
     fun getRecipes(@Auth user: User): List<Recipe> {

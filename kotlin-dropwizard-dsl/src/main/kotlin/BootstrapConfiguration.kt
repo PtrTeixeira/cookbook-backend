@@ -30,7 +30,7 @@ internal constructor(private val bootstrap: Bootstrap<T>) {
 }
 
 @BootstrapConfigurationDsl
-class ConfigSourceProviderConfiguration<T: Configuration> internal constructor(bootstrap: Bootstrap<T>) {
+class ConfigSourceProviderConfiguration<T : Configuration> internal constructor(bootstrap: Bootstrap<T>) {
     private var configSourceProvider = bootstrap.configurationSourceProvider
 
     fun useEnvironmentVariables(strict: Boolean = false) {
