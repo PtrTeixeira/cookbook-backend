@@ -45,6 +45,8 @@ dependencies {
   compile project(':strava-api')
   compile "io.dropwizard:dropwizard-core:${Dependencies.DROPWIZARD}"
   compile "io.sentry:sentry-logback:${Dependencies.SENTRY}"
+  compile "io.micrometer:micrometer-core:${Dependencies.MICROMETER}"
+  compile "io.micrometer:micrometer-registry-prometheus:${Dependencies.MICROMETER}"
   compile "com.fasterxml.jackson.module:jackson-module-kotlin:${Dependencies.JACKSON}"
   compile "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:${Dependencies.JACKSON}"
   compile "com.squareup.retrofit2:adapter-rxjava2:${Dependencies.RETROFIT}"

@@ -2,6 +2,7 @@ package com.github.ptrteixeira.punchcard.resources
 
 import com.github.ptrteixeira.punchcard.StravaPunchcardModule
 import com.github.ptrteixeira.strava.api.StravaApi
+import io.micrometer.core.instrument.MeterRegistry
 import org.slf4j.LoggerFactory
 import java.net.URI
 import java.util.Random
@@ -25,10 +26,13 @@ class AuthResource(
     private val dashboardUiUrl: String,
     private val clientId: String,
     private val clientSecret: String,
-    private val apiClient: StravaApi
+    private val apiClient: StravaApi,
+    registry: MeterRegistry
 ) {
     private val random = Random()
     private val redirectUri = URI("$baseUrl/strava/callback")
+    private val successfulLoginAttempts = registry.counter("http.requests.login.success")
+    private val failedLoginAttempts = registry.counter("http.requests.login.failed")
 
     @GET
     @Path("/login")
@@ -52,12 +56,13 @@ class AuthResource(
     @GET
     @Path("/callback")
     fun authCallback(
-        @CookieParam("AuthNonce") authNonce: String?,
+        @CookieParam(AUTH_NONCE_NAME) authNonce: String?,
         @QueryParam("code") code: String?,
         @QueryParam("error") error: String?,
         @QueryParam("state") state: String?
     ): Response {
         if (error != null || code == null || authNonce == null || state == null) {
+            failedLoginAttempts.increment()
             return Response
                     .status(Response.Status.FORBIDDEN)
                     .build()
@@ -65,6 +70,7 @@ class AuthResource(
 
         if (state != authNonce) {
             LOG.warn("Login callback FAILED due to invalid auth nonce {}", authNonce)
+            failedLoginAttempts.increment()
             return Response
                     .status(Response.Status.FORBIDDEN)
                     .build()
@@ -76,6 +82,7 @@ class AuthResource(
                 .map { buildAuthCookie(it) }
                 .blockingGet()
 
+        successfulLoginAttempts.increment()
         return Response.seeOther(URI(dashboardUiUrl))
                 .cookie(cookie)
                 .build()
@@ -92,11 +99,12 @@ class AuthResource(
             true
     )
 
-    private fun buildVerificationCookie(nonce: String) = NewCookie("AuthNonce", nonce)
+    private fun buildVerificationCookie(nonce: String) = NewCookie(AUTH_NONCE_NAME, nonce)
 
     companion object {
         private const val STRAVA_AUTHORIZE_URI = "https://www.strava.com/oauth/authorize"
         private const val STRAVA_RESPONSE_TYPE = "code"
+        private const val AUTH_NONCE_NAME = "AuthNonce"
         private val MAX_AGE = TimeUnit.DAYS.toSeconds(1).toInt()
 
         private val LOG = LoggerFactory.getLogger(AuthResource::class.java)

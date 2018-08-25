@@ -3,9 +3,13 @@ package com.github.ptrteixeira.punchcard.resources
 import com.github.ptrteixeira.punchcard.StravaPunchcardModule
 import com.github.ptrteixeira.strava.api.StravaService
 import com.github.ptrteixeira.strava.api.models.AthleteActivitiesResponse
+import com.google.common.base.Stopwatch
+import io.micrometer.core.instrument.MeterRegistry
+import io.micrometer.core.instrument.Timer
 import io.reactivex.Observable
 import io.reactivex.observables.GroupedObservable
 import java.time.DayOfWeek
+import java.time.Duration
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import javax.ws.rs.Consumes
@@ -22,16 +26,26 @@ import javax.ws.rs.core.Response
 @Path("/punchcard")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-class PunchcardResource(private val strava: StravaService) {
+class PunchcardResource(
+    private val strava: StravaService,
+    registry: MeterRegistry
+) {
+    private val getActivitiesDuration = Timer.builder("http.requests")
+            .tag("uri", "/punchcard")
+            .sla(Duration.ofMillis(500))
+            .publishPercentileHistogram()
+            .register(registry)
 
     @GET
     fun getActivities(
         @CookieParam(StravaPunchcardModule.AUTH_TOKEN_NAME) authToken: String?,
         @Suspended asyncResponse: AsyncResponse
     ) {
+        val timer = Stopwatch.createStarted()
         if (authToken == null) {
             asyncResponse
                     .resume(WebApplicationException(Response.Status.FORBIDDEN))
+            getActivitiesDuration.record(timer.elapsed())
         } else {
             strava
                     .getAthleteActivities(authToken, LocalDateTime.now().minusMonths(6))
@@ -48,10 +62,17 @@ class PunchcardResource(private val strava: StravaService) {
                             map[weekDay] = weekDayKey
                         }
 
-                        map
+                        return@reduce map
                     }.subscribe(
-                            { asyncResponse.resume(it) },
-                            { asyncResponse.resume(it) }
+                            {
+                                asyncResponse.resume(it)
+                                getActivitiesDuration
+                                        .record(timer.elapsed())
+                            },
+                            {
+                                asyncResponse.resume(it)
+                                getActivitiesDuration.record(timer.elapsed())
+                            }
                     )
         }
     }
