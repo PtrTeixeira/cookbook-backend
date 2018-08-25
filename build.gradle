@@ -23,6 +23,7 @@ subprojects {
       JACKSON   : '2.9.6',
       JDBI      : '3.3.0',
       JERSEY    : '2.25.1',
+      MICROMETER: '1.0.6',
       MOCKITO   : '2.21.0',
       RETROFIT  : '2.4.0',
       RXJAVA    : '2.2.0',
