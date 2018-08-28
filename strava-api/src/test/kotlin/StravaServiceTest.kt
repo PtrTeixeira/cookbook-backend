@@ -2,13 +2,13 @@
 import com.github.ptrteixeira.strava.api.StravaApi
 import com.github.ptrteixeira.strava.api.StravaService
 import com.github.ptrteixeira.strava.api.models.AthleteActivitiesResponse
-import io.reactivex.Single
-import io.reactivex.observers.TestObserver
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.BDDMockito.given
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.reset
+import reactor.core.publisher.Mono
+import reactor.test.StepVerifier
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 
@@ -30,17 +30,12 @@ internal class StravaServiceTest {
         val afterUtcSeconds = after.toEpochSecond(ZoneOffset.UTC)
 
         given(strava.getAthleteActivities("Bearer token", after = afterUtcSeconds, page = 1))
-                .willReturn(Single.just(listOf()))
+                .willReturn(Mono.just(listOf()))
 
-        val testSubscriber = TestObserver<AthleteActivitiesResponse>()
-        stravaService
-                .getAthleteActivities("token", after)
-                .subscribe(testSubscriber)
-
-        testSubscriber
-                .assertTerminated()
-                .assertNoValues()
-                .assertNoErrors()
+        StepVerifier
+                .create(stravaService.getAthleteActivities("token", after))
+                .expectComplete()
+                .verify()
     }
 
     @Test
@@ -49,20 +44,16 @@ internal class StravaServiceTest {
         val afterUtcSeconds = after.toEpochSecond(ZoneOffset.UTC)
 
         given(strava.getAthleteActivities("Bearer token", after = afterUtcSeconds, page = 1))
-                .willReturn(Single.just(listOf(AthleteActivitiesResponse(id = 1))))
+                .willReturn(Mono.just(listOf(AthleteActivitiesResponse(id = 1))))
         given(strava.getAthleteActivities("Bearer token", after = afterUtcSeconds, page = 2))
-                .willReturn(Single.just(listOf(AthleteActivitiesResponse(id = 2))))
+                .willReturn(Mono.just(listOf(AthleteActivitiesResponse(id = 2))))
         given(strava.getAthleteActivities("Bearer token", after = afterUtcSeconds, page = 3))
-                .willReturn(Single.just(listOf()))
+                .willReturn(Mono.just(listOf()))
 
-        val testSubscriber = TestObserver<AthleteActivitiesResponse>()
-        stravaService
-                .getAthleteActivities("token", after)
-                .subscribe(testSubscriber)
-
-        testSubscriber
-                .assertTerminated()
-                .assertNoErrors()
-                .assertValues(AthleteActivitiesResponse(id = 1), AthleteActivitiesResponse(id = 2))
+        StepVerifier.create(stravaService.getAthleteActivities("token", after))
+                .expectNext(AthleteActivitiesResponse(id = 1))
+                .expectNext(AthleteActivitiesResponse(id = 2))
+                .expectComplete()
+                .verify()
     }
 }

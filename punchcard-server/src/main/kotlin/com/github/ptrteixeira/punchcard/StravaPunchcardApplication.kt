@@ -8,6 +8,7 @@ import com.github.ptrteixeira.punchcard.resources.MetricsResource
 import com.github.ptrteixeira.punchcard.resources.PunchcardResource
 import com.github.ptrteixeira.strava.api.StravaApi
 import com.github.ptrteixeira.strava.api.StravaService
+import com.jakewharton.retrofit2.adapter.reactor.ReactorCallAdapterFactory
 import io.dropwizard.Application
 import io.dropwizard.setup.Environment
 import io.micrometer.core.instrument.binder.jvm.JvmGcMetrics
@@ -17,13 +18,14 @@ import io.micrometer.core.instrument.binder.system.ProcessorMetrics
 import io.micrometer.prometheus.PrometheusConfig
 import io.micrometer.prometheus.PrometheusMeterRegistry
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.jackson.JacksonConverterFactory
+import java.time.Clock
 
 class StravaPunchcardApplication : Application<StravaPunchcardConfiguration>() {
     override fun run(configuration: StravaPunchcardConfiguration, environment: Environment) {
         val objectMapper = jacksonObjectMapper()
         val stravaApi = strava(objectMapper)
+        val stravaService = StravaService(stravaApi)
         val registry = meterRegistry()
 
         configure(environment) {
@@ -33,11 +35,12 @@ class StravaPunchcardApplication : Application<StravaPunchcardConfiguration>() {
                             dashboardUiUrl = configuration.dashboardUiUrl,
                             clientId = configuration.stravaClientId,
                             clientSecret = configuration.stravaClientSecret,
-                            apiClient = stravaApi,
+                            stravaService = stravaService,
                             registry = registry
                     ),
                     PunchcardResource(
-                            strava = StravaService(stravaApi),
+                            strava = stravaService,
+                            clock = Clock.systemUTC(),
                             registry = registry
                     ),
                     MetricsResource(registry = registry)
@@ -63,7 +66,7 @@ class StravaPunchcardApplication : Application<StravaPunchcardConfiguration>() {
         val retrofit = Retrofit.Builder()
                 .baseUrl("https://www.strava.com/api/v3/")
                 .addConverterFactory(JacksonConverterFactory.create(objectMapper))
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .addCallAdapterFactory(ReactorCallAdapterFactory.create())
                 .build()
         return retrofit
                 .create(StravaApi::class.java)

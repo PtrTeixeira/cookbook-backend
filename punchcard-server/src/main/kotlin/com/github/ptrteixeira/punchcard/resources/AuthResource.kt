@@ -1,8 +1,10 @@
 package com.github.ptrteixeira.punchcard.resources
 
 import com.github.ptrteixeira.punchcard.StravaPunchcardModule
-import com.github.ptrteixeira.strava.api.StravaApi
+import com.github.ptrteixeira.strava.api.IStravaService
 import io.micrometer.core.instrument.MeterRegistry
+import kotlinx.coroutines.experimental.reactive.awaitFirst
+import kotlinx.coroutines.experimental.runBlocking
 import org.slf4j.LoggerFactory
 import java.net.URI
 import java.util.Random
@@ -26,7 +28,7 @@ class AuthResource(
     private val dashboardUiUrl: String,
     private val clientId: String,
     private val clientSecret: String,
-    private val apiClient: StravaApi,
+    private val stravaService: IStravaService,
     registry: MeterRegistry
 ) {
     private val random = Random()
@@ -76,16 +78,15 @@ class AuthResource(
                     .build()
         }
 
-        val cookie = apiClient
-                .getAuthToken(clientId, clientSecret, code)
-                .map { it.accessToken }
-                .map { buildAuthCookie(it) }
-                .blockingGet()
+        return runBlocking {
+            val authToken = stravaService.getAuthToken(clientId, clientSecret, code)
+            val cookie = buildAuthCookie(authToken.awaitFirst().accessToken)
 
-        successfulLoginAttempts.increment()
-        return Response.seeOther(URI(dashboardUiUrl))
-                .cookie(cookie)
-                .build()
+            successfulLoginAttempts.increment()
+            return@runBlocking Response.seeOther(URI(dashboardUiUrl))
+                    .cookie(cookie)
+                    .build()
+        }
     }
 
     private fun buildAuthCookie(value: String) = NewCookie(

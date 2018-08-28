@@ -1,13 +1,15 @@
 package com.github.ptrteixeira.punchcard.resources
 
 import com.github.ptrteixeira.punchcard.StravaPunchcardModule
-import com.github.ptrteixeira.strava.api.StravaService
+import com.github.ptrteixeira.strava.api.IStravaService
 import com.github.ptrteixeira.strava.api.models.AthleteActivitiesResponse
 import com.google.common.base.Stopwatch
+import com.google.common.collect.HashBasedTable
 import io.micrometer.core.instrument.MeterRegistry
 import io.micrometer.core.instrument.Timer
-import io.reactivex.Observable
-import io.reactivex.observables.GroupedObservable
+import kotlinx.coroutines.experimental.reactive.openSubscription
+import kotlinx.coroutines.experimental.runBlocking
+import java.time.Clock
 import java.time.DayOfWeek
 import java.time.Duration
 import java.time.LocalDateTime
@@ -27,11 +29,13 @@ import javax.ws.rs.core.Response
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 class PunchcardResource(
-    private val strava: StravaService,
+    private val strava: IStravaService,
+    private val clock: Clock,
     registry: MeterRegistry
 ) {
     private val getActivitiesDuration = Timer.builder("http.requests")
             .tag("uri", "/punchcard")
+            .tag("method", "GET")
             .sla(Duration.ofMillis(500))
             .publishPercentileHistogram()
             .register(registry)
@@ -42,39 +46,15 @@ class PunchcardResource(
         @Suspended asyncResponse: AsyncResponse
     ) {
         val timer = Stopwatch.createStarted()
-        if (authToken == null) {
-            asyncResponse
-                    .resume(WebApplicationException(Response.Status.FORBIDDEN))
-            getActivitiesDuration.record(timer.elapsed())
-        } else {
-            strava
-                    .getAthleteActivities(authToken, LocalDateTime.now().minusMonths(6))
-                    .groupBy { rollupByTime(it) }
-                    .flatMap { countItems(it) }
-                    .reduce(mapCollector()) { map, countByDayAndHour ->
-                        val (rollup, count) = countByDayAndHour
-                        rollup?.let {
-                            val (weekDay, hour) = it
-
-                            val weekDayKey = map
-                                    .getOrDefault(weekDay, mutableMapOf())
-                            weekDayKey[hour] = count
-                            map[weekDay] = weekDayKey
-                        }
-
-                        return@reduce map
-                    }.subscribe(
-                            {
-                                asyncResponse.resume(it)
-                                getActivitiesDuration
-                                        .record(timer.elapsed())
-                            },
-                            {
-                                asyncResponse.resume(it)
-                                getActivitiesDuration.record(timer.elapsed())
-                            }
-                    )
+        runBlocking {
+            try {
+                val activitiesMap = getActivitiesTable(authToken)
+                asyncResponse.resume(activitiesMap)
+            } catch (exn: Exception) {
+                asyncResponse.resume(exn)
+            }
         }
+        getActivitiesDuration.record(timer.elapsed())
     }
 
     data class DayAndHourRollup(
@@ -89,14 +69,24 @@ class PunchcardResource(
         return DayAndHourRollup(startTime.dayOfWeek, startTime.hour)
     }
 
-    private fun <K, T> countItems(itemStream: GroupedObservable<K, T>): Observable<Pair<K?, Long>> {
-        return itemStream
-                .count()
-                .toObservable()
-                .map { count -> itemStream.key to count }
-    }
+    private suspend fun getActivitiesTable(authToken: String?): Map<DayOfWeek, Map<Int, Long>> {
+        if (authToken == null) {
+            throw WebApplicationException(Response.Status.FORBIDDEN)
+        }
 
-    private fun mapCollector(): MutableMap<DayOfWeek, MutableMap<Int, Long>> {
-        return mutableMapOf()
+        val activities = strava
+                .getAthleteActivities(authToken, LocalDateTime.now(clock).minusMonths(6))
+                .openSubscription()
+
+        val activitiesTable = HashBasedTable.create<DayOfWeek, Int, Long>()
+
+        for (activity in activities) {
+            val (day, hour) = rollupByTime(activity)
+
+            val currentCount = activitiesTable[day, hour] ?: 0
+            activitiesTable.put(day, hour, currentCount + 1)
+        }
+
+        return activitiesTable.rowMap()
     }
 }
