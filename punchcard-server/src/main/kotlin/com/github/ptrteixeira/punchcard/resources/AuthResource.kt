@@ -80,7 +80,7 @@ class AuthResource(
                 .getAuthToken(clientId, clientSecret, code)
                 .map { it.accessToken }
                 .map { buildAuthCookie(it) }
-                .blockingGet()
+                .block()
 
         successfulLoginAttempts.increment()
         return Response.seeOther(URI(dashboardUiUrl))

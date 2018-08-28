@@ -17,11 +17,13 @@ spotless {
 
 dependencies {
   compile "com.squareup.retrofit2:retrofit:${Dependencies.RETROFIT}"
-  compile "io.reactivex.rxjava2:rxjava:${Dependencies.RXJAVA}"
+  compile "io.projectreactor:reactor-core:${Dependencies.REACTOR}"
+  compile "com.jakewharton.retrofit:retrofit2-reactor-adapter:${Dependencies.RETROFIT_REACTOR_ADAPTER}"
 
   implementation "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:${Dependencies.JACKSON}"
   implementation "com.fasterxml.jackson.core:jackson-annotations:${Dependencies.JACKSON}"
   implementation "com.fasterxml.jackson.module:jackson-module-kotlin:${Dependencies.JACKSON}"
 
   testCompile "org.mockito:mockito-core:${Dependencies.MOCKITO}"
+  testCompile "io.projectreactor:reactor-test:${Dependencies.REACTOR}"
 }

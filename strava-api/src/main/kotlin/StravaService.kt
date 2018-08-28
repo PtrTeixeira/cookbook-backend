@@ -2,8 +2,8 @@ package com.github.ptrteixeira.strava.api
 
 import com.github.ptrteixeira.strava.api.models.AthleteActivitiesResponse
 import com.github.ptrteixeira.strava.api.models.TokenResponse
-import io.reactivex.Observable
-import io.reactivex.Single
+import reactor.core.publisher.Flux
+import reactor.core.publisher.Mono
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 
@@ -11,11 +11,11 @@ open class StravaService(private val strava: StravaApi) {
     fun getAthleteActivities(
         authToken: String,
         after: LocalDateTime
-    ): Observable<AthleteActivitiesResponse> {
+    ): Flux<AthleteActivitiesResponse> {
         return getAthleteActivities(authToken, 1, after)
     }
 
-    fun getAuthToken(clientId: String, clientSecret: String, code: String): Single<TokenResponse> {
+    fun getAuthToken(clientId: String, clientSecret: String, code: String): Mono<TokenResponse> {
         return strava.getAuthToken(clientId, clientSecret, code)
     }
 
@@ -23,18 +23,18 @@ open class StravaService(private val strava: StravaApi) {
         authToken: String,
         page: Int,
         after: LocalDateTime
-    ): Observable<AthleteActivitiesResponse> {
+    ): Flux<AthleteActivitiesResponse> {
         val header = buildAuthHeader(authToken)
         val afterUtcSeconds: Long = after.toEpochSecond(ZoneOffset.UTC)
         val response = strava
                 .getAthleteActivities(header, afterUtcSeconds, page = page)
 
         return response
-                .flatMapObservable {
+                .flatMapMany {
                     if (it.isEmpty()) {
-                        Observable.fromIterable(it)
+                        Flux.fromIterable(it)
                     } else {
-                        Observable
+                        Flux
                                 .fromIterable(it)
                                 .concatWith(getAthleteActivities(authToken, page + 1, after))
                     }

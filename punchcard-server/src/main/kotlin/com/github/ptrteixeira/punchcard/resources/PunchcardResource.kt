@@ -6,8 +6,9 @@ import com.github.ptrteixeira.strava.api.models.AthleteActivitiesResponse
 import com.google.common.base.Stopwatch
 import io.micrometer.core.instrument.MeterRegistry
 import io.micrometer.core.instrument.Timer
-import io.reactivex.Observable
-import io.reactivex.observables.GroupedObservable
+import reactor.core.publisher.Flux
+import reactor.core.publisher.GroupedFlux
+import reactor.core.publisher.toFlux
 import java.time.DayOfWeek
 import java.time.Duration
 import java.time.LocalDateTime
@@ -89,11 +90,11 @@ class PunchcardResource(
         return DayAndHourRollup(startTime.dayOfWeek, startTime.hour)
     }
 
-    private fun <K, T> countItems(itemStream: GroupedObservable<K, T>): Observable<Pair<K?, Long>> {
+    private fun <K, T> countItems(itemStream: GroupedFlux<K, T>): Flux<Pair<K, Long>> {
         return itemStream
                 .count()
-                .toObservable()
-                .map { count -> itemStream.key to count }
+                .toFlux()
+                .map { count -> itemStream.key() to count }
     }
 
     private fun mapCollector(): MutableMap<DayOfWeek, MutableMap<Int, Long>> {

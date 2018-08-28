@@ -49,7 +49,7 @@ dependencies {
   compile "io.micrometer:micrometer-registry-prometheus:${Dependencies.MICROMETER}"
   compile "com.fasterxml.jackson.module:jackson-module-kotlin:${Dependencies.JACKSON}"
   compile "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:${Dependencies.JACKSON}"
-  compile "com.squareup.retrofit2:adapter-rxjava2:${Dependencies.RETROFIT}"
+  compile "com.jakewharton.retrofit:retrofit2-reactor-adapter:${Dependencies.RETROFIT_REACTOR_ADAPTER}"
   compile "com.squareup.retrofit2:converter-jackson:${Dependencies.RETROFIT}"
 
   testCompile "org.assertj:assertj-core:${Dependencies.ASSERTJ}"

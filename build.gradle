@@ -15,19 +15,21 @@ subprojects {
   }
 
   ext.Dependencies = [
-      ASSERTJ   : '3.10.0',
-      DAGGER    : '2.17',
-      DROPWIZARD: '1.3.5',
-      GOOGLE_API: '1.23.0',
-      H2        : '1.4.197',
-      JACKSON   : '2.9.6',
-      JDBI      : '3.3.0',
-      JERSEY    : '2.25.1',
-      MICROMETER: '1.0.6',
-      MOCKITO   : '2.21.0',
-      RETROFIT  : '2.4.0',
-      RXJAVA    : '2.2.0',
-      SENTRY    : '1.7.5',
-      SLF4J     : '1.7.25'
+      ASSERTJ                  : '3.10.0',
+      DAGGER                   : '2.17',
+      DROPWIZARD               : '1.3.5',
+      GOOGLE_API               : '1.23.0',
+      H2                       : '1.4.197',
+      JACKSON                  : '2.9.6',
+      JDBI                     : '3.3.0',
+      JERSEY                   : '2.25.1',
+      MICROMETER               : '1.0.6',
+      MOCKITO                  : '2.21.0',
+      REACTOR                  : '3.1.8.RELEASE',
+      RETROFIT                 : '2.4.0',
+      RETROFIT_REACTOR_ADAPTER : '2.1.0',
+      RXJAVA                   : '2.2.0',
+      SENTRY                   : '1.7.5',
+      SLF4J                    : '1.7.25'
   ]
 }
