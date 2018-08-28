@@ -5,12 +5,15 @@ buildscript {
 test {
   useJUnitPlatform()
 
-  testLogging {
-    events 'skipped', 'failed'
-  }
-
   reports {
-    html.enabled = true
+    junitXml.configure {
+      enabled = true
+      destination = new File(rootProject.buildDir, "/reports/allTestsXml/${project.name}")
+    }
+
+    html.configure {
+      enabled = false
+    }
   }
 }
 
