@@ -1,6 +1,5 @@
 plugins {
   id 'nebula.kotlin' version '1.2.60'
-  id 'org.jetbrains.kotlin.jvm' version '1.2.60'
   id 'com.diffplug.gradle.spotless' version '3.14.0'
 }
 
@@ -18,7 +17,6 @@ spotless {
 dependencies {
   compile "com.squareup.retrofit2:retrofit:${Dependencies.RETROFIT}"
   compile "io.projectreactor:reactor-core:${Dependencies.REACTOR}"
-  compile "com.jakewharton.retrofit:retrofit2-reactor-adapter:${Dependencies.RETROFIT_REACTOR_ADAPTER}"
 
   implementation "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:${Dependencies.JACKSON}"
   implementation "com.fasterxml.jackson.core:jackson-annotations:${Dependencies.JACKSON}"
