@@ -1,7 +1,7 @@
 package com.github.ptrteixeira.punchcard.resources
 
 import com.github.ptrteixeira.punchcard.StravaPunchcardModule
-import com.github.ptrteixeira.strava.api.StravaService
+import com.github.ptrteixeira.strava.api.IStravaService
 import com.github.ptrteixeira.strava.api.models.AthleteActivitiesResponse
 import com.google.common.base.Stopwatch
 import io.micrometer.core.instrument.MeterRegistry
@@ -9,6 +9,7 @@ import io.micrometer.core.instrument.Timer
 import reactor.core.publisher.Flux
 import reactor.core.publisher.GroupedFlux
 import reactor.core.publisher.toFlux
+import java.time.Clock
 import java.time.DayOfWeek
 import java.time.Duration
 import java.time.LocalDateTime
@@ -28,7 +29,9 @@ import javax.ws.rs.core.Response
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 class PunchcardResource(
-    private val strava: StravaService,
+    private val strava: IStravaService,
+
+    private val clock: Clock,
     registry: MeterRegistry
 ) {
     private val getActivitiesDuration = Timer.builder("http.requests")
@@ -48,8 +51,9 @@ class PunchcardResource(
                     .resume(WebApplicationException(Response.Status.FORBIDDEN))
             getActivitiesDuration.record(timer.elapsed())
         } else {
+
             strava
-                    .getAthleteActivities(authToken, LocalDateTime.now().minusMonths(6))
+                    .getAthleteActivities(authToken, LocalDateTime.now(clock).minusMonths(6))
                     .groupBy { rollupByTime(it) }
                     .flatMap { countItems(it) }
                     .reduce(mapCollector()) { map, countByDayAndHour ->

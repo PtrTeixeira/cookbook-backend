@@ -19,11 +19,13 @@ import io.micrometer.prometheus.PrometheusConfig
 import io.micrometer.prometheus.PrometheusMeterRegistry
 import retrofit2.Retrofit
 import retrofit2.converter.jackson.JacksonConverterFactory
+import java.time.Clock
 
 class StravaPunchcardApplication : Application<StravaPunchcardConfiguration>() {
     override fun run(configuration: StravaPunchcardConfiguration, environment: Environment) {
         val objectMapper = jacksonObjectMapper()
         val stravaApi = strava(objectMapper)
+        val stravaService = StravaService(stravaApi)
         val registry = meterRegistry()
 
         configure(environment) {
@@ -33,11 +35,12 @@ class StravaPunchcardApplication : Application<StravaPunchcardConfiguration>() {
                             dashboardUiUrl = configuration.dashboardUiUrl,
                             clientId = configuration.stravaClientId,
                             clientSecret = configuration.stravaClientSecret,
-                            apiClient = stravaApi,
+                            stravaService = stravaService,
                             registry = registry
                     ),
                     PunchcardResource(
-                            strava = StravaService(stravaApi),
+                            strava = stravaService,
+                            clock = Clock.systemUTC(),
                             registry = registry
                     ),
                     MetricsResource(registry = registry)

@@ -7,15 +7,15 @@ import reactor.core.publisher.Mono
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 
-open class StravaService(private val strava: StravaApi) {
-    fun getAthleteActivities(
+class StravaService(private val strava: StravaApi) : IStravaService {
+    override fun getAthleteActivities(
         authToken: String,
         after: LocalDateTime
     ): Flux<AthleteActivitiesResponse> {
-        return getAthleteActivities(authToken, 1, after)
+        return getAthleteActivities(authToken, page = 1, after = after)
     }
 
-    fun getAuthToken(clientId: String, clientSecret: String, code: String): Mono<TokenResponse> {
+    override fun getAuthToken(clientId: String, clientSecret: String, code: String): Mono<TokenResponse> {
         return strava.getAuthToken(clientId, clientSecret, code)
     }
 

@@ -51,6 +51,8 @@ dependencies {
   compile "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:${Dependencies.JACKSON}"
   compile "com.jakewharton.retrofit:retrofit2-reactor-adapter:${Dependencies.RETROFIT_REACTOR_ADAPTER}"
   compile "com.squareup.retrofit2:converter-jackson:${Dependencies.RETROFIT}"
+  compile "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Dependencies.COROUTINES}"
+  compile "org.jetbrains.kotlinx:kotlinx-coroutines-reactive:${Dependencies.COROUTINES}"
 
   testCompile "org.assertj:assertj-core:${Dependencies.ASSERTJ}"
   testCompile "io.dropwizard:dropwizard-testing:${Dependencies.DROPWIZARD}"
