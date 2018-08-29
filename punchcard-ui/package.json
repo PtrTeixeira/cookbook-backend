@@ -30,6 +30,7 @@
     "@types/node": "^10.3.5",
     "@types/react": "^16.4.1",
     "@types/react-dom": "^16.0.6",
+    "jest-localstorage-mock": "^2.2.0",
     "typescript": "^2.9.2"
   }
 }
