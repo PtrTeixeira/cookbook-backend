@@ -6,14 +6,11 @@ import com.fasterxml.jackson.datatype.jdk8.Jdk8Module
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.github.ptrteixeira.cookbook.CookbookConfiguration
 import com.github.ptrteixeira.cookbook.config.AuthConfiguration
-import com.google.api.client.json.JsonFactory
-import com.google.api.client.json.jackson2.JacksonFactory
 import dagger.Module
 import dagger.Provides
 import dagger.Reusable
 import io.dropwizard.db.DataSourceFactory
 import io.dropwizard.setup.Environment
-import javax.inject.Named
 
 @Module
 internal class BaseModule(
@@ -39,11 +36,4 @@ internal class BaseModule(
 
     @Provides
     fun authConfig(): AuthConfiguration = config.auth
-
-    @Provides
-    @Named(BaseComponent.BASE_URL)
-    fun baseUrl(): String = config.baseUrl
-
-    @Provides
-    fun jacksonFactory(): JsonFactory = JacksonFactory()
 }
