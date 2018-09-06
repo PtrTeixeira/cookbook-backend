@@ -2,6 +2,7 @@ package com.github.ptrteixeira.cookbook
 
 import com.github.ptrteixeira.cookbook.auth.AuthModule
 import com.github.ptrteixeira.cookbook.base.BaseModule
+import com.github.ptrteixeira.cookbook.base.ObjectMapperModule
 import com.github.ptrteixeira.cookbook.core.User
 import com.github.ptrteixeira.cookbook.data.DataModule
 import com.github.ptrteixeira.cookbook.resources.ResourcesModule
@@ -11,6 +12,7 @@ import dagger.Component
 import io.dropwizard.auth.Authenticator
 
 @Component(modules = [
+    ObjectMapperModule::class,
     BaseModule::class,
     DataModule::class,
     AuthModule::class,

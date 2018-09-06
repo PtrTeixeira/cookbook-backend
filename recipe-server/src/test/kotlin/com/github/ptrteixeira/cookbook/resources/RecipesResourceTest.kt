@@ -1,7 +1,7 @@
 package com.github.ptrteixeira.cookbook.resources
 
 import com.github.ptrteixeira.cookbook.auth.TrivialAuth
-import com.github.ptrteixeira.cookbook.base.objectMapper
+import com.github.ptrteixeira.cookbook.base.ObjectMapperModule
 import com.github.ptrteixeira.cookbook.core.Recipe
 import com.github.ptrteixeira.cookbook.core.RecipeEgg
 import com.github.ptrteixeira.cookbook.core.User
@@ -149,7 +149,7 @@ class RecipesResourceTest {
             ))
             .addProvider(AuthValueFactoryProvider.Binder<User>(User::class.java))
             .addResource(RecipesResource(dao))
-            .setMapper(objectMapper())
+            .setMapper(ObjectMapperModule().objectMapper())
             .build()
     }
 }
