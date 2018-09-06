@@ -41,7 +41,7 @@ class CookbookApplication : DaggerApplication<CookbookConfiguration>() {
     }
 
     override fun run(configuration: CookbookConfiguration, environment: Environment) {
-        super.run()
+        super.run(configuration, environment)
 
         configure(environment) {
             oauthFilter<User> {

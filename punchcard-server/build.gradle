@@ -53,6 +53,9 @@ dependencies {
   compile "com.squareup.retrofit2:converter-jackson:${Dependencies.RETROFIT}"
   compile "org.jetbrains.kotlinx:kotlinx-coroutines-core:${Dependencies.COROUTINES}"
   compile "org.jetbrains.kotlinx:kotlinx-coroutines-reactive:${Dependencies.COROUTINES}"
+  compile "com.google.dagger:dagger:${Dependencies.DAGGER}"
+  compile "com.tylerkindy:dropwizard-dagger:${Dependencies.DROPWIZARD_DAGGER}"
+  kapt "com.google.dagger:dagger-compiler:${Dependencies.DAGGER}"
 
   testCompile "org.assertj:assertj-core:${Dependencies.ASSERTJ}"
   testCompile "io.dropwizard:dropwizard-testing:${Dependencies.DROPWIZARD}"
