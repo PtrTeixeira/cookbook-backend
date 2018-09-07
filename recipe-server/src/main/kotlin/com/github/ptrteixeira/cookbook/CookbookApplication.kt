@@ -53,9 +53,12 @@ class CookbookApplication : DaggerApplication<CookbookConfiguration>() {
     override fun getName(): String {
         return "cookbook"
     }
-}
 
-fun main(args: Array<String>) {
-    CookbookApplication()
-        .run(*args)
+    companion object {
+        @JvmStatic
+        fun main(args: Array<String>) {
+            CookbookApplication()
+                    .run(*args)
+        }
+    }
 }

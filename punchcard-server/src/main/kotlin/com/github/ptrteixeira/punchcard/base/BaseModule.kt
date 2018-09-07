@@ -6,6 +6,7 @@ import com.github.ptrteixeira.strava.api.IStravaService
 import com.github.ptrteixeira.strava.api.StravaApi
 import com.github.ptrteixeira.strava.api.StravaService
 import com.jakewharton.retrofit2.adapter.reactor.ReactorCallAdapterFactory
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import io.micrometer.core.instrument.MeterRegistry
@@ -20,8 +21,14 @@ import retrofit2.converter.jackson.JacksonConverterFactory
 import java.time.Clock
 import javax.inject.Named
 
-@Module
+@Module(includes = [BaseModule.RegistryModule::class])
 internal class BaseModule(private val configuration: StravaPunchcardConfiguration) {
+    @Module
+    internal interface RegistryModule {
+        @Binds
+        fun providesMeterRegistry(prometheusMeterRegistry: PrometheusMeterRegistry): MeterRegistry
+    }
+
     @Provides
     fun providesPrometheusMeterRegistry(): PrometheusMeterRegistry {
         val registry = PrometheusMeterRegistry(PrometheusConfig.DEFAULT)
@@ -33,11 +40,6 @@ internal class BaseModule(private val configuration: StravaPunchcardConfiguratio
         JvmThreadMetrics().bindTo(registry)
 
         return registry
-    }
-
-    @Provides
-    fun providesMeterRegistry(prometheusMeterRegistry: PrometheusMeterRegistry): MeterRegistry {
-        return prometheusMeterRegistry
     }
 
     @Provides

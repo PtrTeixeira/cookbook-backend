@@ -36,7 +36,7 @@ spotless {
   }
 }
 
-mainClassName = "com.github.ptrteixeira.cookbook.CookbookApplicationKt"
+mainClassName = "com.github.ptrteixeira.cookbook.CookbookApplication"
 distTar.compression = Compression.GZIP
 
 startScripts {
