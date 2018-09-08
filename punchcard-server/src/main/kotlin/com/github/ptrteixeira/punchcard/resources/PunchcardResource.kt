@@ -1,10 +1,10 @@
 package com.github.ptrteixeira.punchcard.resources
 
-import com.github.ptrteixeira.punchcard.StravaPunchcardModule
 import com.github.ptrteixeira.strava.api.IStravaService
 import com.github.ptrteixeira.strava.api.models.AthleteActivitiesResponse
 import com.google.common.base.Stopwatch
 import com.google.common.collect.HashBasedTable
+import com.tylerkindy.dropwizard.dagger.Resource
 import io.micrometer.core.instrument.MeterRegistry
 import io.micrometer.core.instrument.Timer
 import kotlinx.coroutines.experimental.reactive.openSubscription
@@ -14,6 +14,7 @@ import java.time.DayOfWeek
 import java.time.Duration
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import javax.inject.Inject
 import javax.ws.rs.Consumes
 import javax.ws.rs.CookieParam
 import javax.ws.rs.GET
@@ -28,11 +29,11 @@ import javax.ws.rs.core.Response
 @Path("/punchcard")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-class PunchcardResource(
+class PunchcardResource @Inject constructor(
     private val strava: IStravaService,
     private val clock: Clock,
     registry: MeterRegistry
-) {
+) : Resource {
     private val getActivitiesDuration = Timer.builder("http.requests")
             .tag("uri", "/punchcard")
             .tag("method", "GET")
@@ -42,7 +43,7 @@ class PunchcardResource(
 
     @GET
     fun getActivities(
-        @CookieParam(StravaPunchcardModule.AUTH_TOKEN_NAME) authToken: String?,
+        @CookieParam(ResourcesModule.AUTH_TOKEN_NAME) authToken: String?,
         @Suspended asyncResponse: AsyncResponse
     ) {
         val timer = Stopwatch.createStarted()

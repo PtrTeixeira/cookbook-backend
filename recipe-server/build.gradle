@@ -36,7 +36,7 @@ spotless {
   }
 }
 
-mainClassName = "com.github.ptrteixeira.cookbook.CookbookApplicationKt"
+mainClassName = "com.github.ptrteixeira.cookbook.CookbookApplication"
 distTar.compression = Compression.GZIP
 
 startScripts {
@@ -63,6 +63,7 @@ dependencies {
   compile "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:${Dependencies.JACKSON}"
   compile "com.h2database:h2:${Dependencies.H2}"
   compile "com.google.dagger:dagger:${Dependencies.DAGGER}"
+  compile "com.tylerkindy:dropwizard-dagger:${Dependencies.DROPWIZARD_DAGGER}"
   compile("com.google.api-client:google-api-client:${Dependencies.GOOGLE_API}") {
     exclude group: 'com.google.guava', module: 'guava-jdk5'
   }

@@ -1,7 +1,8 @@
 package com.github.ptrteixeira.punchcard.resources
 
-import com.github.ptrteixeira.punchcard.StravaPunchcardModule
+import com.github.ptrteixeira.punchcard.base.BaseModule
 import com.github.ptrteixeira.strava.api.IStravaService
+import com.tylerkindy.dropwizard.dagger.Resource
 import io.micrometer.core.instrument.MeterRegistry
 import kotlinx.coroutines.experimental.reactive.awaitFirst
 import kotlinx.coroutines.experimental.runBlocking
@@ -9,6 +10,8 @@ import org.slf4j.LoggerFactory
 import java.net.URI
 import java.util.Random
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
+import javax.inject.Named
 import javax.ws.rs.Consumes
 import javax.ws.rs.CookieParam
 import javax.ws.rs.GET
@@ -23,14 +26,14 @@ import javax.ws.rs.core.UriBuilder
 @Path("/strava")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-class AuthResource(
-    baseUrl: String,
-    private val dashboardUiUrl: String,
-    private val clientId: String,
-    private val clientSecret: String,
+class AuthResource @Inject constructor(
+    @Named(BaseModule.BASE_URL) baseUrl: String,
+    @Named(BaseModule.DASHBOARD_UI_URL) private val dashboardUiUrl: String,
+    @Named(BaseModule.CLIENT_ID) private val clientId: String,
+    @Named(BaseModule.CLIENT_SECRET) private val clientSecret: String,
     private val stravaService: IStravaService,
     registry: MeterRegistry
-) {
+) : Resource {
     private val random = Random()
     private val redirectUri = URI("$baseUrl/strava/callback")
     private val successfulLoginAttempts = registry.counter("http.requests.login.success")
@@ -90,7 +93,7 @@ class AuthResource(
     }
 
     private fun buildAuthCookie(value: String) = NewCookie(
-            StravaPunchcardModule.AUTH_TOKEN_NAME,
+            ResourcesModule.AUTH_TOKEN_NAME,
             value,
             "/",
             "",

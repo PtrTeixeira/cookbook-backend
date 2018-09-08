@@ -1,6 +1,7 @@
 package com.github.ptrteixeira.cookbook.model
 
 import com.fasterxml.jackson.module.kotlin.readValue
+import com.github.ptrteixeira.cookbook.base.ObjectMapperModule
 import com.github.ptrteixeira.cookbook.core.RecipeEgg
 import com.github.ptrteixeira.cookbook.core.User
 import io.dropwizard.testing.FixtureHelpers.fixture
@@ -8,10 +9,9 @@ import org.assertj.core.api.AbstractObjectAssert
 import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.from
 import org.junit.jupiter.api.Test
-import com.github.ptrteixeira.cookbook.base.objectMapper as mapperFactory
 
 internal class RecipeEggTest {
-    private val objectMapper = mapperFactory()
+    private val objectMapper = ObjectMapperModule().objectMapper()
 
     private val sampleRecipeEgg = RecipeEgg(
         name = "Chocolate Chip Cookies",
