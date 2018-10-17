@@ -1,4 +1,4 @@
-version: 2
+version: "2.1"
 jobs:
   build:
     working_directory: ~/cookbook
@@ -10,16 +10,17 @@ jobs:
       - checkout
       - restore_cache:
           key: v1-{{ checksum "build.gradle" }}
-      - run: |
-              bash gradlew check
-      - run: |
-              cd punchcard-ui
-              yarn
-              yarn test
-              cd ~/cookbook
+      - run: 
+          when: always
+          command: "bash gradlew check"
+      - run: 
+          when: always
+          working_directory: ~/cookbook/punchcard-ui
+          command: "yarn & yarn test"
       - save_cache:
           paths:
             - ~/.m2
           key: v1-{{ checksum "build.gradle" }}
       - store_test_results:
           path: ~/cookbook/build/reports/allTestsXml
+
