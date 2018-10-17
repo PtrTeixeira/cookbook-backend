@@ -16,7 +16,7 @@ jobs:
       - run: 
           when: always
           working_directory: ~/cookbook/punchcard-ui
-          command: "yarn & yarn test"
+          command: "yarn && yarn test"
       - save_cache:
           paths:
             - ~/.m2
