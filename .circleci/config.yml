@@ -29,8 +29,11 @@ jobs:
       - run: 
           working_directory: ~/project/punchcard-ui
           command: yarn test:ci
+      - run: 
+          working_directory: ~/project/punchcard-ui
+          command: mkdir jest & mv junit.xml jest
       - store_test_results:
-          path: ~/project/punchcard-ui/junit.xml
+          path: ~/project/punchcard-ui/jest
 
 workflows:
   version: 2
