@@ -1,6 +1,6 @@
 version: "2.1"
 jobs:
-  build:
+  build_java:
     working_directory: ~/cookbook
     docker:
       - image: circleci/openjdk:8u181-jdk-node-browsers
@@ -11,16 +11,28 @@ jobs:
       - restore_cache:
           key: v1-{{ checksum "build.gradle" }}
       - run: 
-          when: always
           command: "bash gradlew check"
-      - run: 
-          when: always
-          working_directory: ~/cookbook/punchcard-ui
-          command: "yarn && yarn test"
       - save_cache:
           paths:
             - ~/.m2
           key: v1-{{ checksum "build.gradle" }}
       - store_test_results:
           path: ~/cookbook/build/reports/allTestsXml
+  build_ui:
+    docker:
+      - image: circleci/openjdk:8u181-jdk-node-browsers
+    steps:
+      - checkout
+      - run:
+          working_directory: ~/project/punchcard-ui
+          command: yarn
+      - run: 
+          working_directory: ~/project/punchcard-ui
+          command: yarn test
 
+workflows:
+  version: 2
+  full_build:
+    jobs:
+    - build_java
+    - build_ui
