@@ -28,7 +28,7 @@ jobs:
           command: yarn
       - run: 
           working_directory: ~/project/punchcard-ui
-          command: yarn test
+          command: yarn test:ci
       - store_test_results:
           path: ~/project/punchcard-ui/junit.xml
 
