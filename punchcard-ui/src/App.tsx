@@ -54,11 +54,11 @@ function loadWeeklyResults(): Promise<IWeeklyResults> {
 }
 
 class App extends React.Component<{}, IAppState> {
-  private _isMounted: boolean
+  private componentIsMounted: boolean
 
   constructor(props: any) {
     super(props)
-    this._isMounted = false
+    this.componentIsMounted = false
     this.state = {
       error: null,
       isLoaded: false,
@@ -67,11 +67,11 @@ class App extends React.Component<{}, IAppState> {
   }
 
   public componentDidMount() {
-    this._isMounted = true;
+    this.componentIsMounted = true;
     loadWeeklyResults()
       .then(
         (data: IWeeklyResults) => {
-          if (this._isMounted) {
+          if (this.componentIsMounted) {
             this.setState({
               isLoaded: true,
               weeklyResults: data
@@ -79,7 +79,7 @@ class App extends React.Component<{}, IAppState> {
           }
         },
         (error) => {
-          if (this._isMounted) {
+          if (this.componentIsMounted) {
             this.setState({
               error: `Failed to load data from server: ${error.response.data}`,
               isLoaded: true
@@ -105,7 +105,7 @@ class App extends React.Component<{}, IAppState> {
   }
 
   public componentWillUnmount() {
-    this._isMounted = false
+    this.componentIsMounted = false
   }
 }
 
