@@ -14,7 +14,7 @@ jobs:
           command: "bash gradlew check"
       - save_cache:
           paths:
-            - ~/.m2
+            - ~/.gradle
           key: v1-{{ checksum "build.gradle" }}
       - store_test_results:
           path: ~/cookbook/build/reports/allTestsXml
