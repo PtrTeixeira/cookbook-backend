@@ -1,0 +1,12 @@
+[Unit]
+Description=Strava activities punchcard
+Documentation=https://github.com/ptrteixeira/cookbook
+
+[Service]
+Type=simple
+ExecStart=%h/bin/punchcard/bin/punchcard server %h/bin/punchcard/punchcard-dev.yml
+
+[Install]
+WantedBy=multi-user.target
+Alias=punchcard.service
+
