@@ -1,13 +1,11 @@
 plugins {
-    distribution
     application
-    kotlin("jvm") version "1.2.60"
-    id("org.jetbrains.kotlin.kapt") version "1.2.60"
-    id("com.diffplug.gradle.spotless") version "3.14.0"
+    kotlin("jvm")
+    kotlin("kapt")
+    id("com.diffplug.gradle.spotless")
 }
 
 apply {
-    from("$rootDir/gradle/kotlin.gradle")
     from("$rootDir/gradle/junit.gradle")
 }
 
@@ -30,6 +28,7 @@ dependencies {
     compile(project(":kotlin-dropwizard-dsl"))
     compile(project(":sentry-appender"))
     compile(project(":strava-api"))
+    compile(kotlin("stdlib-jdk8"))
     compile("io.dropwizard", "dropwizard-core", versions["DROPWIZARD"])
     compile("io.sentry", "sentry-logback", versions["SENTRY"])
     compile("io.micrometer", "micrometer-core", versions["MICROMETER"])

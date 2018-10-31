@@ -1,10 +1,6 @@
 plugins {
-    kotlin("jvm") version "1.2.71"
-    id("com.diffplug.gradle.spotless") version "3.14.0"
-}
-
-apply {
-    from("$rootDir/gradle/kotlin.gradle")
+    kotlin("jvm")
+    id("com.diffplug.gradle.spotless")
 }
 
 spotless {
@@ -15,6 +11,7 @@ spotless {
 
 val versions: Map<String, String> by extra
 dependencies {
+    implementation(kotlin("stdlib-jdk8"))
     implementation("io.dropwizard", "dropwizard-core", versions["DROPWIZARD"])
     implementation("io.dropwizard", "dropwizard-auth", versions["DROPWIZARD"])
 }
