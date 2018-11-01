@@ -7,8 +7,8 @@ import com.google.common.collect.HashBasedTable
 import com.tylerkindy.dropwizard.dagger.Resource
 import io.micrometer.core.instrument.MeterRegistry
 import io.micrometer.core.instrument.Timer
-import kotlinx.coroutines.experimental.reactive.openSubscription
-import kotlinx.coroutines.experimental.runBlocking
+import kotlinx.coroutines.reactive.awaitFirst
+import kotlinx.coroutines.runBlocking
 import java.time.Clock
 import java.time.DayOfWeek
 import java.time.Duration
@@ -75,19 +75,16 @@ class PunchcardResource @Inject constructor(
             throw WebApplicationException(Response.Status.FORBIDDEN)
         }
 
-        val activities = strava
+        return strava
                 .getAthleteActivities(authToken, LocalDateTime.now(clock).minusMonths(6))
-                .openSubscription()
+                .reduce(HashBasedTable.create<DayOfWeek, Int, Long>()) { table, activity ->
+                    val (day, hour) = rollupByTime(activity)
+                    val currentCount = table[day, hour] ?: 0
 
-        val activitiesTable = HashBasedTable.create<DayOfWeek, Int, Long>()
-
-        for (activity in activities) {
-            val (day, hour) = rollupByTime(activity)
-
-            val currentCount = activitiesTable[day, hour] ?: 0
-            activitiesTable.put(day, hour, currentCount + 1)
-        }
-
-        return activitiesTable.rowMap()
+                    table.put(day, hour, currentCount + 1)
+                    table
+                }.map {
+                    it.rowMap()
+                }.awaitFirst()
     }
 }

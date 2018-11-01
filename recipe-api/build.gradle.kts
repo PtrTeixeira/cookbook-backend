@@ -1,6 +1,6 @@
 plugins {
-    kotlin("jvm") version "1.2.71"
-    id("com.diffplug.gradle.spotless") version "3.14.0"
+    kotlin("jvm")
+    id("com.diffplug.gradle.spotless")
 }
 
 apply {

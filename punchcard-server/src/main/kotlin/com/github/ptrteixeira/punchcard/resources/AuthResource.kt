@@ -4,8 +4,8 @@ import com.github.ptrteixeira.punchcard.base.BaseModule
 import com.github.ptrteixeira.strava.api.IStravaService
 import com.tylerkindy.dropwizard.dagger.Resource
 import io.micrometer.core.instrument.MeterRegistry
-import kotlinx.coroutines.experimental.reactive.awaitFirst
-import kotlinx.coroutines.experimental.runBlocking
+import kotlinx.coroutines.reactive.awaitFirst
+import kotlinx.coroutines.runBlocking
 import org.slf4j.LoggerFactory
 import java.net.URI
 import java.util.Random

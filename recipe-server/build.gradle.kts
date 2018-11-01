@@ -1,14 +1,8 @@
-buildscript {
-    repositories {
-        jcenter()
-    }
-}
-
 plugins {
     application
-    kotlin("jvm") version "1.2.60"
-    id("org.jetbrains.kotlin.kapt") version "1.2.60"
-    id("com.diffplug.gradle.spotless") version "3.14.0"
+    kotlin("jvm")
+    kotlin("kapt")
+    id("com.diffplug.gradle.spotless")
 }
 
 apply {
