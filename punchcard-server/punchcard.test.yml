@@ -1,0 +1,18 @@
+baseUrl: "https://localhost:8080"
+dashboardUiUrl: "https://localhost:3000"
+stravaClientId: "${STRAVA_CLIENT_ID}"
+stravaClientSecret: "${STRAVA_CLIENT_SECRET}"
+
+server:
+  applicationConnectors:
+  - type: "h2"
+    port: 8443
+    jceProvider: "Conscrypt"
+    httpCompliance: "RFC2616"
+    keyStorePath: "${KEYSTORE_NAME:-example.keystore}"
+    keyStorePassword: "${KEYSTORE_PASSWORD}"
+    trustStorePath: "${KEYSTORE_NAME:-example.keystore}"
+    trustStorePassword: "${KEYSTORE_PASSWORD}"
+    supportedCipherSuites:
+    - "TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384"
+    - "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"

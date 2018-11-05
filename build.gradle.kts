@@ -32,6 +32,7 @@ subprojects {
 
     extra["versions"] = mapOf(
             "ASSERTJ" to "3.11.1",
+            "CONSCRYPT" to "1.4.1",
             "COROUTINES" to "1.0.0",
             "DAGGER" to "2.19",
             "DROPWIZARD_DAGGER" to "0.1.0-alpha03",

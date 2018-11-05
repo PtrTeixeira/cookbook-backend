@@ -7,3 +7,5 @@ include(
   'recipe-server',
   'strava-api'
 )
+
+enableFeaturePreview("IMPROVED_POM_SUPPORT")

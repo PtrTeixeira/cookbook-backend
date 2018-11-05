@@ -8,7 +8,6 @@ import kotlinx.coroutines.reactive.awaitFirst
 import kotlinx.coroutines.runBlocking
 import org.slf4j.LoggerFactory
 import java.net.URI
-import java.util.Random
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Named
@@ -22,6 +21,7 @@ import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.NewCookie
 import javax.ws.rs.core.Response
 import javax.ws.rs.core.UriBuilder
+import kotlin.random.Random
 
 @Path("/strava")
 @Produces(MediaType.APPLICATION_JSON)
@@ -34,7 +34,6 @@ class AuthResource @Inject constructor(
     private val stravaService: IStravaService,
     registry: MeterRegistry
 ) : Resource {
-    private val random = Random()
     private val redirectUri = URI("$baseUrl/strava/callback")
     private val successfulLoginAttempts = registry.counter("http.requests.login.success")
     private val failedLoginAttempts = registry.counter("http.requests.login.failed")
@@ -42,7 +41,7 @@ class AuthResource @Inject constructor(
     @GET
     @Path("/login")
     fun authRedirect(): Response {
-        val nonce = random.nextLong().toString(16)
+        val nonce = Random.nextBytes(16).toString()
 
         val stravaAuthorizePath = UriBuilder
                 .fromPath(STRAVA_AUTHORIZE_URI)
@@ -99,7 +98,7 @@ class AuthResource @Inject constructor(
             "",
             "",
             MAX_AGE,
-            false,
+            true,
             true
     )
 

@@ -29,7 +29,10 @@ dependencies {
     compile(project(":sentry-appender"))
     compile(project(":strava-api"))
     compile(kotlin("stdlib-jdk8"))
-    compile("io.dropwizard", "dropwizard-core", versions["DROPWIZARD"])
+
+    compile("io.dropwizard", "dropwizard-bom", versions["DROPWIZARD"])
+    compile("io.dropwizard", "dropwizard-core")
+    compile("io.dropwizard", "dropwizard-http2")
     compile("io.sentry", "sentry-logback", versions["SENTRY"])
     compile("io.micrometer", "micrometer-core", versions["MICROMETER"])
     compile("io.micrometer", "micrometer-registry-prometheus", versions["MICROMETER"])
@@ -37,6 +40,8 @@ dependencies {
     compile("com.fasterxml.jackson.datatype", "jackson-datatype-jdk8", versions["JACKSON"])
     compile("com.jakewharton.retrofit", "retrofit2-reactor-adapter", versions["RETROFIT_REACTOR_ADAPTER"])
     compile("com.squareup.retrofit2", "converter-jackson", versions["RETROFIT"])
+    compile("org.conscrypt", "conscrypt-openjdk-uber", versions["CONSCRYPT"])
+    compile("org.eclipse.jetty", "jetty-alpn-conscrypt-server")
     compile("org.jetbrains.kotlinx", "kotlinx-coroutines-core", versions["COROUTINES"])
     compile("org.jetbrains.kotlinx", "kotlinx-coroutines-reactive", versions["COROUTINES"])
     compile("com.google.dagger", "dagger", versions["DAGGER"])
@@ -44,8 +49,8 @@ dependencies {
     kapt("com.google.dagger", "dagger-compiler", versions["DAGGER"])
 
     testCompile("org.assertj", "assertj-core", versions["ASSERTJ"])
-    testCompile("io.dropwizard", "dropwizard-testing", versions["DROPWIZARD"])
-    testCompile("org.glassfish.jersey.test-framework.providers", "jersey-test-framework-provider-grizzly2", versions["JERSEY"]) {
+    testCompile("io.dropwizard", "dropwizard-testing")
+    testCompile("org.glassfish.jersey.test-framework.providers", "jersey-test-framework-provider-grizzly2") {
         exclude(group = "junit", module = "junit")
         exclude(group = "javax.servlet", module = "javax.servlet-api")
     }
