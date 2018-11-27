@@ -30,6 +30,7 @@ dependencies {
     compile(project(":recipe-api"))
     compile(project(":kotlin-dropwizard-dsl"))
     compile(project(":sentry-appender"))
+    compile(kotlin("reflect", versions["KOTLIN"]))
     compile("io.dropwizard:dropwizard-core:${versions["DROPWIZARD"]}")
     compile("io.dropwizard:dropwizard-jdbi3:${versions["DROPWIZARD"]}")
     compile("io.dropwizard:dropwizard-migrations:${versions["DROPWIZARD"]}")

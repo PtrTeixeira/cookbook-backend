@@ -2,8 +2,8 @@ import com.diffplug.gradle.spotless.SpotlessTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.3.0" apply false
-    kotlin("kapt") version "1.3.0" apply false
+    kotlin("jvm") version "1.3.10" apply false
+    kotlin("kapt") version "1.3.10" apply false
     id("com.diffplug.gradle.spotless") version "3.15.0" apply false
 }
 
@@ -41,6 +41,7 @@ subprojects {
             "JACKSON" to "2.9.7",
             "JDBI" to "3.5.1",
             "JERSEY" to "2.25.1",
+            "KOTLIN" to "1.3.10",
             "MICROMETER" to "1.1.0",
             "MOCKITO" to "2.23.0",
             "REACTOR" to "3.2.2.RELEASE",

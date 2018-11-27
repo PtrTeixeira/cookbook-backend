@@ -16,6 +16,8 @@ spotless {
 
 val versions: Map<String, String> by extra
 dependencies {
+    compile(kotlin("stdlib-jdk8", versions["KOTLIN"]))
+    compile(kotlin("reflect", versions["KOTLIN"]))
     compile("com.squareup.retrofit2", "retrofit", versions["RETROFIT"])
     compile("io.projectreactor", "reactor-core", versions["REACTOR"])
 
