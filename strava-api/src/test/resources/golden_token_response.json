@@ -1,0 +1,7 @@
+{
+  "token_type": "Bearer",
+  "access_token": "987654321234567898765432123456789",
+  "refresh_token": "1234567898765432112345678987654321",
+  "expires_at": 1531378346,
+  "state": "STRAVA"
+}
