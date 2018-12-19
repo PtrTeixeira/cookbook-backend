@@ -25,4 +25,5 @@ dependencies {
 
     testCompile("org.mockito", "mockito-core", versions["MOCKITO"])
     testCompile("io.projectreactor", "reactor-test", versions["REACTOR"])
+    testCompile("org.assertj", "assertj-core", versions["ASSERTJ"])
 }

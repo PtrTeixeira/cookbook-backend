@@ -7,8 +7,8 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy::class)
 data class Athlete(
-    val id: Long,
-    val username: String,
+    val id: Long?,
+    val username: String?,
     val firstname: String?,
     val lastname: String?,
     val city: String?,
@@ -24,5 +24,5 @@ data class Athlete(
     val resourceState: Int,
     val sex: String?,
     val state: String?,
-    val updatedAt: String
+    val updatedAt: String?
 )

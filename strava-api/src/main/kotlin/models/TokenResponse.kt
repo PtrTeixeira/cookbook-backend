@@ -9,5 +9,6 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming
 data class TokenResponse(
     val accessToken: String,
     val tokenType: String,
-    val athlete: Athlete
+    val athlete: Athlete?,
+    val state: String?
 )
