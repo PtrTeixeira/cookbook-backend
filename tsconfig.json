@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "lib": [
+      "es2015.promise",
+      "dom",
+      "es5"
+    ],
+    "rootDirs": [
+      ".",
+      "../bazel-bin/punchcard/ui"
+    ],
+    "types": []
+  }
+}

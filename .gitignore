@@ -2,6 +2,9 @@
 **/build/
 **/out/
 
+bazel-*
+node_modules/
+
 *.jar
 !gradle-wrapper.jar
 *.war
