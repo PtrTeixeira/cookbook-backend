@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "strict": true,
+    "jsx": "react",
     "lib": [
       "es2015.promise",
       "dom",

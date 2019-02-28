@@ -1,33 +1,63 @@
-## TODO: Either get new plugins for Rollup working or 
-## write a webpack.bzl file to use webpack instead.
-## Rollup is inherently supported by Bazel, which means that 
-## changes there will involve hacking through a bunch of 
-## garbage.
-
 load("@build_bazel_rules_nodejs//:defs.bzl", "http_server", "rollup_bundle")
 load("@npm_bazel_typescript//:defs.bzl", "ts_library", "ts_devserver")
+# load("//bzl/webpack:webpack.bzl", "webpack")
+load("//bzl/parcel:parcel.bzl", "parcel")
 
 ts_library(
     name = "ui",
-    srcs = [
-        "src/app.ts",
-    ],
+    srcs = ["src/app.tsx"],
     deps = [
-        "@npm//vue",
+        "@npm//@types/react",
+        "@npm//@types/react-dom",
+        "@npm//react",
+        "@npm//react-dom",
     ]
 )
 
-rollup_bundle(
-    name = "bundle",
-    entry_point = "punchcard/ui/src/app",
-    deps = [":ui"]
+# rollup_bundle(
+#     name = "bundle",
+#     entry_point = "punchcard/ui/src/app",
+#     deps = [
+#         ":ui",
+#         "@npm//@types/react",
+#         "@npm//@types/react-dom",
+#         "@npm//react",
+#         "@npm//react-dom"
+#     ]
+# )
+
+# webpack(
+#     name = "wpack",
+#     entry_point = "app.js",
+#     config = "webpack.config.js",
+#     srcs = [
+#         ":ui"
+#     ]
+# )
+
+parcel(
+    name = "package",
+    entry_point = "index.html",
+    srcs = [
+        "index.html",
+        "src/app.tsx",
+    ],
+    deps = [
+        "@npm//typescript",
+        "@npm//typescript/bin:tsc",
+        "@npm//typescript/bin:tsserver",
+        "@npm//@types/react",
+        "@npm//@types/react-dom",
+        "@npm//react",
+        "@npm//react-dom",
+    ]
 )
 
 http_server(
     name = "server",
     data = [
-        ":index.html",
-        ":bundle",
+        ":bundle.js",
+        "index.html",
     ],
     templated_args = [
         "-p", "3000",
