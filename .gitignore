@@ -1,9 +1,11 @@
 .gradle
 **/build/
 **/out/
+**/target/
 
 bazel-*
 node_modules/
+.ijwb/
 
 *.jar
 !gradle-wrapper.jar
