@@ -8,7 +8,6 @@ import com.tylerkindy.dropwizard.dagger.Resource
 import io.dropwizard.auth.Auth
 import org.slf4j.LoggerFactory
 import java.util.Optional
-import javax.inject.Inject
 import javax.ws.rs.Consumes
 import javax.ws.rs.DELETE
 import javax.ws.rs.GET
@@ -22,9 +21,7 @@ import javax.ws.rs.core.MediaType
 @Path("/recipes")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-internal class RecipesResource @Inject constructor(
-    private val recipeData: RecipeData
-) : Resource {
+internal class RecipesResource(private val recipeData: RecipeData) : Resource {
     @GET
     fun getRecipes(@Auth user: User): List<Recipe> {
         return recipeData.getRecipes(user)

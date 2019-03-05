@@ -4,13 +4,10 @@ kt_jvm_library(
     name = "resources",
     srcs = [
         "RecipesResource.kt",
-        "ResourcesModule.kt",
     ],
     visibility = ["//visibility:public"],
     deps = [
-        "//bzl/dagger:dagger_with_annotation_processor",
         "//cookbook/models",
-        "//cookbook/server/src/main/kotlin/base",
         "//cookbook/server/src/main/kotlin/config",
         "//cookbook/server/src/main/kotlin/data",
         "//third-party/java:com_fasterxml_jackson_core_jackson_annotations",

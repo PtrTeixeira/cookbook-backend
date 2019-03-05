@@ -3,15 +3,12 @@ load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kt_jvm_library")
 kt_jvm_library(
     name = "data",
     srcs = [
-        "DataModule.kt",
         "MigrationsBundle.kt",
         "RecipeData.kt",
     ],
     visibility = ["//visibility:public"],
     deps = [
-        "//bzl/dagger:dagger_with_annotation_processor",
         "//cookbook/models",
-        "//cookbook/server/src/main/kotlin/base",
         "//cookbook/server/src/main/kotlin/config",
         "//third-party/java:com_fasterxml_jackson_core_jackson_annotations",
         "//third-party/java:com_fasterxml_jackson_core_jackson_core",
