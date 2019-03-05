@@ -8,6 +8,7 @@ kt_jvm_library(
     ],
     visibility = ["//visibility:public"],
     deps = [
+        "//bzl/dagger:dagger_with_annotation_processor",
         "//cookbook/models",
         "//cookbook/server/src/main/kotlin/base",
         "//cookbook/server/src/main/kotlin/config",
@@ -29,6 +30,5 @@ kt_jvm_library(
         "//third-party/java:org_jdbi_jdbi3_core",
         "//third-party/java:org_jdbi_jdbi3_sqlobject",
         "//third-party/java:org_slf4j_slf4j_api",
-        "@dagger//:dagger_with_compiler",
     ],
 )

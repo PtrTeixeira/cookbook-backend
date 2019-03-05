@@ -8,10 +8,10 @@ kt_jvm_library(
     ],
     visibility = ["//visibility:public"],
     deps = [
+        "//bzl/dagger:dagger_with_annotation_processor",
         "//cookbook/server/src/main/kotlin/config",
-        "@dagger//:dagger_with_compiler",
-        "//third-party/java:com_fasterxml_jackson_core_jackson_core",
         "//third-party/java:com_fasterxml_jackson_core_jackson_annotations",
+        "//third-party/java:com_fasterxml_jackson_core_jackson_core",
         "//third-party/java:com_fasterxml_jackson_core_jackson_databind",
         "//third-party/java:com_fasterxml_jackson_datatype_jackson_datatype_jdk8",
         "//third-party/java:com_fasterxml_jackson_module_jackson_module_kotlin",
