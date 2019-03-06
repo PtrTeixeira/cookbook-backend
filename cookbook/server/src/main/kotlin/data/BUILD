@@ -6,6 +6,9 @@ kt_jvm_library(
         "MigrationsBundle.kt",
         "RecipeData.kt",
     ],
+    resources = [
+        "//cookbook/server/src/main/resources:migrations.xml",
+    ],
     visibility = ["//visibility:public"],
     deps = [
         "//cookbook/models",
