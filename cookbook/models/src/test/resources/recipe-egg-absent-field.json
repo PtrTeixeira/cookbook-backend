@@ -1,0 +1,11 @@
+{
+  "name": "Chocolate Chip Cookies",
+  "ingredients": [
+    "Chocolate",
+    "Chips",
+    "Cookies"
+  ],
+  "instructions": "Mix",
+  "summary": "They were invented right here in Massachusetts, you know",
+  "fake-field": "This gets ignored"
+}
