@@ -10,6 +10,9 @@ kt_jvm_library(
         "//cookbook/server/src/main/resources:sentry.properties",
     ],
     visibility = ["//visibility:public"],
+    runtime_deps = [
+        "//sentry-appender",
+    ],
     deps = [
         "//cookbook/models",
         "//cookbook/server/src/main/kotlin/auth",

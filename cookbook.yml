@@ -2,12 +2,12 @@ server:
   type: default
   requestLog:
     appenders:
-      - type: console
+    - type: console
 logging:
   appenders:
-    # - type: sentry
-    #   threshold: ERROR
-    - type: console
+   - type: sentry
+     threshold: ERROR
+   - type: console
 baseUrl: ${COOKBOOK_BASE_URL:-"http://localhost:8080"}
 database:
   driverClass: ${DB_DRIVER_CLASS:-org.h2.Driver}
