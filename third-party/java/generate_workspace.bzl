@@ -259,19 +259,12 @@ def generated_maven_jars():
     )
 
     # org.mockito:mockito-core:jar:2.23.0
-    #   native.maven_jar(
-    #       name = "net_bytebuddy_byte_buddy_agent",
-    #       artifact = "net.bytebuddy:byte-buddy-agent:1.9.0",
-    #       repository = "https://jcenter.bintray.com/",
-    #       sha1 = "37b5703b4a6290be3fffc63ae9c6bcaaee0ff856",
-    #   )
-
-    #   native.maven_jar(
-    #       name = "org_mockito_mockito_core",
-    #       artifact = "org.mockito:mockito-core:2.23.0",
-    #       repository = "https://jcenter.bintray.com/",
-    #       sha1 = "497ddb32fd5d01f9dbe99a2ec790aeb931dff1b1",
-    #   )
+    native.maven_jar(
+        name = "net_bytebuddy_byte_buddy_agent",
+        artifact = "net.bytebuddy:byte-buddy-agent:1.9.0",
+        repository = "https://jcenter.bintray.com/",
+        sha1 = "37b5703b4a6290be3fffc63ae9c6bcaaee0ff856",
+    )
 
     native.maven_jar(
         name = "io_projectreactor_reactor_test",
@@ -333,12 +326,12 @@ def generated_maven_jars():
     )
 
     # org.mockito:mockito-core:jar:2.23.0
-    #   native.maven_jar(
-    #       name = "net_bytebuddy_byte_buddy",
-    #       artifact = "net.bytebuddy:byte-buddy:1.9.0",
-    #       repository = "https://jcenter.bintray.com/",
-    #       sha1 = "8cb0d5baae526c9df46ae17693bbba302640538b",
-    #   )
+    native.maven_jar(
+        name = "net_bytebuddy_byte_buddy",
+        artifact = "net.bytebuddy:byte-buddy:1.9.0",
+        repository = "https://jcenter.bintray.com/",
+        sha1 = "8cb0d5baae526c9df46ae17693bbba302640538b",
+    )
 
     # io.dropwizard:dropwizard-jackson:jar:1.3.5
     native.maven_jar(
@@ -398,14 +391,6 @@ def generated_maven_jars():
         repository = "https://jcenter.bintray.com/",
         sha1 = "134f1518a9516be01b25526a935d4fd68610b89c",
     )
-
-    # com.google.guava:guava:bundle:24.0-jre
-    #   native.maven_jar(
-    #       name = "org_checkerframework_checker_compat_qual",
-    #       artifact = "org.checkerframework:checker-compat-qual:2.0.0",
-    #       repository = "https://jcenter.bintray.com/",
-    #       sha1 = "fc89b03860d11d6213d0154a62bcd1c2f69b9efa",
-    #   )
 
     # com.google.guava:guava:bundle:24.0-jre
     native.maven_jar(
@@ -582,15 +567,6 @@ def generated_maven_jars():
         sha1 = "2438ce68d4907046095ab54aa83a6092951b4bbb",
     )
 
-    # com.google.guava:guava:bundle:24.0-jre
-    # io.dropwizard:dropwizard-util:jar:1.3.5 wanted version 3.0.2
-    #   native.maven_jar(
-    #       name = "com_google_code_findbugs_jsr305",
-    #       artifact = "com.google.code.findbugs:jsr305:1.3.9",
-    #       repository = "https://jcenter.bintray.com/",
-    #       sha1 = "40719ea6961c0cb6afaeb6a921eaa1f6afd4cfdf",
-    #   )
-
     # io.dropwizard:dropwizard-core:jar:1.3.5 got requested version
     # io.dropwizard:dropwizard-core:jar:1.3.5
     # io.dropwizard.metrics:metrics-servlets:bundle:4.0.2 got requested version
@@ -688,14 +664,6 @@ def generated_maven_jars():
         sha1 = "fdac3217b804d6900fa3650f17b5cb48e620b140",
     )
 
-    # com.google.guava:guava:bundle:24.0-jre
-    #   native.maven_jar(
-    #       name = "com_google_errorprone_error_prone_annotations",
-    #       artifact = "com.google.errorprone:error_prone_annotations:2.1.3",
-    #       repository = "https://jcenter.bintray.com/",
-    #       sha1 = "39b109f2cd352b2d71b52a3b5a1a9850e1dc304b",
-    #   )
-
     # io.dropwizard:dropwizard-core:jar:1.3.5 got requested version
     # io.dropwizard:dropwizard-core:jar:1.3.5
     # io.dropwizard:dropwizard-request-logging:jar:1.3.5 got requested version
@@ -754,15 +722,6 @@ def generated_maven_jars():
         repository = "https://maven.java.net/content/repositories/releases/",
         sha1 = "5108a926988c4ceda7f1e681dddfe3101454a002",
     )
-
-    # org.mockito:mockito-core:jar:2.23.0 got requested version
-    # io.dropwizard:dropwizard-testing:jar:1.3.5
-    #   native.maven_jar(
-    #       name = "org_objenesis_objenesis",
-    #       artifact = "org.objenesis:objenesis:2.6",
-    #       repository = "https://jcenter.bintray.com/",
-    #       sha1 = "639033469776fd37c08358c6b92a4761feb2af4b",
-    #   )
 
     # io.dropwizard:dropwizard-core:jar:1.3.5 got requested version
     # io.dropwizard:dropwizard-core:jar:1.3.5
@@ -837,14 +796,6 @@ def generated_maven_jars():
         repository = "https://maven.java.net/content/repositories/releases/",
         sha1 = "6af37c3f8ec6f9e9653ec837eb508da28ce443cd",
     )
-
-    # junit:junit:jar:4.12
-    #   native.maven_jar(
-    #       name = "org_hamcrest_hamcrest_core",
-    #       artifact = "org.hamcrest:hamcrest-core:1.3",
-    #       repository = "https://jcenter.bintray.com/",
-    #       sha1 = "42a25dc3219429f0e5d060061f71acb49bf010a0",
-    #   )
 
     # io.dropwizard:dropwizard-request-logging:jar:1.3.5
     native.maven_jar(
@@ -985,16 +936,6 @@ def generated_maven_jars():
         repository = "https://jcenter.bintray.com/",
         sha1 = "367264d2342ab8abedc48c4cad4502fa1eeab1be",
     )
-
-    # org.glassfish.jersey.test-framework.providers:jersey-test-framework-provider-inmemory:jar:2.25.1 got requested version
-    # org.glassfish.jersey.test-framework:jersey-test-framework-core:jar:2.25.1 got requested version
-    # io.dropwizard:dropwizard-testing:jar:1.3.5
-    #   native.maven_jar(
-    #       name = "junit_junit",
-    #       artifact = "junit:junit:4.12",
-    #       repository = "https://jcenter.bintray.com/",
-    #       sha1 = "2973d150c0dc1fefe998f834810d68f278ea58ec",
-    #   )
 
     # io.dropwizard:dropwizard-core:jar:1.3.5 got requested version
     # io.dropwizard:dropwizard-servlets:jar:1.3.5 got requested version
@@ -1156,18 +1097,6 @@ def generated_maven_jars():
         sha1 = "926def86d31ee07ca4b4658833dc6ee6918b8e86",
     )
 
-    # io.dropwizard:dropwizard-util:jar:1.3.5
-    # org.jdbi:jdbi3-guava:jar:3.2.1 wanted version 21.0
-    # io.dropwizard:dropwizard-jackson:jar:1.3.5 got requested version
-    # com.fasterxml.jackson.datatype:jackson-datatype-guava:bundle:2.9.7 wanted version 18.0
-    # io.dropwizard:dropwizard-lifecycle:jar:1.3.5 got requested version
-    #   native.maven_jar(
-    #       name = "com_google_guava_guava",
-    #       artifact = "com.google.guava:guava:24.0-jre",
-    #       repository = "https://jcenter.bintray.com/",
-    #       sha1 = "041ac1e74d6b4e1ea1f027139cffeb536c732a81",
-    #   )
-
     native.maven_jar(
         name = "com_tylerkindy_dropwizard_dagger",
         artifact = "com.tylerkindy:dropwizard-dagger:0.1.0-alpha03",
@@ -1233,12 +1162,6 @@ def generated_java_libraries():
         name = "org_eclipse_jetty_toolchain_setuid_jetty_setuid_java",
         visibility = ["//visibility:public"],
         exports = ["@org_eclipse_jetty_toolchain_setuid_jetty_setuid_java//jar"],
-    )
-
-    native.java_library(
-        name = "org_mockito_mockito_core",
-        visibility = ["//visibility:public"],
-        exports = ["@org_mockito_mockito_core//jar"],
     )
 
     native.java_library(
@@ -1546,16 +1469,16 @@ def generated_java_libraries():
         exports = ["@net_bytebuddy_byte_buddy_agent//jar"],
     )
 
-    #   native.java_library(
-    #       name = "org_mockito_mockito_core",
-    #       visibility = ["//visibility:public"],
-    #       exports = ["@org_mockito_mockito_core//jar"],
-    #       runtime_deps = [
-    #           ":net_bytebuddy_byte_buddy",
-    #           ":net_bytebuddy_byte_buddy_agent",
-    #           ":org_objenesis_objenesis",
-    #       ],
-    #   )
+    native.java_library(
+        name = "org_mockito_mockito_core",
+        visibility = ["//visibility:public"],
+        exports = ["@org_mockito_mockito_core//jar"],
+        runtime_deps = [
+            ":net_bytebuddy_byte_buddy",
+            ":net_bytebuddy_byte_buddy_agent",
+            ":org_objenesis_objenesis",
+        ],
+    )
 
     native.java_library(
         name = "io_projectreactor_reactor_test",
