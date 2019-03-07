@@ -1,10 +1,10 @@
 package com.github.ptrteixeira.punchcard.resources
 
+import com.codahale.metrics.MetricRegistry
 import com.github.ptrteixeira.strava.api.IStravaService
 import com.github.ptrteixeira.strava.api.models.AthleteActivitiesResponse
-import io.micrometer.core.instrument.simple.SimpleMeterRegistry
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.any
 import org.mockito.BDDMockito.given
 import org.mockito.BDDMockito.then
@@ -30,12 +30,12 @@ class PunchcardResourceTest {
     lateinit var stravaService: IStravaService
     lateinit var asyncResponse: AsyncResponse
 
-    @Before
+    @BeforeEach
     fun setUp() {
         stravaService = mock(IStravaService::class.java)
         asyncResponse = mock(AsyncResponse::class.java)
 
-        punchcardResource = PunchcardResource(stravaService, testClock, SimpleMeterRegistry())
+        punchcardResource = PunchcardResource(stravaService, testClock, MetricRegistry())
     }
 
     @Test
