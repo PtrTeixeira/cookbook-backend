@@ -1,20 +1,14 @@
 package com.github.ptrteixeira.punchcard.resources
 
+import com.codahale.metrics.MetricRegistry
 import com.github.ptrteixeira.strava.api.IStravaService
 import com.github.ptrteixeira.strava.api.models.AthleteActivitiesResponse
-import com.google.common.base.Stopwatch
 import com.google.common.collect.HashBasedTable
-import com.tylerkindy.dropwizard.dagger.Resource
-import io.micrometer.core.instrument.MeterRegistry
-import io.micrometer.core.instrument.Timer
-import kotlinx.coroutines.reactive.awaitFirst
-import kotlinx.coroutines.runBlocking
+import reactor.core.publisher.Mono
 import java.time.Clock
 import java.time.DayOfWeek
-import java.time.Duration
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
-import javax.inject.Inject
 import javax.ws.rs.Consumes
 import javax.ws.rs.CookieParam
 import javax.ws.rs.GET
@@ -29,33 +23,27 @@ import javax.ws.rs.core.Response
 @Path("/punchcard")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-class PunchcardResource @Inject constructor(
+class PunchcardResource(
     private val strava: IStravaService,
     private val clock: Clock,
-    registry: MeterRegistry
-) : Resource {
-    private val getActivitiesDuration = Timer.builder("http.requests")
-            .tag("uri", "/punchcard")
-            .tag("method", "GET")
-            .sla(Duration.ofMillis(500))
-            .publishPercentileHistogram()
-            .register(registry)
+    registry: MetricRegistry
+) {
+    private val getActivitiesDuration = registry.timer("punchcard.getActivities.duration")
 
     @GET
     fun getActivities(
-        @CookieParam(ResourcesModule.AUTH_TOKEN_NAME) authToken: String?,
+        @CookieParam("StravaAuthToken") authToken: String?,
         @Suspended asyncResponse: AsyncResponse
     ) {
-        val timer = Stopwatch.createStarted()
-        runBlocking {
-            try {
-                val activitiesMap = getActivitiesTable(authToken)
-                asyncResponse.resume(activitiesMap)
-            } catch (exn: Exception) {
-                asyncResponse.resume(exn)
-            }
-        }
-        getActivitiesDuration.record(timer.elapsed())
+        val callDuration = getActivitiesDuration.time()
+        getActivitiesTable(authToken)
+            .subscribe({
+                asyncResponse.resume(it)
+                callDuration.stop()
+            }, {
+                asyncResponse.resume(it)
+                callDuration.stop()
+            })
     }
 
     data class DayAndHourRollup(
@@ -70,7 +58,7 @@ class PunchcardResource @Inject constructor(
         return DayAndHourRollup(startTime.dayOfWeek, startTime.hour)
     }
 
-    private suspend fun getActivitiesTable(authToken: String?): Map<DayOfWeek, Map<Int, Long>> {
+    private fun getActivitiesTable(authToken: String?): Mono<Map<DayOfWeek, Map<Int, Long>>> {
         if (authToken == null) {
             throw WebApplicationException(Response.Status.FORBIDDEN)
         }
@@ -85,6 +73,6 @@ class PunchcardResource @Inject constructor(
                     table
                 }.map {
                     it.rowMap()
-                }.awaitFirst()
+                }
     }
 }

@@ -4,7 +4,6 @@ import com.github.ptrteixeira.cookbook.core.Recipe
 import com.github.ptrteixeira.cookbook.core.RecipeEgg
 import com.github.ptrteixeira.cookbook.core.User
 import com.github.ptrteixeira.cookbook.data.RecipeData
-import com.tylerkindy.dropwizard.dagger.Resource
 import io.dropwizard.auth.Auth
 import org.slf4j.LoggerFactory
 import java.util.Optional
@@ -21,7 +20,7 @@ import javax.ws.rs.core.MediaType
 @Path("/recipes")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-internal class RecipesResource(private val recipeData: RecipeData) : Resource {
+internal class RecipesResource(private val recipeData: RecipeData) {
     @GET
     fun getRecipes(@Auth user: User): List<Recipe> {
         return recipeData.getRecipes(user)

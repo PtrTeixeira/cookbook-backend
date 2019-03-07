@@ -1,17 +1,11 @@
 package com.github.ptrteixeira.punchcard.resources
 
-import com.github.ptrteixeira.punchcard.base.BaseModule
+import com.codahale.metrics.MetricRegistry
 import com.github.ptrteixeira.strava.api.IStravaService
-import com.tylerkindy.dropwizard.dagger.Resource
-import io.micrometer.core.instrument.MeterRegistry
-import kotlinx.coroutines.reactive.awaitFirst
-import kotlinx.coroutines.runBlocking
 import org.slf4j.LoggerFactory
 import java.net.URI
 import java.util.Random
 import java.util.concurrent.TimeUnit
-import javax.inject.Inject
-import javax.inject.Named
 import javax.ws.rs.Consumes
 import javax.ws.rs.CookieParam
 import javax.ws.rs.GET
@@ -26,14 +20,14 @@ import javax.ws.rs.core.UriBuilder
 @Path("/strava")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-class AuthResource @Inject constructor(
-    @Named(BaseModule.BASE_URL) baseUrl: String,
-    @Named(BaseModule.DASHBOARD_UI_URL) private val dashboardUiUrl: String,
-    @Named(BaseModule.CLIENT_ID) private val clientId: String,
-    @Named(BaseModule.CLIENT_SECRET) private val clientSecret: String,
+class AuthResource(
+    baseUrl: String,
+    private val dashboardUiUrl: String,
+    private val clientId: String,
+    private val clientSecret: String,
     private val stravaService: IStravaService,
-    registry: MeterRegistry
-) : Resource {
+    registry: MetricRegistry
+) {
     private val random = Random()
     private val redirectUri = URI("$baseUrl/strava/callback")
     private val successfulLoginAttempts = registry.counter("http.requests.login.success")
@@ -45,17 +39,17 @@ class AuthResource @Inject constructor(
         val nonce = random.nextLong().toString(16)
 
         val stravaAuthorizePath = UriBuilder
-                .fromPath(STRAVA_AUTHORIZE_URI)
-                .queryParam("client_id", clientId)
-                .queryParam("response_type", STRAVA_RESPONSE_TYPE)
-                .queryParam("redirect_uri", redirectUri)
-                .queryParam("state", nonce)
-                .build()
+            .fromPath(STRAVA_AUTHORIZE_URI)
+            .queryParam("client_id", clientId)
+            .queryParam("response_type", STRAVA_RESPONSE_TYPE)
+            .queryParam("redirect_uri", redirectUri)
+            .queryParam("state", nonce)
+            .build()
 
         return Response
-                .seeOther(stravaAuthorizePath)
-                .cookie(buildVerificationCookie(nonce))
-                .build()
+            .seeOther(stravaAuthorizePath)
+            .cookie(buildVerificationCookie(nonce))
+            .build()
     }
 
     @GET
@@ -65,42 +59,41 @@ class AuthResource @Inject constructor(
         @QueryParam("code") code: String?,
         @QueryParam("error") error: String?,
         @QueryParam("state") state: String?
-    ): Response {
+    ): Response? {
         if (error != null || code == null || authNonce == null || state == null) {
-            failedLoginAttempts.increment()
+            failedLoginAttempts.inc()
             return Response
-                    .status(Response.Status.FORBIDDEN)
-                    .build()
+                .status(Response.Status.FORBIDDEN)
+                .build()
         }
 
         if (state != authNonce) {
             LOG.warn("Login callback FAILED due to invalid auth nonce {}", authNonce)
-            failedLoginAttempts.increment()
+            failedLoginAttempts.inc()
             return Response
-                    .status(Response.Status.FORBIDDEN)
-                    .build()
+                .status(Response.Status.FORBIDDEN)
+                .build()
         }
 
-        return runBlocking {
-            val authToken = stravaService.getAuthToken(clientId, clientSecret, code)
-            val cookie = buildAuthCookie(authToken.awaitFirst().accessToken)
-
-            successfulLoginAttempts.increment()
-            return@runBlocking Response.seeOther(URI(dashboardUiUrl))
-                    .cookie(cookie)
-                    .build()
-        }
+        return stravaService
+            .getAuthToken(clientId, clientSecret, code)
+            .map {
+                successfulLoginAttempts.inc()
+                buildAuthCookie(it.accessToken)
+            }.map {
+                Response.seeOther(URI(dashboardUiUrl)).cookie(it).build()
+            }.block()
     }
 
     private fun buildAuthCookie(value: String) = NewCookie(
-            ResourcesModule.AUTH_TOKEN_NAME,
-            value,
-            "/",
-            "",
-            "",
-            MAX_AGE,
-            false,
-            true
+        "StravaAuthToken",
+        value,
+        "/",
+        "",
+        "",
+        MAX_AGE,
+        false,
+        true
     )
 
     private fun buildVerificationCookie(nonce: String) = NewCookie(AUTH_NONCE_NAME, nonce)

@@ -22,4 +22,4 @@ generate_workspace \
   --artifact org.mockito:mockito-core:2.23.0 \
   --artifact org.reactivestreams:reactive-streams:1.0.2 \
   --repositories=https://jcenter.bintray.com \
-  --output_dir $PWD
+  --output_dir $PWD/tmp
