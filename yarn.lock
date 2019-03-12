@@ -8345,10 +8345,10 @@ react-error-overlay@^5.1.4:
   resolved "https://registry.yarnpkg.com/react-error-overlay/-/react-error-overlay-5.1.4.tgz#88dfb88857c18ceb3b9f95076f850d7121776991"
   integrity sha512-fp+U98OMZcnduQ+NSEiQa4s/XMsbp+5KlydmkbESOw4P69iWZ68ZMFM5a2BuE0FgqPBKApJyRuYHR95jM8lAmg==
 
-react-heatmap-grid@^0.7.3:
-  version "0.7.3"
-  resolved "https://registry.yarnpkg.com/react-heatmap-grid/-/react-heatmap-grid-0.7.3.tgz#3a482f97aca38be72c0255abee1206b682cf684a"
-  integrity sha512-7NeJjLPnqLoUQ/NSkbuOMLp0yOIEWIMXWwrUtEPojYb0tUZumR5LnhsHLRPhllzbg1oPCLNm1thznK7buJF+Ow==
+react-heatmap-grid@^0.8.0:
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/react-heatmap-grid/-/react-heatmap-grid-0.8.0.tgz#073e64f2c493dba1063f1902abcb2e0bdd07bb70"
+  integrity sha512-E0LtYz7hTaEf8s9PTVGMLhaGzcDbyp0c8fj5J7gebnyixlQAboqAXHVHXf8wyw+DTl/YdS1i80WEToCDHC7/CQ==
 
 react-is@^16.8.1:
   version "16.8.2"

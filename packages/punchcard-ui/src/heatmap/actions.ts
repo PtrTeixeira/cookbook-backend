@@ -77,5 +77,5 @@ export function buildWeeklyGrid(data: IWeeklyResults): number[][] {
     "SUNDAY"
   ]).map(weekday => buildHourlyGridSafe(data[weekday]));
 
-  return rotate(grid)
+  return grid;
 }
