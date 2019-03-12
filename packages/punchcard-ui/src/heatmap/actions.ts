@@ -5,7 +5,8 @@ export interface IWeeklyResults {
   "THURSDAY"?: IHourlyResults,
   "FRIDAY"?: IHourlyResults,
   "SATURDAY"?: IHourlyResults,
-  "SUNDAY"?: IHourlyResults
+  "SUNDAY"?: IHourlyResults;
+  [key: string]: IHourlyResults | undefined;
 }
 
 export interface IHourlyResults {
@@ -32,7 +33,8 @@ export interface IHourlyResults {
   "20"?: number,
   "21"?: number,
   "22"?: number,
-  "23"?: number,
+  "23"?: number;
+  [key: string]: number | undefined;
 }
 
 function buildHourlyGrid(data: IHourlyResults): number[] {
