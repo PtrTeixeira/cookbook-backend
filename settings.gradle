@@ -1,9 +1,0 @@
-rootProject.name = 'cookbook'
-include(
-  'kotlin-dropwizard-dsl',
-  'sentry-appender',
-  'punchcard-server',
-  'recipe-api',
-  'recipe-server',
-  'strava-api'
-)
