@@ -31,5 +31,8 @@
     "not ie <= 11",
     "not op_mini all"
   ],
-  "description": "UI for Strava Punchcard application"
+  "description": "UI for Strava Punchcard application",
+  "devDependencies": {
+    "jest-localstorage-mock": "^2.4.0"
+  }
 }
