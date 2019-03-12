@@ -1,0 +1,17 @@
+{
+  "name": "cookbook",
+  "version": "0.1.0",
+  "description": "Monorepo for things",
+  "private": true,
+  "author": "Peter Teixeira",
+  "license": "MIT",
+  "workspaces": [
+    "packages/*"
+  ],
+  "devDependencies": {
+    "json-server": "^0.14.2"
+  },
+  "scripts": {
+    "punchcard:backend": "json-server punchcard-db.json --port=8080"
+  }
+}
