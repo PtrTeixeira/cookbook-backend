@@ -2,12 +2,6 @@ load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 load("@bazel_tools//tools/build_defs/repo:maven_rules.bzl", "maven_dependency_plugin", "maven_jar")
 
-git_repository(
-    name = "build_bazel_rules_nodejs",
-    commit = "f49f9e1e795646d40c64f2c56f02f2a3feaae75a",
-    remote = "http://github.com/bazelbuild/rules_nodejs.git",
-)
-
 rules_kotlin_version = "9d100403c084534d41a8b74cfe12dc40275f4dd0"
 
 http_archive(
@@ -15,34 +9,8 @@ http_archive(
     strip_prefix = "rules_kotlin-%s" % rules_kotlin_version,
     type = "zip",
     urls = ["https://github.com/bazelbuild/rules_kotlin/archive/%s.zip" % rules_kotlin_version],
+    sha256 = "43c788de9a56afc01b61ae77b84fcc105bf0a361f2e2f66e4c46e90c420674f7"
 )
-
-http_archive(
-    name = "google_bazel_common",
-    strip_prefix = "bazel-common-1c225e62390566a9e88916471948ddd56e5f111c",
-    urls = ["https://github.com/google/bazel-common/archive/1c225e62390566a9e88916471948ddd56e5f111c.zip"],
-)
-
-#load("@google_bazel_common//:workspace_defs.bzl", "google_common_workspace_rules")
-#google_common_workspace_rules()
-
-load("@build_bazel_rules_nodejs//:defs.bzl", "node_repositories", "yarn_install")
-
-node_repositories(package_json = ["//:package.json"])
-
-yarn_install(
-    name = "npm",
-    package_json = "//:package.json",
-    yarn_lock = "//:yarn.lock",
-)
-
-load("@npm//:install_bazel_dependencies.bzl", "install_bazel_dependencies")
-
-install_bazel_dependencies()
-
-load("@npm_bazel_typescript//:defs.bzl", "ts_setup_workspace")
-
-ts_setup_workspace()
 
 load("//third-party/java:generate_workspace.bzl", "generated_maven_jars")
 
@@ -71,10 +39,4 @@ junit_jupiter_java_repositories(
 
 junit_platform_java_repositories(
     version = JUNIT_PLATFORM_VERSION,
-)
-
-git_repository(
-    name = "dagger",
-    commit = "9e0baea74aa2b2ef83f78898bac44851b9840f30",
-    remote = "https://github.com/google/dagger",
 )

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import HeatMap from 'react-heatmap-grid';
 
-export function WeekMap({data}: {data: number[][]}): JSX.Element {
+export function WeekMap({ data }: { data: number[][] }): JSX.Element {
   const days = [
     "Monday",
     "Tuesday",
