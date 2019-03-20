@@ -20,3 +20,11 @@ alias(
     name = "pest_derive",
     actual = "@raze__pest_derive__2_1_0//:pest_derive",
 )
+alias(
+    name = "regex",
+    actual = "@raze__regex__1_1_2//:regex",
+)
+alias(
+    name = "walkdir",
+    actual = "@raze__walkdir__2_2_7//:walkdir",
+)

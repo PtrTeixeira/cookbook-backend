@@ -12,7 +12,8 @@ package(default_visibility = [
 ])
 
 licenses([
-  "notice", # "MIT,Apache-2.0"
+  "notice", # "MIT"
+  "unencumbered", # "Unlicense"
 ])
 
 load(
@@ -23,10 +24,10 @@ load(
 )
 
 
-# Unsupported target "build-script-build" with type "custom-build" omitted
+# Unsupported target "bench" with type "bench" omitted
 
 rust_library(
-    name = "winapi",
+    name = "utf8_ranges",
     crate_root = "src/lib.rs",
     crate_type = "lib",
     edition = "2015",
@@ -36,19 +37,8 @@ rust_library(
     rustc_flags = [
         "--cap-lints=allow",
     ],
-    version = "0.3.6",
+    version = "1.0.2",
     crate_features = [
-        "consoleapi",
-        "errhandlingapi",
-        "fileapi",
-        "minwinbase",
-        "minwindef",
-        "processenv",
-        "std",
-        "winbase",
-        "wincon",
-        "winerror",
-        "winnt",
     ],
 )
 
