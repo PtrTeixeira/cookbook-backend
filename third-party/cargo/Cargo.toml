@@ -6,9 +6,11 @@ version = "0.0.0"
 path = "fake_lib.rs"
 
 [dependencies]
+clap = "2"
 pest = "2"
 pest_derive = "2"
-clap = "2"
+regex = "1"
+walkdir = "2"
 
 [raze]
 genmode = "Remote"

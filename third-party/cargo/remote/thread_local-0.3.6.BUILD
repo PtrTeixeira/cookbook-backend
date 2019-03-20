@@ -12,7 +12,7 @@ package(default_visibility = [
 ])
 
 licenses([
-  "notice", # "MIT,Apache-2.0"
+  "notice", # "Apache-2.0,MIT"
 ])
 
 load(
@@ -23,32 +23,22 @@ load(
 )
 
 
-# Unsupported target "build-script-build" with type "custom-build" omitted
+# Unsupported target "thread_local" with type "bench" omitted
 
 rust_library(
-    name = "winapi",
+    name = "thread_local",
     crate_root = "src/lib.rs",
     crate_type = "lib",
     edition = "2015",
     srcs = glob(["**/*.rs"]),
     deps = [
+        "@raze__lazy_static__1_3_0//:lazy_static",
     ],
     rustc_flags = [
         "--cap-lints=allow",
     ],
     version = "0.3.6",
     crate_features = [
-        "consoleapi",
-        "errhandlingapi",
-        "fileapi",
-        "minwinbase",
-        "minwindef",
-        "processenv",
-        "std",
-        "winbase",
-        "wincon",
-        "winerror",
-        "winnt",
     ],
 )
 
