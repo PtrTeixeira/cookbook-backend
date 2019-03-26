@@ -30,10 +30,16 @@ function HomeRoute() {
     )} />)
 }
 
+const HelperRoute = (props: IAppState) => (
+  <div className="row">
+    <Dashboard {...props} />
+  </div>
+)
+
 function WeekMapRoute(props: IAppState) {
   return (
     <Route path="/dashboard" render={withProps(
-      <Dashboard {...props} />
+      <HelperRoute {...props} />
     )} />)
 }
 
