@@ -7,11 +7,11 @@ kt_junit5_test(
     test_class = "models.TokenResponseTest",
     deps = [
         "//strava-api:models",
-        "//third-party/java:com_fasterxml_jackson_core_jackson_annotations",
-        "//third-party/java:com_fasterxml_jackson_core_jackson_core",
-        "//third-party/java:com_fasterxml_jackson_core_jackson_databind",
-        "//third-party/java:com_fasterxml_jackson_datatype_jackson_datatype_jdk8",
-        "//third-party/java:com_fasterxml_jackson_module_jackson_module_kotlin",
-        "//third-party/java:org_assertj_assertj_core",
+        "@maven//:com_fasterxml_jackson_core_jackson_annotations",
+        "@maven//:com_fasterxml_jackson_core_jackson_core",
+        "@maven//:com_fasterxml_jackson_core_jackson_databind",
+        "@maven//:com_fasterxml_jackson_datatype_jackson_datatype_jdk8",
+        "@maven//:com_fasterxml_jackson_module_jackson_module_kotlin",
+        "@maven//:org_assertj_assertj_core",
     ],
 )

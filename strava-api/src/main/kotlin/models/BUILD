@@ -9,9 +9,9 @@ kt_jvm_library(
     ],
     visibility = ["//visibility:public"],
     deps = [
-        "//third-party/java:com_fasterxml_jackson_core_jackson_annotations",
-        "//third-party/java:com_fasterxml_jackson_core_jackson_databind",
-        "//third-party/java:com_fasterxml_jackson_datatype_jackson_datatype_jdk8",
-        "//third-party/java:com_fasterxml_jackson_module_jackson_module_kotlin",
+        "@maven//:com_fasterxml_jackson_core_jackson_annotations",
+        "@maven//:com_fasterxml_jackson_core_jackson_databind",
+        "@maven//:com_fasterxml_jackson_datatype_jackson_datatype_jdk8",
+        "@maven//:com_fasterxml_jackson_module_jackson_module_kotlin",
     ],
 )

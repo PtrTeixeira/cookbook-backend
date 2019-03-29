@@ -9,7 +9,7 @@ kt_jvm_library(
     ],
     visibility = ["//visibility:public"],
     deps = [
-        "//third-party/java:io_dropwizard_dropwizard_core",
-        "//third-party/java:io_dropwizard_dropwizard_db",
+        "@maven//:io_dropwizard_dropwizard_core",
+        "@maven//:io_dropwizard_dropwizard_db",
     ],
 )
