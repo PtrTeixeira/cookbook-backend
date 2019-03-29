@@ -5,6 +5,7 @@ generate_workspace \
   --artifact com.fasterxml.jackson.core:jackson-annotations:2.9.7 \
   --artifact com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.9.7 \
   --artifact com.fasterxml.jackson.module:jackson-module-kotlin:2.9.7 \
+  --artifact com.google.inject:guice:4.2.2 \
   --artifact com.h2database:h2:1.4.197 \
   --artifact com.squareup.retrofit2:retrofit:2.4.0 \
   --artifact com.tylerkindy.com:dropwizard-dagger:0.1.0-alpha03 \

@@ -12,6 +12,14 @@ def generated_maven_jars():
         sha1 = "479c1e06db31c432330183f5cae684163f186146",
     )
 
+    # com.google.inject:guice:jar:4.2.2
+    native.maven_jar(
+        name = "aopalliance_aopalliance",
+        artifact = "aopalliance:aopalliance:1.0",
+        repository = "https://jcenter.bintray.com/",
+        sha1 = "0235ba8b489512805ac13a8f9ea77a1ca5ebe3e8",
+    )
+
     # io.dropwizard:dropwizard-core:jar:1.3.5 got requested version
     # io.dropwizard:dropwizard-core:jar:1.3.5
     native.maven_jar(
@@ -91,6 +99,13 @@ def generated_maven_jars():
         repository = "https://jcenter.bintray.com/",
         sha1 = "2c8241f84acf6c924bd75be0dbd68e8d74fbcd70",
     )
+
+    native.maven_jar(
+        name = "com_google_inject_guice",
+        artifact = "com.google.inject:guice:4.2.2",
+        repository = "https://jcenter.bintray.com/",
+        sha1 = "6dacbe18e5eaa7f6c9c36db33b42e7985e94ce77",
+     )
 
     # io.dropwizard:dropwizard-jackson:jar:1.3.5
     native.maven_jar(
@@ -1230,6 +1245,12 @@ def generated_java_libraries():
     )
 
     native.java_library(
+        name = "aopalliance_aopalliance",
+        visibility = ["//visibility:public"],
+        exports = ["@aopalliance_aopalliance//jar"],
+    )
+
+    native.java_library(
         name = "org_eclipse_jetty_toolchain_setuid_jetty_setuid_java",
         visibility = ["//visibility:public"],
         exports = ["@org_eclipse_jetty_toolchain_setuid_jetty_setuid_java//jar"],
@@ -1326,6 +1347,21 @@ def generated_java_libraries():
         visibility = ["//visibility:public"],
         exports = ["@net_sourceforge_argparse4j_argparse4j//jar"],
     )
+
+    native.java_library(
+          name = "com_google_inject_guice",
+          visibility = ["//visibility:public"],
+          exports = ["@com_google_inject_guice//jar"],
+          runtime_deps = [
+              ":aopalliance_aopalliance",
+              ":com_google_code_findbugs_jsr305",
+              ":com_google_errorprone_error_prone_annotations",
+              ":com_google_guava_guava",
+              ":com_google_j2objc_j2objc_annotations",
+              ":org_checkerframework_checker_compat_qual",
+              ":org_codehaus_mojo_animal_sniffer_annotations",
+          ],
+      )
 
     native.java_library(
         name = "com_fasterxml_jackson_module_jackson_module_afterburner",

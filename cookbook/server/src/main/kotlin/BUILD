@@ -3,6 +3,7 @@ load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kt_jvm_library")
 kt_jvm_library(
     name = "server_lib",
     srcs = [
+        "ApplicationModule.kt",
         "CookbookApplication.kt",
     ],
     resources = [
@@ -23,6 +24,7 @@ kt_jvm_library(
         "//third-party/java:com_fasterxml_jackson_core_jackson_core",
         "//third-party/java:com_fasterxml_jackson_core_jackson_databind",
         "//third-party/java:com_fasterxml_jackson_module_jackson_module_kotlin",
+        "//third-party/java:com_google_inject_guice",
         "//third-party/java:com_h2database_h2",
         "//third-party/java:io_dropwizard_dropwizard_auth",
         "//third-party/java:io_dropwizard_dropwizard_core",
