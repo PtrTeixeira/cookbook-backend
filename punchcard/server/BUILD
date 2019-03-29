@@ -26,6 +26,7 @@ kt_jvm_library(
         "//third-party/java:com_fasterxml_jackson_core_jackson_databind",
         "//third-party/java:com_fasterxml_jackson_module_jackson_module_kotlin",
         "//third-party/java:com_google_guava_guava",
+        "//third-party/java:com_google_inject_guice",
         "//third-party/java:com_jakewharton_retrofit_retrofit2_reactor_adapter",
         "//third-party/java:com_squareup_retrofit2_converter_jackson",
         "//third-party/java:com_squareup_retrofit2_retrofit",
