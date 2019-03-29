@@ -1,0 +1,14 @@
+# See github.com/google/startup-os for background
+
+# Disable log spam
+build --noshow_progress
+
+# Skip manual tests
+test --test_tag_filters=-manual
+
+# Write build info into the build cache
+build --experimental_repository_cache=/home/circleci/bazel_repository_cache
+
+# Explicitly limit resources on server
+build --local_resources=3072,1.0,1.0
+startup --host_jvm_args=-Xmx2G
