@@ -32,12 +32,51 @@ http_archive(
     sha256 = "43c788de9a56afc01b61ae77b84fcc105bf0a361f2e2f66e4c46e90c420674f7"
 )
 
+RULES_JVM_EXTERNAL_TAG = "1.1"
+RULES_JVM_EXTERNAL_SHA = "ade316ec98ba0769bb1189b345d9877de99dd1b1e82f5a649d6ccbcb8da51c1f"
+http_archive(
+    name = "rules_jvm_external",
+    strip_prefix = "rules_jvm_external-%s" % RULES_JVM_EXTERNAL_TAG,
+    sha256 = RULES_JVM_EXTERNAL_SHA,
+    url = "https://github.com/bazelbuild/rules_jvm_external/archive/%s.zip" % RULES_JVM_EXTERNAL_TAG,
+)
+load("@rules_jvm_external//:defs.bzl", "maven_install")
+
+
+maven_install(
+  artifacts = [
+  "com.fasterxml.jackson.core:jackson-annotations:2.9.7",
+  "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:2.9.7",
+  "com.fasterxml.jackson.module:jackson-module-kotlin:2.9.7",
+  "com.google.inject:guice:4.2.2",
+  "com.google.guava:guava:27.1-jre",
+  "com.h2database:h2:1.4.197",
+  "com.jakewharton.retrofit:retrofit2-reactor-adapter:2.1.0",
+  "com.squareup.retrofit2:converter-jackson:2.4.0",
+  "com.squareup.retrofit2:retrofit:2.4.0",
+  "io.dropwizard:dropwizard-auth:1.3.5",
+  "io.dropwizard:dropwizard-core:1.3.5",
+  "io.dropwizard:dropwizard-jdbi3:1.3.5",
+  "io.dropwizard:dropwizard-logging:1.3.5",
+  "io.dropwizard:dropwizard-migrations:1.3.5",
+  "io.dropwizard:dropwizard-testing:1.3.5",
+  "io.projectreactor:reactor-core:3.2.2.RELEASE",
+  "io.projectreactor:reactor-test:3.2.2.RELEASE",
+  "io.sentry:sentry-logback:1.7.13",
+  "org.assertj:assertj-core:3.11.1",
+  "org.jdbi:jdbi3-kotlin-sqlobject:3.5.1",
+  "org.mockito:mockito-core:2.23.0",
+  "org.reactivestreams:reactive-streams:1.0.2",
+  ],
+  repositories = [
+    "https://jcenter.bintray.com/",
+    "https://repo1.maven.org/maven2/"
+  ]
+)
+
 
 load("//third-party/cargo:crates.bzl", "raze_fetch_remote_crates")
 raze_fetch_remote_crates()
-load("//third-party/java:generate_workspace.bzl", "generated_maven_jars")
-
-generated_maven_jars()
 
 load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kotlin_repositories", "kt_register_toolchains")
 

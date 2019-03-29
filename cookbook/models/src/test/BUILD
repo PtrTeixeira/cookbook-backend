@@ -11,12 +11,12 @@ kt_junit5_test(
     test_class = "com.github.ptrteixeira.cookbook.model.RecipeEggTest",
     deps = [
         "//cookbook/models",
-        "//third-party/java:com_fasterxml_jackson_core_jackson_core",
-        "//third-party/java:com_fasterxml_jackson_core_jackson_databind",
-        "//third-party/java:com_fasterxml_jackson_datatype_jackson_datatype_jdk8",
-        "//third-party/java:com_fasterxml_jackson_module_jackson_module_kotlin",
-        "//third-party/java:io_dropwizard_dropwizard_testing",
-        "//third-party/java:org_assertj_assertj_core",
+        "@maven//:com_fasterxml_jackson_core_jackson_core",
+        "@maven//:com_fasterxml_jackson_core_jackson_databind",
+        "@maven//:com_fasterxml_jackson_datatype_jackson_datatype_jdk8",
+        "@maven//:com_fasterxml_jackson_module_jackson_module_kotlin",
+        "@maven//:io_dropwizard_dropwizard_testing",
+        "@maven//:org_assertj_assertj_core",
     ],
 )
 
@@ -30,11 +30,11 @@ kt_junit5_test(
     test_class = "com.github.ptrteixeira.cookbook.model.RecipeTest",
     deps = [
         "//cookbook/models",
-        "//third-party/java:com_fasterxml_jackson_core_jackson_core",
-        "//third-party/java:com_fasterxml_jackson_core_jackson_databind",
-        "//third-party/java:com_fasterxml_jackson_datatype_jackson_datatype_jdk8",
-        "//third-party/java:com_fasterxml_jackson_module_jackson_module_kotlin",
-        "//third-party/java:io_dropwizard_dropwizard_testing",
-        "//third-party/java:org_assertj_assertj_core",
+        "@maven//:com_fasterxml_jackson_core_jackson_core",
+        "@maven//:com_fasterxml_jackson_core_jackson_databind",
+        "@maven//:com_fasterxml_jackson_datatype_jackson_datatype_jdk8",
+        "@maven//:com_fasterxml_jackson_module_jackson_module_kotlin",
+        "@maven//:io_dropwizard_dropwizard_testing",
+        "@maven//:org_assertj_assertj_core",
     ],
 )
