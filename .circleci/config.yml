@@ -1,35 +1,32 @@
 version: "2.1"
 jobs:
-  # build_java:
-  #   working_directory: ~/cookbook
-  #   docker:
-  #     - image: circleci/openjdk:8u181-jdk-node-browsers
-  #   environment:
-  #     _JAVA_OPTIONS: -Xmx1024m -XX:ParallelGCThreads=2 -XX:ConcGCThreads=2 -XX:ParallelGCThreads=2 -Djava.util.concurrent.ForkJoinPool.common.parallelism=2
-  #   steps:
-  #     - checkout
-  #     - restore_cache:
-  #         key: &java_cache_key v2-{{ checksum "build.gradle.kts" }}
-  #     - run:
-  #         command: "bash gradlew check"
-  #     - save_cache:
-  #         paths:
-  #           - ~/.gradle
-  #         key: *java_cache_key
-  #     - store_test_results:
-  #         path: ~/cookbook/build/reports/allTestsXml
+  build_primary:
+    working_directory: ~/cookbook
+    docker:
+      - image: angular/ngcontainer:0.10.0
+    steps:
+      - checkout
+      - restore_cache:
+          key: "v1-bazel-cache"
+      - run: sudo cp .circleci/bazel.rc /etc/bazel.bazelrc
+      - run: bazel build //...
+      - run: bazel test //...
+      - save_cache:
+          key: "v1-bazel-cache"
+          paths:
+            - "/home/circleci/.cache/bazel"
   build_ui:
     docker:
       - image: circleci/openjdk:8u181-jdk-node-browsers
     steps:
       - checkout
       - run: yarn
-      - run: yarn workspaces run test
       - run: yarn workspaces run build
+      - run: yarn workspaces run test
 
 workflows:
   version: 2
   full_build:
     jobs:
-    # - build_java
+    - build_primary
     - build_ui
