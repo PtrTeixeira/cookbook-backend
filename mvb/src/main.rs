@@ -11,6 +11,14 @@ use std::path::Path;
 use walkdir::{DirEntry, WalkDir};
 
 fn main() {
+    let result = run_app();
+
+    if !result {
+        std::process::exit(1);
+    }
+}
+
+fn run_app() -> bool {
     let matches = App::new("mvb")
         .author("Peter Teixeira")
         .about("Bulk renames files")
@@ -30,13 +38,21 @@ fn main() {
     let backup = matches.is_present("preserve");
     let re = Regex::new(from_pattern).expect("Could not parse input pattern");
 
+    let mut exit_ok = true;
     for entry in WalkDir::new(".").into_iter().filter_map(|e| e.ok()) {
-        if backup {
-            try_copy_file(entry, &to_pattern, &re);
+        let move_result = if backup {
+            try_copy_file(entry, &to_pattern, &re)
         } else {
-            try_move_file(entry, &to_pattern, &re);
+            try_move_file(entry, &to_pattern, &re)
+        };
+
+        if let Some(Err(e)) = move_result {
+            exit_ok = false;
+            eprintln!("{:?}", e);
         }
     }
+
+    exit_ok
 }
 
 fn try_move_file(entry: DirEntry, target_pattern: &str, re: &Regex) -> Option<io::Result<()>> {
@@ -66,6 +82,6 @@ fn try_copy_file(entry: DirEntry, target_pattern: &str, re: &Regex) -> Option<io
 
     return match fs::copy(entry.path(), target_file_path) {
         Ok(_) => Some(Ok(())),
-        Err(e) => Some(Err(e))
-    }
+        Err(e) => Some(Err(e)),
+    };
 }
