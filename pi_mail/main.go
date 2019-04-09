@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"os/signal"
 	"time"
 
 	"golang.org/x/oauth2"
@@ -142,9 +143,18 @@ func main() {
 	hasMessages := false
 
 	ticker := time.NewTicker(30 * time.Second)
-  for range ticker.C {
-    hasMessages, historyId = hasMessagesSince(srv, user, historyId)
-    fmt.Printf("Has messages since %v: %v\n", historyId, hasMessages)
-  }
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, os.Interrupt)
+
+outer:
+	for {
+		select {
+		case <-ticker.C:
+			hasMessages, historyId = hasMessagesSince(srv, user, historyId)
+			fmt.Printf("Has messages since %v: %v\n", historyId, hasMessages)
+		case <-quit:
+			break outer
+		}
+	}
 	ticker.Stop()
 }
