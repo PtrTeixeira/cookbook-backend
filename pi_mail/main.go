@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
@@ -63,6 +64,62 @@ func saveToken(path string, token *oauth2.Token) {
 	json.NewEncoder(f).Encode(token)
 }
 
+func getMessage(srv *gmail.Service, userId string, messageId string) (*gmail.Message, error) {
+	return srv.Users.Messages.Get(userId, messageId).Do()
+}
+
+func getSubject(message *gmail.Message) string {
+	payload := message.Payload
+	if payload == nil {
+		log.Fatalf("Retrieved message %v had no body\n", message.Raw)
+	}
+
+	headers := payload.Headers
+	if headers == nil {
+		log.Fatalf("Retrieved message %v had no body\n", message.Raw)
+	}
+
+	for _, header := range headers {
+		if header.Name == "Subject" {
+			return header.Value
+		}
+	}
+
+	return ""
+}
+
+func getMostRecentHistoryId(srv *gmail.Service, userId string) uint64 {
+	r, err := srv.Users.Messages.List(userId).MaxResults(1).Do()
+	if err != nil {
+		log.Fatalf("Failed to retrieve recent messages %v\n", err)
+	}
+
+	for _, m := range r.Messages {
+		message, err := getMessage(srv, userId, m.Id)
+		if err != nil {
+			log.Fatalf("Failed to retrieve message %v due to %v\n", m.Id, err)
+		}
+
+		return message.HistoryId
+	}
+
+	log.Fatalf("Could not get most recent history ID")
+	return 0
+}
+
+// First result = has new messages since
+// second result = most recently seen history ID
+func hasMessagesSince(srv *gmail.Service, userId string, historyId uint64) (bool, uint64) {
+	r, err := srv.Users.History.List(userId).HistoryTypes("messageAdded").StartHistoryId(historyId).Do()
+	if err != nil {
+		log.Fatalf("Could not get message history due to %v\n", err)
+	}
+
+	newHistoryId := r.HistoryId
+	hasResults := (len(r.History) > 0)
+	return hasResults, newHistoryId
+}
+
 func main() {
 	b, err := ioutil.ReadFile("/home/teixeira/credentials.json")
 	if err != nil {
@@ -81,17 +138,13 @@ func main() {
 	}
 
 	user := "me"
-	r, err := srv.Users.Labels.List(user).Do()
-	if err != nil {
-		log.Fatalf("Failed to retrive labels: %v\n", err)
-	}
-	if len(r.Labels) == 0 {
-		fmt.Println("No labels found")
-		return
-	}
+	historyId := getMostRecentHistoryId(srv, user)
+	hasMessages := false
 
-	fmt.Println("Labels:")
-	for _, l := range r.Labels {
-		fmt.Printf("- %s\n", l.Name)
-	}
+	ticker := time.NewTicker(30 * time.Second)
+  for range ticker.C {
+    hasMessages, historyId = hasMessagesSince(srv, user, historyId)
+    fmt.Printf("Has messages since %v: %v\n", historyId, hasMessages)
+  }
+	ticker.Stop()
 }
