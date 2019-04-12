@@ -1,9 +1,10 @@
 package main
 
 import (
-  "bytes"
+	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -23,27 +24,34 @@ import (
 
 func getClient(tokFile string, config *oauth2.Config) *http.Client {
 	tok, err := tokenFromFile(tokFile)
-	if err != nil {
-		tok = getTokenFromWeb(config)
-		saveToken(tokFile, tok)
-	}
-	return config.Client(context.Background(), tok)
+  if err == nil {
+    return config.Client(context.Background(), tok)
+  }
+
+  tok, err = getTokenFromWeb(config)
+  if err != nil {
+    log.Fatalf("Could not get auth token from gmail: %v", err)
+  }
+  saveToken(tokFile, tok)
+  return config.Client(context.Background(), tok)
 }
 
-func getTokenFromWeb(config *oauth2.Config) *oauth2.Token {
+func getTokenFromWeb(config *oauth2.Config) (*oauth2.Token, error) {
 	authURL := config.AuthCodeURL("state-token", oauth2.AccessTypeOffline)
 	fmt.Printf("Go here: \n%v\n", authURL)
 
 	var authCode string
 	if _, err := fmt.Scan(&authCode); err != nil {
-		log.Fatalf("Could not read auth code")
+    msg := fmt.Sprintf("Could not read auth code: %v", err)
+    return nil, errors.New(msg)
 	}
 
 	tok, err := config.Exchange(context.TODO(), authCode)
 	if err != nil {
-		log.Fatalf("Unable to retrieve token from web: %v", err)
+    msg := fmt.Sprintf("Unable to retrieve token from web: %v", err)
+    return nil, errors.New(msg)
 	}
-	return tok
+	return tok, nil
 }
 
 func tokenFromFile(file string) (*oauth2.Token, error) {
@@ -93,23 +101,22 @@ func getSubject(message *gmail.Message) string {
 	return ""
 }
 
-func getMostRecentHistoryId(srv *gmail.Service, userId string) uint64 {
+func getMostRecentHistoryId(srv *gmail.Service, userId string) (uint64, error) {
 	r, err := srv.Users.Messages.List(userId).MaxResults(1).Do()
 	if err != nil {
-		log.Fatalf("Failed to retrieve recent messages %v\n", err)
+		return 0, err
 	}
 
 	for _, m := range r.Messages {
 		message, err := getMessage(srv, userId, m.Id)
 		if err != nil {
-			log.Fatalf("Failed to retrieve message %v due to %v\n", m.Id, err)
+			continue
 		}
 
-		return message.HistoryId
+		return message.HistoryId, nil
 	}
 
-	log.Fatalf("Could not get most recent history ID")
-	return 0
+	return 0, errors.New("Could not get the most recent history ID")
 }
 
 // First result = has new messages since
@@ -159,9 +166,12 @@ func main() {
 	}
 
 	user := "me"
-	historyId := getMostRecentHistoryId(srv, user)
-	hasMessages := false
+	historyId, err := getMostRecentHistoryId(srv, user)
+	if err != nil {
+		log.Fatal(err)
+	}
 
+	hasMessages := false
 	ticker := time.NewTicker(30 * time.Second)
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, os.Interrupt)
