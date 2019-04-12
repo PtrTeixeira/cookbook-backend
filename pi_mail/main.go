@@ -1,6 +1,7 @@
 package main
 
 import (
+  "bytes"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -8,16 +9,19 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"os/exec"
 	"os/signal"
+	"os/user"
+	"path/filepath"
 	"time"
 
+	flag "github.com/spf13/pflag"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
 	"google.golang.org/api/gmail/v1"
 )
 
-func getClient(config *oauth2.Config) *http.Client {
-	tokFile := "/home/teixeira/token.json"
+func getClient(tokFile string, config *oauth2.Config) *http.Client {
 	tok, err := tokenFromFile(tokFile)
 	if err != nil {
 		tok = getTokenFromWeb(config)
@@ -122,7 +126,23 @@ func hasMessagesSince(srv *gmail.Service, userId string, historyId uint64) (bool
 }
 
 func main() {
-	b, err := ioutil.ReadFile("/home/teixeira/credentials.json")
+	usr, err := user.Current()
+	var defaultCredentials, defaultTokFile string
+	if err != nil {
+		defaultCredentials = ""
+		defaultTokFile = ""
+	}
+	homeDir := usr.HomeDir
+
+	defaultCredentials = filepath.Join(homeDir, "credentials.json")
+	defaultTokFile = filepath.Join(homeDir, "token.json")
+	credentials := flag.StringP("credentials", "c", defaultCredentials, "Saved credentials file")
+	tokFile := flag.StringP("token", "t", defaultTokFile, "Saved token file")
+	execString := flag.StringP("exec", "e", "", "Command to execute for each message")
+	flag.Parse()
+	fmt.Printf("Exec string: %v\n", *execString)
+
+	b, err := ioutil.ReadFile(*credentials)
 	if err != nil {
 		log.Fatalf("Unable to read client secret: %v\n", err)
 	}
@@ -131,7 +151,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("Unable to parse client secret: %v\n", err)
 	}
-	client := getClient(config)
+	client := getClient(*tokFile, config)
 
 	srv, err := gmail.New(client)
 	if err != nil {
@@ -152,6 +172,15 @@ outer:
 		case <-ticker.C:
 			hasMessages, historyId = hasMessagesSince(srv, user, historyId)
 			fmt.Printf("Has messages since %v: %v\n", historyId, hasMessages)
+			cmd := exec.Command("bash", "-c", *execString)
+			var out bytes.Buffer
+			cmd.Stdout = &out
+			err := cmd.Run()
+			if err != nil {
+				log.Fatal(err)
+			}
+			fmt.Printf("Result: %v\n", out.String())
+
 		case <-quit:
 			break outer
 		}

@@ -6,6 +6,7 @@ go_library(
     importpath = "github.com/PtrTeixeira/cookbook/pi_mail",
     visibility = ["//visibility:private"],
     deps = [
+        "@com_github_spf13_pflag//:go_default_library",
         "@org_golang_google_api//gmail/v1:go_default_library",
         "@org_golang_x_oauth2//:go_default_library",
         "@org_golang_x_oauth2//google:go_default_library",
@@ -13,7 +14,7 @@ go_library(
 )
 
 go_binary(
-    name = "pi_mail",
+    name = "gmaild",
     embed = [":go_default_library"],
     visibility = ["//visibility:public"],
 )
