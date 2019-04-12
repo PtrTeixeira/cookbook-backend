@@ -1,4 +1,4 @@
-module github.com/PtrTeixeira/cookbook/pi_mail
+module github.com/PtrTeixeira/cookbook/gmaild
 
 require (
 	github.com/spf13/pflag v1.0.3
