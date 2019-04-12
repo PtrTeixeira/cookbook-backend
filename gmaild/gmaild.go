@@ -22,18 +22,30 @@ import (
 	"google.golang.org/api/gmail/v1"
 )
 
+// GmaildConfig is the format for the gmaild daemon
+type GmaildConfig struct {
+	// The file path to credentials file
+	// defaults to $HOME/credentials.json
+	CredFile string
+	// The file path to the token file
+	// defaults to $HOME/token.json
+	TokFile string
+	// The command to get executed on new messages
+	ExecString string
+}
+
 func getClient(tokFile string, config *oauth2.Config) *http.Client {
 	tok, err := tokenFromFile(tokFile)
-  if err == nil {
-    return config.Client(context.Background(), tok)
-  }
+	if err == nil {
+		return config.Client(context.Background(), tok)
+	}
 
-  tok, err = getTokenFromWeb(config)
-  if err != nil {
-    log.Fatalf("Could not get auth token from gmail: %v", err)
-  }
-  saveToken(tokFile, tok)
-  return config.Client(context.Background(), tok)
+	tok, err = getTokenFromWeb(config)
+	if err != nil {
+		log.Fatalf("Could not get auth token from gmail: %v", err)
+	}
+	saveToken(tokFile, tok)
+	return config.Client(context.Background(), tok)
 }
 
 func getTokenFromWeb(config *oauth2.Config) (*oauth2.Token, error) {
@@ -42,14 +54,14 @@ func getTokenFromWeb(config *oauth2.Config) (*oauth2.Token, error) {
 
 	var authCode string
 	if _, err := fmt.Scan(&authCode); err != nil {
-    msg := fmt.Sprintf("Could not read auth code: %v", err)
-    return nil, errors.New(msg)
+		msg := fmt.Sprintf("Could not read auth code: %v", err)
+		return nil, errors.New(msg)
 	}
 
 	tok, err := config.Exchange(context.TODO(), authCode)
 	if err != nil {
-    msg := fmt.Sprintf("Unable to retrieve token from web: %v", err)
-    return nil, errors.New(msg)
+		msg := fmt.Sprintf("Unable to retrieve token from web: %v", err)
+		return nil, errors.New(msg)
 	}
 	return tok, nil
 }
@@ -77,38 +89,18 @@ func saveToken(path string, token *oauth2.Token) {
 	json.NewEncoder(f).Encode(token)
 }
 
-func getMessage(srv *gmail.Service, userId string, messageId string) (*gmail.Message, error) {
-	return srv.Users.Messages.Get(userId, messageId).Do()
+func getMessage(srv *gmail.Service, userID string, messageID string) (*gmail.Message, error) {
+	return srv.Users.Messages.Get(userID, messageID).Do()
 }
 
-func getSubject(message *gmail.Message) string {
-	payload := message.Payload
-	if payload == nil {
-		log.Fatalf("Retrieved message %v had no body\n", message.Raw)
-	}
-
-	headers := payload.Headers
-	if headers == nil {
-		log.Fatalf("Retrieved message %v had no body\n", message.Raw)
-	}
-
-	for _, header := range headers {
-		if header.Name == "Subject" {
-			return header.Value
-		}
-	}
-
-	return ""
-}
-
-func getMostRecentHistoryId(srv *gmail.Service, userId string) (uint64, error) {
-	r, err := srv.Users.Messages.List(userId).MaxResults(1).Do()
+func getMostRecentHistoryID(srv *gmail.Service, userID string) (uint64, error) {
+	r, err := srv.Users.Messages.List(userID).MaxResults(1).Do()
 	if err != nil {
 		return 0, err
 	}
 
 	for _, m := range r.Messages {
-		message, err := getMessage(srv, userId, m.Id)
+		message, err := getMessage(srv, userID, m.Id)
 		if err != nil {
 			continue
 		}
@@ -121,35 +113,75 @@ func getMostRecentHistoryId(srv *gmail.Service, userId string) (uint64, error) {
 
 // First result = has new messages since
 // second result = most recently seen history ID
-func hasMessagesSince(srv *gmail.Service, userId string, historyId uint64) (bool, uint64) {
-	r, err := srv.Users.History.List(userId).HistoryTypes("messageAdded").StartHistoryId(historyId).Do()
+func hasMessagesSince(srv *gmail.Service, userID string, historyID uint64) (bool, uint64) {
+	r, err := srv.Users.History.List(userID).HistoryTypes("messageAdded").StartHistoryId(historyID).Do()
 	if err != nil {
 		log.Fatalf("Could not get message history due to %v\n", err)
 	}
 
-	newHistoryId := r.HistoryId
+	newHistoryID := r.HistoryId
 	hasResults := (len(r.History) > 0)
-	return hasResults, newHistoryId
+	return hasResults, newHistoryID
+}
+
+func parseCommandLine(
+	usr *user.User,
+	arguments []string,
+) (*GmaildConfig, error) {
+	homeDir := usr.HomeDir
+	defaultCredentials := filepath.Join(homeDir, "credentials.json")
+	defaultTokFile := filepath.Join(homeDir, "token.json")
+
+	defaultCommand := flag.NewFlagSet("gmaild", flag.ExitOnError)
+	credFile := defaultCommand.StringP(
+		"credentials",
+		"c",
+		defaultCredentials,
+		"Saved credentials file")
+	tokFile := defaultCommand.StringP("token", "t", defaultTokFile, "Saved token file")
+	exec := defaultCommand.StringP("exec", "e", "", "Command to execute for each message")
+
+	if len(arguments) <= 1 {
+		// Clearly this is buggy crap
+		defaultCommand.PrintDefaults()
+		return nil, errors.New("Invalid command string format")
+	}
+
+	defaultCommand.Parse(arguments[1:])
+	config := GmaildConfig{
+		CredFile:   *credFile,
+		TokFile:    *tokFile,
+		ExecString: *exec,
+	}
+
+	return &config, nil
 }
 
 func main() {
 	usr, err := user.Current()
-	var defaultCredentials, defaultTokFile string
+	// var defaultCredentials, defaultTokFile string
 	if err != nil {
-		defaultCredentials = ""
-		defaultTokFile = ""
+		log.Fatalf("Could not determine current user %v\n", err)
+		// defaultCredentials = ""
+		// defaultTokFile = ""
 	}
-	homeDir := usr.HomeDir
+	// var credentials, tokFile, execString string
+	gmaildConfig, err := parseCommandLine(usr, os.Args)
+	if err != nil {
+		os.Exit(1)
+	}
 
-	defaultCredentials = filepath.Join(homeDir, "credentials.json")
-	defaultTokFile = filepath.Join(homeDir, "token.json")
-	credentials := flag.StringP("credentials", "c", defaultCredentials, "Saved credentials file")
-	tokFile := flag.StringP("token", "t", defaultTokFile, "Saved token file")
-	execString := flag.StringP("exec", "e", "", "Command to execute for each message")
-	flag.Parse()
-	fmt.Printf("Exec string: %v\n", *execString)
+	// homeDir := usr.HomeDir
 
-	b, err := ioutil.ReadFile(*credentials)
+	// defaultCredentials = filepath.Join(homeDir, "credentials.json")
+	// defaultTokFile = filepath.Join(homeDir, "token.json")
+	// credentials := flag.StringP("credentials", "c", defaultCredentials, "Saved credentials file")
+	// tokFile := flag.StringP("token", "t", defaultTokFile, "Saved token file")
+	// execString := flag.StringP("exec", "e", "", "Command to execute for each message")
+	// flag.Parse()
+	fmt.Printf("Exec string: %v\n", gmaildConfig.ExecString)
+
+	b, err := ioutil.ReadFile(gmaildConfig.ExecString)
 	if err != nil {
 		log.Fatalf("Unable to read client secret: %v\n", err)
 	}
@@ -158,7 +190,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("Unable to parse client secret: %v\n", err)
 	}
-	client := getClient(*tokFile, config)
+	client := getClient(gmaildConfig.TokFile, config)
 
 	srv, err := gmail.New(client)
 	if err != nil {
@@ -166,7 +198,7 @@ func main() {
 	}
 
 	user := "me"
-	historyId, err := getMostRecentHistoryId(srv, user)
+	historyID, err := getMostRecentHistoryID(srv, user)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -180,9 +212,9 @@ outer:
 	for {
 		select {
 		case <-ticker.C:
-			hasMessages, historyId = hasMessagesSince(srv, user, historyId)
-			fmt.Printf("Has messages since %v: %v\n", historyId, hasMessages)
-			cmd := exec.Command("bash", "-c", *execString)
+			hasMessages, historyID = hasMessagesSince(srv, user, historyID)
+			fmt.Printf("Has messages since %v: %v\n", historyID, hasMessages)
+			cmd := exec.Command("bash", "-c", gmaildConfig.ExecString)
 			var out bytes.Buffer
 			cmd.Stdout = &out
 			err := cmd.Run()
