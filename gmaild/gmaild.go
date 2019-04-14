@@ -171,17 +171,9 @@ func main() {
 		os.Exit(1)
 	}
 
-	// homeDir := usr.HomeDir
-
-	// defaultCredentials = filepath.Join(homeDir, "credentials.json")
-	// defaultTokFile = filepath.Join(homeDir, "token.json")
-	// credentials := flag.StringP("credentials", "c", defaultCredentials, "Saved credentials file")
-	// tokFile := flag.StringP("token", "t", defaultTokFile, "Saved token file")
-	// execString := flag.StringP("exec", "e", "", "Command to execute for each message")
-	// flag.Parse()
 	fmt.Printf("Exec string: %v\n", gmaildConfig.ExecString)
 
-	b, err := ioutil.ReadFile(gmaildConfig.ExecString)
+	b, err := ioutil.ReadFile(gmaildConfig.CredFile)
 	if err != nil {
 		log.Fatalf("Unable to read client secret: %v\n", err)
 	}
@@ -214,15 +206,16 @@ outer:
 		case <-ticker.C:
 			hasMessages, historyID = hasMessagesSince(srv, user, historyID)
 			fmt.Printf("Has messages since %v: %v\n", historyID, hasMessages)
-			cmd := exec.Command("bash", "-c", gmaildConfig.ExecString)
-			var out bytes.Buffer
-			cmd.Stdout = &out
-			err := cmd.Run()
-			if err != nil {
-				log.Fatal(err)
-			}
-			fmt.Printf("Result: %v\n", out.String())
-
+      if hasMessages {
+        cmd := exec.Command("bash", "-c", gmaildConfig.ExecString)
+        var out bytes.Buffer
+        cmd.Stdout = &out
+        err := cmd.Run()
+        if err != nil {
+          log.Fatal(err)
+        }
+        fmt.Printf("Result: %v\n", out.String())
+      }
 		case <-quit:
 			break outer
 		}
