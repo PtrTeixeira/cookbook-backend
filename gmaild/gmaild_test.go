@@ -49,4 +49,19 @@ func TestGmaild(t *testing.T) {
 			t.Error("Should have failed to parse command-line arguments")
 		}
 	})
+
+	t.Run("when given the -h flag", func(t *testing.T) {
+		args := []string{"gmaild", "-h"}
+		_, err := parseCommandLine(&user, args)
+
+		if err == nil {
+			t.Error("Should have returned an error while parsing command line args")
+		}
+
+		cliErr := err.(*cliError)
+
+		if !cliErr.helpRequested {
+			t.Error("Should have indicated that user passed -h flag")
+		}
+	})
 }

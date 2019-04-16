@@ -42,13 +42,26 @@ type MessageEvent struct {
 	MessageAdded gmail.Message
 }
 
+type cliError struct {
+	errorMessage  string
+	usage         string
+	helpRequested bool
+}
+
+func (c *cliError) Error() string {
+	if c.helpRequested {
+		return fmt.Sprintf("Usage:\n%s", c.usage)
+	}
+	return fmt.Sprintf("Error: %s\n\nUsage:\n%s", c.errorMessage, c.usage)
+}
+
 func getClient(tokFile string, config *oauth2.Config) *http.Client {
 	tok, err := tokenFromFile(tokFile)
 	if err == nil {
 		return config.Client(context.Background(), tok)
 	}
 
-	tok, err = getTokenFromWeb(config)
+	tok, err = getTokenFromWeb(context.TODO(), config)
 	if err != nil {
 		log.Fatalf("Could not get auth token from gmail: %v", err)
 	}
@@ -56,7 +69,7 @@ func getClient(tokFile string, config *oauth2.Config) *http.Client {
 	return config.Client(context.Background(), tok)
 }
 
-func getTokenFromWeb(config *oauth2.Config) (*oauth2.Token, error) {
+func getTokenFromWeb(context context.Context, config *oauth2.Config) (*oauth2.Token, error) {
 	authURL := config.AuthCodeURL("state-token", oauth2.AccessTypeOffline)
 	fmt.Printf("Go here: \n%v\n", authURL)
 
@@ -66,7 +79,7 @@ func getTokenFromWeb(config *oauth2.Config) (*oauth2.Token, error) {
 		return nil, errors.New(msg)
 	}
 
-	tok, err := config.Exchange(context.TODO(), authCode)
+	tok, err := config.Exchange(context, authCode)
 	if err != nil {
 		msg := fmt.Sprintf("Unable to retrieve token from web: %v", err)
 		return nil, errors.New(msg)
@@ -164,17 +177,24 @@ func parseCommandLine(
 		"Saved credentials file")
 	tokFile := defaultCommand.StringP("token", "t", defaultTokFile, "Saved token file")
 	exec := defaultCommand.StringP("exec", "e", "", "Command to execute for each message")
-
-	if len(arguments) <= 1 {
-		// Clearly this is buggy crap
-		defaultCommand.PrintDefaults()
-		return nil, errors.New("Invalid command string format")
-	}
+	help := defaultCommand.BoolP("help", "h", false, "Print usage")
 
 	defaultCommand.Parse(arguments[1:])
 
+	if *help {
+		return nil, &cliError{
+			errorMessage:  "Help requested",
+			usage:         defaultCommand.FlagUsages(),
+			helpRequested: true,
+		}
+	}
+
 	if len(*exec) == 0 {
-		return nil, errors.New("Exec string must be set")
+		return nil, &cliError{
+			errorMessage:  "Exec command (-e / --exec) must be set",
+			usage:         defaultCommand.FlagUsages(),
+			helpRequested: false,
+		}
 	}
 
 	config := GmaildConfig{
@@ -217,7 +237,8 @@ func main() {
 
 	gmaildConfig, err := parseCommandLine(usr, os.Args)
 	if err != nil {
-		log.Fatalf("%v\n", err)
+		fmt.Fprintf(os.Stderr, "%v\n", err)
+		os.Exit(1)
 	}
 
 	b, err := ioutil.ReadFile(gmaildConfig.CredFile)
