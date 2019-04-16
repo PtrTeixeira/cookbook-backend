@@ -14,6 +14,7 @@ import (
 	"os/signal"
 	"os/user"
 	"path/filepath"
+	"strings"
 	"time"
 
 	flag "github.com/spf13/pflag"
@@ -130,8 +131,14 @@ func hasMessagesSince(srv *gmail.Service, userID string, historyID uint64) (uint
 	result := make([]MessageEvent, 0)
 	for _, h := range r.History {
 		for _, messageAdded := range h.MessagesAdded {
+			message, err := getMessage(srv, userID, messageAdded.Message.Id)
+			if err != nil {
+				fmt.Printf("Could not get message from server: %v\n", err)
+				continue
+			}
+
 			messageEvent := MessageEvent{
-				MessageAdded: *messageAdded.Message,
+				MessageAdded: *message,
 			}
 
 			result = append(result, messageEvent)
@@ -244,10 +251,11 @@ outer:
 		select {
 		case message := <-messageChannel:
 			cmd := exec.Command("bash", "-c", gmaildConfig.ExecString)
-			fmt.Printf("%v\n", message.MessageAdded.Raw)
 
+			in := strings.NewReader(message.MessageAdded.Snippet)
 			var out bytes.Buffer
 			cmd.Stdout = &out
+			cmd.Stdin = in
 			err := cmd.Run()
 			if err != nil {
 				log.Fatal(err)
