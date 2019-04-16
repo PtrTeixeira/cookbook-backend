@@ -148,30 +148,29 @@ func parseCommandLine(
 	}
 
 	defaultCommand.Parse(arguments[1:])
+
+	if len(*exec) == 0 {
+		return nil, errors.New("Exec string must be set")
+	}
+
 	config := GmaildConfig{
 		CredFile:   *credFile,
 		TokFile:    *tokFile,
 		ExecString: *exec,
 	}
-
 	return &config, nil
 }
 
 func main() {
 	usr, err := user.Current()
-	// var defaultCredentials, defaultTokFile string
 	if err != nil {
 		log.Fatalf("Could not determine current user %v\n", err)
-		// defaultCredentials = ""
-		// defaultTokFile = ""
 	}
-	// var credentials, tokFile, execString string
 	gmaildConfig, err := parseCommandLine(usr, os.Args)
-	if err != nil {
-		os.Exit(1)
+	
+  if err != nil {
+    log.Fatalf("%v\n", err)
 	}
-
-	fmt.Printf("Exec string: %v\n", gmaildConfig.ExecString)
 
 	b, err := ioutil.ReadFile(gmaildConfig.CredFile)
 	if err != nil {
@@ -204,18 +203,19 @@ outer:
 	for {
 		select {
 		case <-ticker.C:
+      oldHistoryID := historyID
 			hasMessages, historyID = hasMessagesSince(srv, user, historyID)
-			fmt.Printf("Has messages since %v: %v\n", historyID, hasMessages)
-      if hasMessages {
-        cmd := exec.Command("bash", "-c", gmaildConfig.ExecString)
-        var out bytes.Buffer
-        cmd.Stdout = &out
-        err := cmd.Run()
-        if err != nil {
-          log.Fatal(err)
-        }
-        fmt.Printf("Result: %v\n", out.String())
-      }
+			fmt.Printf("Checking for messages between %v -> %v\n", oldHistoryID, historyID)
+			if hasMessages {
+				cmd := exec.Command("bash", "-c", gmaildConfig.ExecString)
+				var out bytes.Buffer
+				cmd.Stdout = &out
+				err := cmd.Run()
+				if err != nil {
+					log.Fatal(err)
+				}
+				fmt.Printf("Result: %v\n", out.String())
+			}
 		case <-quit:
 			break outer
 		}
