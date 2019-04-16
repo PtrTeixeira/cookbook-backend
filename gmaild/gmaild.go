@@ -34,6 +34,13 @@ type GmaildConfig struct {
 	ExecString string
 }
 
+// A MessageEvent is a wrapper for each message received
+// when checking for gmail events
+type MessageEvent struct {
+	// The receieved email associated with the message event
+	MessageAdded gmail.Message
+}
+
 func getClient(tokFile string, config *oauth2.Config) *http.Client {
 	tok, err := tokenFromFile(tokFile)
 	if err == nil {
@@ -111,17 +118,27 @@ func getMostRecentHistoryID(srv *gmail.Service, userID string) (uint64, error) {
 	return 0, errors.New("Could not get the most recent history ID")
 }
 
-// First result = has new messages since
-// second result = most recently seen history ID
-func hasMessagesSince(srv *gmail.Service, userID string, historyID uint64) (bool, uint64) {
+// First result = most recently seen history ID
+// second result = Any messages since last update
+func hasMessagesSince(srv *gmail.Service, userID string, historyID uint64) (uint64, []MessageEvent) {
 	r, err := srv.Users.History.List(userID).HistoryTypes("messageAdded").StartHistoryId(historyID).Do()
 	if err != nil {
 		log.Fatalf("Could not get message history due to %v\n", err)
 	}
 
 	newHistoryID := r.HistoryId
-	hasResults := (len(r.History) > 0)
-	return hasResults, newHistoryID
+	result := make([]MessageEvent, 0)
+	for _, h := range r.History {
+		for _, messageAdded := range h.MessagesAdded {
+			messageEvent := MessageEvent{
+				MessageAdded: *messageAdded.Message,
+			}
+
+			result = append(result, messageEvent)
+		}
+	}
+
+	return newHistoryID, result
 }
 
 func parseCommandLine(
@@ -161,15 +178,39 @@ func parseCommandLine(
 	return &config, nil
 }
 
+func getNewMessages(
+	srv *gmail.Service,
+	userID string,
+	startHistoryID uint64) <-chan MessageEvent {
+	messageEventChan := make(chan MessageEvent)
+
+	historyID := startHistoryID
+	go func() {
+		ticker := time.NewTicker(30 * time.Second)
+		for range ticker.C {
+			var messages []MessageEvent
+			oldHistoryID := historyID
+			historyID, messages = hasMessagesSince(srv, userID, historyID)
+			fmt.Printf("Checking for messages between %v -> %v\n", oldHistoryID, historyID)
+			for _, message := range messages {
+				messageEventChan <- message
+			}
+		}
+		close(messageEventChan)
+	}()
+
+	return messageEventChan
+}
+
 func main() {
 	usr, err := user.Current()
 	if err != nil {
 		log.Fatalf("Could not determine current user %v\n", err)
 	}
+
 	gmaildConfig, err := parseCommandLine(usr, os.Args)
-	
-  if err != nil {
-    log.Fatalf("%v\n", err)
+	if err != nil {
+		log.Fatalf("%v\n", err)
 	}
 
 	b, err := ioutil.ReadFile(gmaildConfig.CredFile)
@@ -181,8 +222,8 @@ func main() {
 	if err != nil {
 		log.Fatalf("Unable to parse client secret: %v\n", err)
 	}
-	client := getClient(gmaildConfig.TokFile, config)
 
+	client := getClient(gmaildConfig.TokFile, config)
 	srv, err := gmail.New(client)
 	if err != nil {
 		log.Fatalf("Unable to get Gmail client: %v\n", err)
@@ -194,31 +235,26 @@ func main() {
 		log.Fatal(err)
 	}
 
-	hasMessages := false
-	ticker := time.NewTicker(30 * time.Second)
+	messageChannel := getNewMessages(srv, user, historyID)
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, os.Interrupt)
 
 outer:
 	for {
 		select {
-		case <-ticker.C:
-      oldHistoryID := historyID
-			hasMessages, historyID = hasMessagesSince(srv, user, historyID)
-			fmt.Printf("Checking for messages between %v -> %v\n", oldHistoryID, historyID)
-			if hasMessages {
-				cmd := exec.Command("bash", "-c", gmaildConfig.ExecString)
-				var out bytes.Buffer
-				cmd.Stdout = &out
-				err := cmd.Run()
-				if err != nil {
-					log.Fatal(err)
-				}
-				fmt.Printf("Result: %v\n", out.String())
+		case message := <-messageChannel:
+			cmd := exec.Command("bash", "-c", gmaildConfig.ExecString)
+			fmt.Printf("%v\n", message.MessageAdded.Raw)
+
+			var out bytes.Buffer
+			cmd.Stdout = &out
+			err := cmd.Run()
+			if err != nil {
+				log.Fatal(err)
 			}
+			fmt.Printf("Result: %v\n", out.String())
 		case <-quit:
 			break outer
 		}
 	}
-	ticker.Stop()
 }
