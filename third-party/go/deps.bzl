@@ -36,3 +36,9 @@ def go_dependencies():
     importpath = "github.com/hashicorp/golang-lru",
     commit = "7087cb70de9f7a8bc0a10c375cb0d2280a8edf9c",
 	)
+
+  go_repository(
+    name = "com_github_spf13_pflag",
+    importpath = "github.com/spf13/pflag",
+    commit = "298182f68c66c05229eb03ac171abe6e309ee79a"
+  )
