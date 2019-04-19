@@ -1,8 +1,7 @@
-import axios, { AxiosResponse } from 'axios'
+import ky from 'ky'
 import * as React from 'react'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 
-import stravaLogo from './api_logo_pwrdBy_strava_horiz_gray.svg'
 import './App.css'
 import loginButton from './btn_strava_connectwith_light.svg'
 
@@ -49,9 +48,9 @@ async function loadWeeklyResults(): Promise<IWeeklyResults> {
   if (storageContents != null) {
     return Promise.resolve(JSON.parse(storageContents))
   } else {
-    const response = await axios
-      .get("/api/punchcard");
-    const data = response.data;
+    const data = await ky
+      .get("/api/punchcard")
+      .then(data => data.json())
     sessionStorage.setItem("results", JSON.stringify(data));
     return data;
   }
@@ -98,10 +97,19 @@ class App extends React.Component<{}, IAppState> {
         <div className="App container-fluid">
           <Header />
 
-          <HomeRoute />
-          <WeekMapRoute {...this.state} />
+          <div className="row justify-content-center">
+            <HomeRoute />
+            <WeekMapRoute {...this.state} />
+          </div>
+
           <footer>
-            <img src={stravaLogo} alt="Powered by Strava" className="app-strava-logo" />
+            <div className="row justify-content-center">
+              <div className="col-sm">
+                <p className="text-center">
+                  <a className="strava-link" href="https://strava.com">View on Strava</a>
+                </p>
+              </div>
+            </div>
           </footer>
         </div>
       </Router>
