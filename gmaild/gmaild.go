@@ -14,7 +14,6 @@ import (
 	"os/signal"
 	"os/user"
 	"path/filepath"
-	"strings"
 	"time"
 
 	flag "github.com/spf13/pflag"
@@ -38,8 +37,12 @@ type GmaildConfig struct {
 // A MessageEvent is a wrapper for each message received
 // when checking for gmail events
 type MessageEvent struct {
-	// The receieved email associated with the message event
-	MessageAdded gmail.Message
+	// Subject line of the message
+	MessageSubject string `json:"subject"`
+	// Message sender
+	From string `json:"from"`
+	// GMail's chosen message snippet
+	Snippet string `json:"snippet"`
 }
 
 type cliError struct {
@@ -114,6 +117,23 @@ func getMessage(srv *gmail.Service, userID string, messageID string) (*gmail.Mes
 	return srv.Users.Messages.Get(userID, messageID).Do()
 }
 
+func messageToMessageEvent(message *gmail.Message) MessageEvent {
+	var subject, from string
+	for _, messageHeader := range message.Payload.Headers {
+		if messageHeader.Name == "Subject" {
+			subject = messageHeader.Value
+		} else if messageHeader.Name == "From" {
+			from = messageHeader.Value
+		}
+	}
+
+	return MessageEvent{
+		MessageSubject: subject,
+		From:           from,
+		Snippet:        message.Snippet,
+	}
+}
+
 func getMostRecentHistoryID(srv *gmail.Service, userID string) (uint64, error) {
 	r, err := srv.Users.Messages.List(userID).MaxResults(1).Do()
 	if err != nil {
@@ -150,9 +170,7 @@ func hasMessagesSince(srv *gmail.Service, userID string, historyID uint64) (uint
 				continue
 			}
 
-			messageEvent := MessageEvent{
-				MessageAdded: *message,
-			}
+			messageEvent := messageToMessageEvent(message)
 
 			result = append(result, messageEvent)
 		}
@@ -273,7 +291,12 @@ outer:
 		case message := <-messageChannel:
 			cmd := exec.Command("bash", "-c", gmaildConfig.ExecString)
 
-			in := strings.NewReader(message.MessageAdded.Snippet)
+			serializedMessage, marshalErr := json.Marshal(message)
+			if marshalErr != nil {
+				log.Fatal(marshalErr)
+			}
+
+			in := bytes.NewReader(serializedMessage)
 			var out bytes.Buffer
 			cmd.Stdout = &out
 			cmd.Stdin = in
