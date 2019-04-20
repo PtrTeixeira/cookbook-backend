@@ -1,4 +1,4 @@
-import ky from 'ky'
+import axios, { AxiosResponse } from 'axios'
 import * as React from 'react'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 
@@ -48,9 +48,9 @@ async function loadWeeklyResults(): Promise<IWeeklyResults> {
   if (storageContents != null) {
     return Promise.resolve(JSON.parse(storageContents))
   } else {
-    const data = await ky
-      .get("/api/punchcard")
-      .then(data => data.json())
+    const response = await axios
+      .get("/api/punchcard");
+    const data = response.data;
     sessionStorage.setItem("results", JSON.stringify(data));
     return data;
   }
