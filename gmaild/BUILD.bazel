@@ -15,11 +15,11 @@ go_library(
 
 go_test(
     name = "go_default_test",
+    size = "small",
     srcs = ["gmaild_test.go"],
     embed = [":go_default_library"],
     importpath = "github.com/PtrTeixeira/cookbook/gmaild",
     visibility = ["//visibility:private"],
-    size = "small"
 )
 
 go_binary(
