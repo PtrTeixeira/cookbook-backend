@@ -6,8 +6,8 @@ kt_junit5_test(
     srcs = ["StravaServiceTest.kt"],
     test_class = "StravaServiceTest",
     deps = [
-        "//strava-api:models",
         "//strava-api:client",
+        "//strava-api:models",
         "@maven//:com_fasterxml_jackson_core_jackson_annotations",
         "@maven//:com_fasterxml_jackson_core_jackson_core",
         "@maven//:com_fasterxml_jackson_core_jackson_databind",

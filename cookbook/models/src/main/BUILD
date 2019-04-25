@@ -3,8 +3,8 @@ load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kt_jvm_library")
 kt_jvm_library(
     name = "models",
     srcs = [
-        "kotlin/RecipeEgg.kt",
         "kotlin/Recipe.kt",
+        "kotlin/RecipeEgg.kt",
         "kotlin/User.kt",
     ],
     visibility = ["//visibility:public"],
