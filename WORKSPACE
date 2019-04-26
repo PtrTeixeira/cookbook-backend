@@ -38,9 +38,9 @@ http_archive(
     urls = ["https://github.com/bazelbuild/rules_kotlin/archive/%s.zip" % rules_kotlin_version],
 )
 
-RULES_JVM_EXTERNAL_TAG = "1.1"
+RULES_JVM_EXTERNAL_TAG = "2.0.1"
 
-RULES_JVM_EXTERNAL_SHA = "ade316ec98ba0769bb1189b345d9877de99dd1b1e82f5a649d6ccbcb8da51c1f"
+RULES_JVM_EXTERNAL_SHA = "55e8d3951647ae3dffde22b4f7f8dee11b3f70f3f89424713debd7076197eaca"
 
 http_archive(
     name = "rules_jvm_external",

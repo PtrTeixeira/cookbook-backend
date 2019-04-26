@@ -13,6 +13,7 @@ kt_jvm_library(
     visibility = ["//visibility:public"],
     runtime_deps = [
         "//sentry-appender",
+        "@maven//:com_h2database_h2",
     ],
     deps = [
         "//cookbook/models",
@@ -25,7 +26,6 @@ kt_jvm_library(
         "@maven//:com_fasterxml_jackson_core_jackson_databind",
         "@maven//:com_fasterxml_jackson_module_jackson_module_kotlin",
         "@maven//:com_google_inject_guice",
-        "@maven//:com_h2database_h2",
         "@maven//:io_dropwizard_dropwizard_auth",
         "@maven//:io_dropwizard_dropwizard_core",
         "@maven//:io_dropwizard_dropwizard_db",
