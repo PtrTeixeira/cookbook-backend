@@ -12,7 +12,7 @@ package(default_visibility = [
 ])
 
 licenses([
-  "notice", # "MIT"
+  "restricted", # "MIT OR Apache-2.0"
 ])
 
 load(
@@ -23,22 +23,34 @@ load(
 )
 
 
-# Unsupported target "atty" with type "example" omitted
+# Unsupported target "lib" with type "bench" omitted
+# Unsupported target "lib" with type "test" omitted
+alias(
+  name = "sha_1",
+  actual = ":sha1",
+)
 
 rust_library(
-    name = "atty",
+    name = "sha1",
     crate_root = "src/lib.rs",
     crate_type = "lib",
     edition = "2015",
     srcs = glob(["**/*.rs"]),
     deps = [
-        "@raze__libc__0_2_53//:libc",
+        "@raze__block_buffer__0_7_3//:block_buffer",
+        "@raze__digest__0_8_0//:digest",
+        "@raze__fake_simd__0_1_2//:fake_simd",
+        "@raze__opaque_debug__0_2_2//:opaque_debug",
     ],
     rustc_flags = [
         "--cap-lints=allow",
     ],
-    version = "0.2.11",
+    version = "0.8.1",
     crate_features = [
+        "default",
+        "digest",
+        "std",
     ],
 )
 
+# Unsupported target "sha1sum" with type "example" omitted

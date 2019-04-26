@@ -12,7 +12,7 @@ package(default_visibility = [
 ])
 
 licenses([
-  "notice", # "MIT"
+  "notice", # "MIT,Apache-2.0"
 ])
 
 load(
@@ -23,21 +23,21 @@ load(
 )
 
 
-# Unsupported target "atty" with type "example" omitted
 
 rust_library(
-    name = "atty",
+    name = "pest_meta",
     crate_root = "src/lib.rs",
     crate_type = "lib",
     edition = "2015",
     srcs = glob(["**/*.rs"]),
     deps = [
-        "@raze__libc__0_2_53//:libc",
+        "@raze__maplit__1_0_1//:maplit",
+        "@raze__pest__2_1_1//:pest",
     ],
     rustc_flags = [
         "--cap-lints=allow",
     ],
-    version = "0.2.11",
+    version = "2.1.1",
     crate_features = [
     ],
 )

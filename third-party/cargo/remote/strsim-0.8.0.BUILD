@@ -23,21 +23,21 @@ load(
 )
 
 
-# Unsupported target "atty" with type "example" omitted
+# Unsupported target "benches" with type "bench" omitted
+# Unsupported target "lib" with type "test" omitted
 
 rust_library(
-    name = "atty",
+    name = "strsim",
     crate_root = "src/lib.rs",
     crate_type = "lib",
     edition = "2015",
     srcs = glob(["**/*.rs"]),
     deps = [
-        "@raze__libc__0_2_53//:libc",
     ],
     rustc_flags = [
         "--cap-lints=allow",
     ],
-    version = "0.2.11",
+    version = "0.8.0",
     crate_features = [
     ],
 )

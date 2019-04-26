@@ -12,7 +12,7 @@ package(default_visibility = [
 ])
 
 licenses([
-  "notice", # "MIT"
+  "notice", # "MIT,Apache-2.0"
 ])
 
 load(
@@ -23,22 +23,29 @@ load(
 )
 
 
-# Unsupported target "atty" with type "example" omitted
+# Unsupported target "build-script-build" with type "custom-build" omitted
+# Unsupported target "marker" with type "test" omitted
 
 rust_library(
-    name = "atty",
+    name = "proc_macro2",
     crate_root = "src/lib.rs",
     crate_type = "lib",
     edition = "2015",
     srcs = glob(["**/*.rs"]),
     deps = [
-        "@raze__libc__0_2_53//:libc",
+        "@raze__unicode_xid__0_1_0//:unicode_xid",
     ],
     rustc_flags = [
         "--cap-lints=allow",
+        "--cfg=use_proc_macro",
+        "--cfg=u128",
+        "--cfg=wrap_proc_macro",
     ],
-    version = "0.2.11",
+    version = "0.4.28",
     crate_features = [
+        "default",
+        "proc-macro",
     ],
 )
 
+# Unsupported target "test" with type "test" omitted

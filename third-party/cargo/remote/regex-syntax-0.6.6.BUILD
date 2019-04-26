@@ -12,7 +12,7 @@ package(default_visibility = [
 ])
 
 licenses([
-  "notice", # "MIT"
+  "notice", # "MIT,Apache-2.0"
 ])
 
 load(
@@ -23,21 +23,21 @@ load(
 )
 
 
-# Unsupported target "atty" with type "example" omitted
+# Unsupported target "bench" with type "bench" omitted
 
 rust_library(
-    name = "atty",
+    name = "regex_syntax",
     crate_root = "src/lib.rs",
     crate_type = "lib",
     edition = "2015",
     srcs = glob(["**/*.rs"]),
     deps = [
-        "@raze__libc__0_2_53//:libc",
+        "@raze__ucd_util__0_1_3//:ucd_util",
     ],
     rustc_flags = [
         "--cap-lints=allow",
     ],
-    version = "0.2.11",
+    version = "0.6.6",
     crate_features = [
     ],
 )

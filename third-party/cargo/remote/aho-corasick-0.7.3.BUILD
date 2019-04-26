@@ -13,6 +13,7 @@ package(default_visibility = [
 
 licenses([
   "notice", # "MIT"
+  "unencumbered", # "Unlicense"
 ])
 
 load(
@@ -23,22 +24,24 @@ load(
 )
 
 
-# Unsupported target "atty" with type "example" omitted
 
 rust_library(
-    name = "atty",
+    name = "aho_corasick",
     crate_root = "src/lib.rs",
     crate_type = "lib",
     edition = "2015",
     srcs = glob(["**/*.rs"]),
     deps = [
-        "@raze__libc__0_2_53//:libc",
+        "@raze__memchr__2_2_0//:memchr",
     ],
     rustc_flags = [
         "--cap-lints=allow",
     ],
-    version = "0.2.11",
+    version = "0.7.3",
     crate_features = [
+        "default",
+        "memchr",
+        "std",
     ],
 )
 

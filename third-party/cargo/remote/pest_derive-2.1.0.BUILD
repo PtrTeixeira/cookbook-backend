@@ -34,7 +34,7 @@ rust_library(
     edition = "2015",
     srcs = glob(["**/*.rs"]),
     deps = [
-        "@raze__pest__2_1_0//:pest",
+        "@raze__pest__2_1_1//:pest",
         "@raze__pest_generator__2_1_0//:pest_generator",
     ],
     rustc_flags = [
