@@ -31,7 +31,7 @@ rust_library(
     edition = "2015",
     srcs = glob(["**/*.rs"]),
     deps = [
-        "@raze__redox_syscall__0_1_51//:redox_syscall",
+        "@raze__redox_syscall__0_1_54//:redox_syscall",
     ],
     rustc_flags = [
         "--cap-lints=allow",

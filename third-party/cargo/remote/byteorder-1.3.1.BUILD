@@ -12,7 +12,7 @@ package(default_visibility = [
 ])
 
 licenses([
-  "notice", # "MIT"
+  "restricted", # "Unlicense OR MIT"
 ])
 
 load(
@@ -23,21 +23,21 @@ load(
 )
 
 
-# Unsupported target "atty" with type "example" omitted
+# Unsupported target "bench" with type "bench" omitted
+# Unsupported target "build-script-build" with type "custom-build" omitted
 
 rust_library(
-    name = "atty",
+    name = "byteorder",
     crate_root = "src/lib.rs",
     crate_type = "lib",
     edition = "2015",
     srcs = glob(["**/*.rs"]),
     deps = [
-        "@raze__libc__0_2_53//:libc",
     ],
     rustc_flags = [
         "--cap-lints=allow",
     ],
-    version = "0.2.11",
+    version = "1.3.1",
     crate_features = [
     ],
 )

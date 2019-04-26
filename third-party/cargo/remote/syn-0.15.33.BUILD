@@ -12,7 +12,7 @@ package(default_visibility = [
 ])
 
 licenses([
-  "notice", # "MIT"
+  "notice", # "MIT,Apache-2.0"
 ])
 
 load(
@@ -23,22 +23,32 @@ load(
 )
 
 
-# Unsupported target "atty" with type "example" omitted
+# Unsupported target "build-script-build" with type "custom-build" omitted
 
 rust_library(
-    name = "atty",
+    name = "syn",
     crate_root = "src/lib.rs",
     crate_type = "lib",
     edition = "2015",
     srcs = glob(["**/*.rs"]),
     deps = [
-        "@raze__libc__0_2_53//:libc",
+        "@raze__proc_macro2__0_4_28//:proc_macro2",
+        "@raze__quote__0_6_12//:quote",
+        "@raze__unicode_xid__0_1_0//:unicode_xid",
     ],
     rustc_flags = [
         "--cap-lints=allow",
     ],
-    version = "0.2.11",
+    version = "0.15.33",
     crate_features = [
+        "clone-impls",
+        "default",
+        "derive",
+        "parsing",
+        "printing",
+        "proc-macro",
+        "proc-macro2",
+        "quote",
     ],
 )
 

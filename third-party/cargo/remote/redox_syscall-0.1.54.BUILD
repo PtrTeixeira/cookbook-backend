@@ -23,21 +23,23 @@ load(
 )
 
 
-# Unsupported target "atty" with type "example" omitted
+alias(
+  name = "redox_syscall",
+  actual = ":syscall",
+)
 
 rust_library(
-    name = "atty",
+    name = "syscall",
     crate_root = "src/lib.rs",
     crate_type = "lib",
     edition = "2015",
     srcs = glob(["**/*.rs"]),
     deps = [
-        "@raze__libc__0_2_53//:libc",
     ],
     rustc_flags = [
         "--cap-lints=allow",
     ],
-    version = "0.2.11",
+    version = "0.1.54",
     crate_features = [
     ],
 )

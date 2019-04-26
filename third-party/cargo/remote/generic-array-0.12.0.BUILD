@@ -23,22 +23,27 @@ load(
 )
 
 
-# Unsupported target "atty" with type "example" omitted
+# Unsupported target "arr" with type "test" omitted
 
 rust_library(
-    name = "atty",
+    name = "generic_array",
     crate_root = "src/lib.rs",
     crate_type = "lib",
     edition = "2015",
     srcs = glob(["**/*.rs"]),
     deps = [
-        "@raze__libc__0_2_53//:libc",
+        "@raze__typenum__1_10_0//:typenum",
     ],
     rustc_flags = [
         "--cap-lints=allow",
     ],
-    version = "0.2.11",
+    version = "0.12.0",
     crate_features = [
     ],
 )
 
+# Unsupported target "generics" with type "test" omitted
+# Unsupported target "hex" with type "test" omitted
+# Unsupported target "import_name" with type "test" omitted
+# Unsupported target "iter" with type "test" omitted
+# Unsupported target "mod" with type "test" omitted

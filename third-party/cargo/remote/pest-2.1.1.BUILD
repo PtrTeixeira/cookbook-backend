@@ -12,7 +12,7 @@ package(default_visibility = [
 ])
 
 licenses([
-  "notice", # "MIT"
+  "notice", # "MIT,Apache-2.0"
 ])
 
 load(
@@ -23,21 +23,23 @@ load(
 )
 
 
-# Unsupported target "atty" with type "example" omitted
+# Unsupported target "calculator" with type "test" omitted
+# Unsupported target "json" with type "test" omitted
+# Unsupported target "parens" with type "example" omitted
 
 rust_library(
-    name = "atty",
+    name = "pest",
     crate_root = "src/lib.rs",
     crate_type = "lib",
     edition = "2015",
     srcs = glob(["**/*.rs"]),
     deps = [
-        "@raze__libc__0_2_53//:libc",
+        "@raze__ucd_trie__0_1_1//:ucd_trie",
     ],
     rustc_flags = [
         "--cap-lints=allow",
     ],
-    version = "0.2.11",
+    version = "2.1.1",
     crate_features = [
     ],
 )

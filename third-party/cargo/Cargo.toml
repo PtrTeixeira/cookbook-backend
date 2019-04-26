@@ -20,7 +20,7 @@ target = "x86_64-unknown-linux-gnu"
 [raze.crates.syn.'0.15.29']
 gen_buildrs = true
 
-[raze.crates.proc-macro2.'0.4.27']
+[raze.crates.proc-macro2.'0.4.28']
 additional_flags = [
   "--cfg=use_proc_macro",
   "--cfg=u128",

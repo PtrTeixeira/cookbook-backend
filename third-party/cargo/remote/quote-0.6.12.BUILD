@@ -12,7 +12,7 @@ package(default_visibility = [
 ])
 
 licenses([
-  "notice", # "MIT"
+  "notice", # "MIT,Apache-2.0"
 ])
 
 load(
@@ -23,22 +23,25 @@ load(
 )
 
 
-# Unsupported target "atty" with type "example" omitted
 
 rust_library(
-    name = "atty",
+    name = "quote",
     crate_root = "src/lib.rs",
     crate_type = "lib",
     edition = "2015",
     srcs = glob(["**/*.rs"]),
     deps = [
-        "@raze__libc__0_2_53//:libc",
+        "@raze__proc_macro2__0_4_28//:proc_macro2",
     ],
     rustc_flags = [
         "--cap-lints=allow",
     ],
-    version = "0.2.11",
+    version = "0.6.12",
     crate_features = [
+        "default",
+        "proc-macro",
+        "proc-macro2",
     ],
 )
 
+# Unsupported target "test" with type "test" omitted

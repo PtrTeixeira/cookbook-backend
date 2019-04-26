@@ -12,7 +12,7 @@ package(default_visibility = [
 ])
 
 licenses([
-  "notice", # "MIT"
+  "restricted", # "MIT OR Apache-2.0"
 ])
 
 load(
@@ -23,21 +23,20 @@ load(
 )
 
 
-# Unsupported target "atty" with type "example" omitted
 
 rust_library(
-    name = "atty",
+    name = "block_padding",
     crate_root = "src/lib.rs",
     crate_type = "lib",
     edition = "2015",
     srcs = glob(["**/*.rs"]),
     deps = [
-        "@raze__libc__0_2_53//:libc",
+        "@raze__byte_tools__0_3_1//:byte_tools",
     ],
     rustc_flags = [
         "--cap-lints=allow",
     ],
-    version = "0.2.11",
+    version = "0.1.4",
     crate_features = [
     ],
 )
