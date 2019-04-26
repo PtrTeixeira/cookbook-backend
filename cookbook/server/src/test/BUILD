@@ -7,11 +7,13 @@ kt_junit5_test(
         "kotlin/data/Helpers.kt",
         "kotlin/data/RecipeDataTest.kt",
     ],
+    runtime_deps = [
+        "@maven//:com_h2database_h2",
+    ],
     test_class = "com.github.ptrteixeira.cookbook.data.RecipeDataTest",
     deps = [
         "//cookbook/models",
         "//cookbook/server/src/main/kotlin/data",
-        "@maven//:com_h2database_h2",
         "@maven//:org_assertj_assertj_core",
         "@maven//:org_jdbi_jdbi3_core",
         "@maven//:org_jdbi_jdbi3_kotlin",
