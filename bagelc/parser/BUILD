@@ -15,5 +15,5 @@ rust_library(
 
 rust_test(
     name = "parser_test",
-    deps = [":parser"],
+    crate = ":parser",
 )
