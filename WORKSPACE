@@ -28,11 +28,11 @@ load("@io_bazel_rules_rust//:workspace.bzl", "bazel_version")
 
 bazel_version(name = "bazel_version")
 
-rules_kotlin_version = "9d100403c084534d41a8b74cfe12dc40275f4dd0"
+rules_kotlin_version = "59dc7473c777b5054e91c1af6b95ed0ecbdc0ace"
 
 http_archive(
     name = "io_bazel_rules_kotlin",
-    sha256 = "43c788de9a56afc01b61ae77b84fcc105bf0a361f2e2f66e4c46e90c420674f7",
+    sha256 = "620546b4f03b001bd06ef8ef5d946f00c58ca1f6426507b0b0b415d1c9f2e102",
     strip_prefix = "rules_kotlin-%s" % rules_kotlin_version,
     type = "zip",
     urls = ["https://github.com/bazelbuild/rules_kotlin/archive/%s.zip" % rules_kotlin_version],
@@ -92,12 +92,10 @@ kotlin_repositories()
 
 kt_register_toolchains()
 
-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
-
 http_archive(
     name = "io_bazel_rules_go",
-    sha256 = "77dfd303492f2634de7a660445ee2d3de2960cbd52f97d8c0dffa9362d3ddef9",
-    urls = ["https://github.com/bazelbuild/rules_go/releases/download/0.18.1/rules_go-0.18.1.tar.gz"],
+    sha256 = "86ae934bd4c43b99893fc64be9d9fc684b81461581df7ea8fc291c816f5ee8c5",
+    urls = ["https://github.com/bazelbuild/rules_go/releases/download/0.18.3/rules_go-0.18.3.tar.gz"],
 )
 
 http_archive(
