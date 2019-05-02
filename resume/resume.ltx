@@ -1,0 +1,113 @@
+\documentclass{article}
+
+\usepackage[margin=0.75in]{geometry}
+\usepackage{array}
+\usepackage{enumitem}
+
+\setlength{\parindent}{0pt}
+\let\olditemize\itemize
+\setlist[itemize]{noitemsep,topsep=0pt}
+
+\newcommand{\secline}{\vspace{2mm}\rule{\linewidth}{.4pt}\vspace{1mm}}
+\newcommand{\emphline}{\begin{center}\line(1,0){250}\end{center}}
+\newcommand{\shortline}{\line(1, 0){250}\\}
+
+\newcommand{\hname}[1]{\textbf{{\LARGE #1}}}
+\newcommand{\hmain}[1]{\vspace{4mm}\textbf{{\large #1}}\vspace{1mm}\hrule\vspace{1mm}}
+\newcommand{\hsub}[1]{\vspace{1mm}\textbf{#1}}
+
+
+\begin{document}
+\thispagestyle{empty}
+\begin{center}
+\hname{Peter Teixeira} \\
+teixeira.p@husky.neu.edu \S{} (774) 641-4648 \\
+linkedin.com/in/PtrTeixeira \S{} github.com/PtrTeixeira \\
+Available: January - July 2018
+\end{center}
+
+\hsub{Local Address:} \hfill \hsub{Permanent Address:} \\
+50 Leon Street        \hfill 30 Oakridge Road \\
+Box 3166              \hfill Holden, MA 01520 \\
+Boston, MA 02115
+
+
+\hmain{Education}
+\hsub{Northeastern University}, Boston, MA \hfill 2014 - Present \\
+\emph{College of Computer and Information Science} \\
+Candidate for a Bachelor of Science in Computer Science and Mathematics, 2019 \\
+\textbf{GPA: 3.90/4.00}
+
+\begin{tabular}{p{5cm}p{12cm}}
+Related Coursework: &
+        Statistics and Stochastic Processes, Object-Oriented Design,
+        Software Development\\
+Activities: & Habitat for Humanity, Club Running
+\end{tabular}
+
+\hmain{Computer Knowledge}
+\begin{tabular}{p{5cm}p{12cm}}
+Languages: & Java, Javascript,  Kotlin \\
+Technologies: & React, Redux, JDBI \\
+\end{tabular}
+
+
+\hmain{Projects}
+\begin{tabular}{p{5cm}p{12cm}}
+NUSports: & A Java web scraper and GUI to collect and display information on
+Northeastern's standing in the CAA \\
+Underload & An interpreter for the Underload esoteric programming language,
+implemented in Racket
+\end{tabular}
+
+\hmain{Work Experience}
+\hsub{HubSpot} \hfill Jan. 2017 - July 2017 \\
+Product Co-Op
+\begin{itemize}
+  \itemsep-.2em
+  \item Maintained Singularity, HubSpot's open-source Mesos scheduler
+  framework
+  \item Ported Baragon, HubSpot's open-source load-balancer management
+  tooling, from AWS' Classic Load Balancers to the new Application
+  Load Balancers to take advantage of the new DDOS-prevention infrastructure
+  \item Built internal work-queue system for deferred data processing
+  backed by Amazon SQS and MySQL, to improve the horizontal scalability of
+  an older system backed by HBase
+\end{itemize}
+
+
+\hsub{NantHealth LLC} \hfill Jan. 2016 - Aug. 2016 \\
+Product Research Co-Op
+\begin{itemize}
+    \itemsep-.2em
+    \item Built a full-stack Javascript application with Polymer and Express
+    as a tech demo for interoperability with EHR sources using FHIR and for
+    for document exchange between health insurance companies
+    and health care providers, and was added to the roadmap for
+    the NaviNet product.
+    \item Built ETL infrastructure using Apache Spark to transform between
+    storage formats and remove PII. One usecase was  allowing
+    developers at NantHealth to generate test data that was not
+    HIPAA protected from production data in our data lake.
+\end{itemize}
+
+\hsub{Northeastern University} \hfill Sept. 2015 - Dec. 2015 \\
+Peer Tutor
+\begin{itemize}
+    \itemsep-.2em
+    \item Administered labs and provided office hours for Fundamentals of
+    Computer Science I
+    \item Graded homeworks and monitored student progress
+\end{itemize}
+
+
+\hmain{Interests}
+Semi-competitive running
+
+
+\begin{center}
+\hsub{References available upon request}
+\end{center}
+
+
+\end{document}

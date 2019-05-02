@@ -12,6 +12,13 @@ http_archive(
 )
 
 http_archive(
+   name = "bazel_latex",
+   strip_prefix = "bazel-latex-0.17",
+   sha256 = "66ca4240628a4e40cc02d7f77f06b93269dad0068e7a844009fd439e5c55f5a9",
+   url = "https://github.com/ProdriveTechnologies/bazel-latex/archive/v0.17.tar.gz",
+)
+
+http_archive(
     name = "io_bazel_rules_rust",
     sha256 = "69757af5bbb75a485775301d9e4b724f17a54eb9adc27e69adfefead6ef3ce07",
     strip_prefix = "rules_rust-761ef8f820a96c87a288b4f499b7f61772733f32",
@@ -19,6 +26,9 @@ http_archive(
         "https://github.com/bazelbuild/rules_rust/archive/761ef8f820a96c87a288b4f499b7f61772733f32.tar.gz",
     ],
 )
+
+load("@bazel_latex//:repositories.bzl", "latex_repositories")
+latex_repositories()
 
 load("@io_bazel_rules_rust//rust:repositories.bzl", "rust_repositories")
 
