@@ -33,7 +33,13 @@ fn run_app() -> bool {
         preserve,
     } = command_line;
 
-    let re = Regex::new(&from_pattern).expect("Could not parse input pattern");
+    let re = match Regex::new(&from_pattern) {
+        Ok(re) => re,
+        Err(_) => {
+            eprintln!("Could not parse '{}' as a regular expression", from_pattern);
+            return false;
+        }
+    };
 
     let mut exit_ok = true;
     for entry in WalkDir::new(".").into_iter().filter_map(|e| e.ok()) {
