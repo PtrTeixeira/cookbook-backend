@@ -3,13 +3,13 @@ import HeatMap from 'react-heatmap-grid';
 
 export function WeekMap({ data }: { data: number[][] }): JSX.Element {
   const days = [
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-    "Sunday"
+    "Mon",
+    "Tues",
+    "Wed",
+    "Thurs",
+    "Fri",
+    "Sat",
+    "Sun"
   ]
 
   const hours = [
@@ -39,9 +39,13 @@ export function WeekMap({ data }: { data: number[][] }): JSX.Element {
     "12 PM"
   ]
 
+  const visibility = hours.map((_, index) => index % 2 === 0);
+
   return <HeatMap
-    yLabels={hours}
-    xLabels={days}
+    yLabels={days}
+    xLabels={hours}
+    squares={true}
+    xLabelsVisibility={visibility}
     data={data}
   />;
 }
