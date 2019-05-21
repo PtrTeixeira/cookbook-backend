@@ -1,0 +1,29 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library", "go_test")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "athlete.go",
+        "client.go",
+        "config.go",
+    ],
+    importpath = "github.com/PtrTeixeira/cookbook/strava",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//proto/strava:go_default_library",
+        "@com_github_golang_protobuf//jsonpb:go_default_library_gen",
+    ],
+)
+
+go_test(
+    name = "go_default_test",
+    size = "small",
+    srcs = [
+        "athlete_test.go",
+        "client_test.go",
+    ],
+    embed = [":go_default_library"],
+    importpath = "github.com/PtrTeixeira/cookbook/strava",
+    visibility = ["//visibility:private"],
+    deps = ["@in_gopkg_h2non_gock_v1//:go_default_library"],
+)
