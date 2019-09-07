@@ -11,6 +11,11 @@ jobs:
       - run: cp .circleci/bazel.rc /etc/bazel.bazelrc
       - run: bazel build //...
       - run: bazel test //...
+      - run: |
+          mkdir tmp
+          find -L bazel-testlogs -name 'test.xml' -printf '%h\n' | xargs -n1 -I{} cp -r {} tmp
+      - store_test_results:
+          path: tmp
       - save_cache:
           key: "v1-bazel-cache"
           paths:
