@@ -11,6 +11,15 @@ jobs:
       - run: cp .circleci/bazel.rc /etc/bazel.bazelrc
       - run: bazel build //...
       - run: bazel test //...
+      - run: |
+          mkdir tests
+          find -L bazel-testlogs -name 'test.xml' -printf '%h\n' | xargs -n1 -I{} cp -r {} tests
+          mkdir artifacts
+          cp bazel-bin/punchcard/punchcard.deb artifacts
+      - store_test_results:
+          path: tests
+      - store_artifacts:
+          path: artifacts/punchcard.deb
       - save_cache:
           key: "v1-bazel-cache"
           paths:
