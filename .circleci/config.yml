@@ -8,7 +8,7 @@ jobs:
       - checkout
       - restore_cache:
           key: "v1-bazel-cache"
-      - run: sudo cp .circleci/bazel.rc /etc/bazel.bazelrc
+      - run: cp .circleci/bazel.rc /etc/bazel.bazelrc
       - run: bazel build //...
       - run: bazel test //...
       - save_cache:
