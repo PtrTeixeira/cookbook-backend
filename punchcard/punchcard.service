@@ -1,0 +1,11 @@
+[Unit]
+Description=See when you run, on Strava
+After=network.target
+
+[Service]
+Type=simple
+Restart=always
+ExecStart=/usr/bin/java -jar /opt/punchcard/server_deploy.jar server /etc/punchcard/config.yml
+
+[Install]
+WantedBy=multi-user.target
