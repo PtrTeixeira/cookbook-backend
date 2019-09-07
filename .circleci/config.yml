@@ -3,7 +3,7 @@ jobs:
   build_primary:
     working_directory: ~/cookbook
     docker:
-      - image: angular/ngcontainer:0.10.0
+      - image: l.gcr.io/google/bazel:0.29.0
     steps:
       - checkout
       - restore_cache:
