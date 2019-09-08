@@ -24,4 +24,4 @@ have all of the interesting files backed up anyway.
 
 ## Development
 
-Build with `bazel build ...`. Test with (there's no tests) `bazel test ...`.
+Build with `bazel build ...`. Test with `bazel test ...`.
