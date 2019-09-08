@@ -1,47 +1,76 @@
-extern crate clap;
+extern crate lib;
 extern crate regex;
 extern crate walkdir;
 
-use clap::{Arg, App};
+use lib::cli::{parse_command_line, CommandLine};
+use lib::get_new_path;
 use regex::Regex;
+use std::env;
 use std::fs;
-use std::borrow::Borrow;
-use std::path::Path;
-use walkdir::{ DirEntry, WalkDir };
+use std::io;
+use walkdir::{DirEntry, WalkDir};
 
 fn main() {
-  let matches = App::new("mvb")
-      .version("0.1.0")
-      .author("Peter Teixeira")
-      .about("Bulk renames files")
-      .arg(Arg::with_name("from_pattern").required(true).index(1))
-      .arg(Arg::with_name("to_pattern").required(true).index(2))
-      .get_matches();
+    let result = run_app();
 
-  let from_pattern = matches.value_of("from_pattern").unwrap();
-  let to_pattern = matches.value_of("to_pattern").unwrap();
-  let re = Regex::new(from_pattern)
-      .expect("Could not parse input pattern");
-
-  for entry in WalkDir::new(".").into_iter().filter_map(|e| e.ok()) {
-      try_move_file(entry, &to_pattern, &re);
-  }
+    if !result {
+        std::process::exit(1);
+    }
 }
 
-fn try_move_file(entry: DirEntry, target_pattern: &str, re: &Regex) -> Option<()> {
-  let filename = entry.file_name().to_str()?;
-  
-  if !re.is_match(filename) {
-      return None;
-  }
+fn run_app() -> bool {
+    let command_line = match parse_command_line(env::args_os()) {
+        Ok(cl) => cl,
+        Err(e) => {
+            eprintln!("{}", e);
+            return true;
+        }
+    };
 
-  let replaced_name = re.replace(filename, target_pattern);
-  let target_file_name: &str = replaced_name.borrow();
-  let target_file_path = Path::new(target_file_name);
+    let CommandLine {
+        from_pattern,
+        to_pattern,
+        preserve,
+    } = command_line;
 
-  println!("Renaming {} to {:?}", entry.path().display(), target_file_name);
-  return match fs::rename(entry.path(), target_file_path) {
-      Ok(_) => None,
-      Err(e) => panic!(e),
-  }
+    let re = match Regex::new(&from_pattern) {
+        Ok(re) => re,
+        Err(_) => {
+            eprintln!("Could not parse '{}' as a regular expression", from_pattern);
+            return false;
+        }
+    };
+
+    let mut exit_ok = true;
+    for entry in WalkDir::new(".").into_iter().filter_map(|e| e.ok()) {
+        let move_result = if preserve {
+            try_copy_file(entry, &to_pattern, &re)
+        } else {
+            try_move_file(entry, &to_pattern, &re)
+        };
+
+        if let Some(Err(e)) = move_result {
+            exit_ok = false;
+            eprintln!("{:?}", e);
+        }
+    }
+
+    exit_ok
+}
+
+fn try_move_file(entry: DirEntry, target_pattern: &str, re: &Regex) -> Option<io::Result<()>> {
+    let filename = entry.file_name().to_str()?;
+    let target_file_path = get_new_path(filename, target_pattern, re)?;
+
+    Some(fs::rename(entry.path(), target_file_path))
+}
+
+fn try_copy_file(entry: DirEntry, target_pattern: &str, re: &Regex) -> Option<io::Result<()>> {
+    let filename = entry.file_name().to_str()?;
+    let target_file_path = get_new_path(filename, target_pattern, re)?;
+
+    return match fs::copy(entry.path(), target_file_path) {
+        Ok(_) => Some(Ok(())),
+        Err(e) => Some(Err(e)),
+    };
 }

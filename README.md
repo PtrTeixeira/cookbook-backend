@@ -67,6 +67,9 @@ I don't know Bazel that well, but I'm learning as I go.
 * `kotlin-dropwizard-dsl` - A small Kotlin library for configuring Dropwizard
   * Build with `bazel build //kotlin-dropwizard-dsl/...`
   * Test with `bazel test //kotlin-dropwizard-dsl/...`
+* `mvb` - A command-line batch file renamer
+  * Build with `bazel build //mvb/...`
+  * Test with `bazel test //mvb/...`
 * third-party has external dependency things in it.
 
 You can test everything (in CI, for instance) with `bazel test ...`.
