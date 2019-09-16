@@ -6,11 +6,9 @@ import (
 )
 
 func TestDeserialize(t *testing.T) {
-	config := NewConfig(true)
-
 	t.Run("it deserializes an AthleteResponse response missing some fields", func(t *testing.T) {
 		athleteResponseMissingFields := `{"id": 5454}`
-		data, err := config.deserializeAthleteResponse(strings.NewReader(athleteResponseMissingFields))
+		data, err := deserializeAthleteResponse(strings.NewReader(athleteResponseMissingFields))
 
 		if err != nil {
 			t.Error("Failed to deserialize response")
@@ -22,7 +20,7 @@ func TestDeserialize(t *testing.T) {
 
 	t.Run("it deserializes an AthleteResponse with some extra fields", func(t *testing.T) {
 		athleteResponseMissingFields := `{"id": 5454, "city": "San Francisco"}`
-		data, err := config.deserializeAthleteResponse(strings.NewReader(athleteResponseMissingFields))
+		data, err := deserializeAthleteResponse(strings.NewReader(athleteResponseMissingFields))
 
 		if err != nil {
 			t.Error("Failed to deserialize response", err)
@@ -34,7 +32,7 @@ func TestDeserialize(t *testing.T) {
 
 	t.Run("it deserializes an empty AthleteActivitiesResponse", func(t *testing.T) {
 		athleteActivitiesResponse := `[]`
-		data, err := config.deserializeAthleteActivitiesResponse(strings.NewReader(athleteActivitiesResponse))
+		data, err := deserializeAthleteActivitiesResponse(strings.NewReader(athleteActivitiesResponse))
 
 		if err != nil {
 			t.Error("Failed to deserialize response", err)
@@ -59,7 +57,7 @@ func TestDeserialize(t *testing.T) {
 			}
 		]
 		`
-		data, err := config.deserializeAthleteActivitiesResponse(strings.NewReader(athleteActivitiesResponse))
+		data, err := deserializeAthleteActivitiesResponse(strings.NewReader(athleteActivitiesResponse))
 
 		if err != nil {
 			t.Error("Failed to deserialize response", err)
@@ -86,7 +84,7 @@ func TestDeserialize(t *testing.T) {
 			"state": "extradata"
 		}
 		`
-		data, err := config.deserializeTokenResponse(strings.NewReader(tokenResponse))
+		data, err := deserializeTokenResponse(strings.NewReader(tokenResponse))
 
 		if err != nil {
 			t.Error("Failed to deserialize response", err)
@@ -109,7 +107,7 @@ func TestDeserialize(t *testing.T) {
 			"message": "Please don't do that again"
 		}
 		`
-		data, err := config.deserializeErrorResponse(strings.NewReader(errorResponse))
+		data, err := deserializeErrorResponse(strings.NewReader(errorResponse))
 
 		if err != nil {
 			t.Error("Failed to deserialize response", err)

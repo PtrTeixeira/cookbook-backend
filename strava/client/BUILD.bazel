@@ -7,12 +7,9 @@ go_library(
         "client.go",
         "config.go",
     ],
-    importpath = "github.com/PtrTeixeira/cookbook/strava",
+    importpath = "github.com/PtrTeixeira/cookbook/strava/client",
     visibility = ["//visibility:public"],
-    deps = [
-        "//proto/strava:go_default_library",
-        "@com_github_golang_protobuf//jsonpb:go_default_library_gen",
-    ],
+    deps = ["//strava/api:go_default_library"],
 )
 
 go_test(

@@ -1,11 +1,12 @@
 package main
 
 import (
-	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
 	"net/http"
 
-	"github.com/PtrTeixeira/cookbook/strava"
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
+
+	strava "github.com/PtrTeixeira/cookbook/strava/client"
 )
 
 func main() {
