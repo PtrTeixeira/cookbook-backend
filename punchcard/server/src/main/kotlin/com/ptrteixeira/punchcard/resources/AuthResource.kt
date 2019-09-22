@@ -21,12 +21,12 @@ import javax.ws.rs.core.UriBuilder
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 class AuthResource(
-    baseUrl: String,
-    private val dashboardUiUrl: String,
-    private val clientId: String,
-    private val clientSecret: String,
-    private val stravaService: IStravaService,
-    registry: MetricRegistry
+        baseUrl: String,
+        private val dashboardUiUrl: String,
+        private val clientId: String,
+        private val clientSecret: String,
+        private val stravaService: IStravaService,
+        registry: MetricRegistry
 ) {
     private val random = Random()
     private val redirectUri = URI("$baseUrl/strava/callback")
@@ -39,40 +39,41 @@ class AuthResource(
         val nonce = random.nextLong().toString(16)
 
         val stravaAuthorizePath = UriBuilder
-            .fromPath(STRAVA_AUTHORIZE_URI)
-            .queryParam("client_id", clientId)
-            .queryParam("response_type", STRAVA_RESPONSE_TYPE)
-            .queryParam("redirect_uri", redirectUri)
-            .queryParam("state", nonce)
-            .build()
+                .fromPath(STRAVA_AUTHORIZE_URI)
+                .queryParam("client_id", clientId)
+                .queryParam("response_type", STRAVA_RESPONSE_TYPE)
+                .queryParam("redirect_uri", redirectUri)
+                .queryParam("scope", "read,activity:read")
+                .queryParam("state", nonce)
+                .build()
 
         return Response
-            .seeOther(stravaAuthorizePath)
-            .cookie(buildVerificationCookie(nonce))
-            .build()
+                .seeOther(stravaAuthorizePath)
+                .cookie(buildVerificationCookie(nonce))
+                .build()
     }
 
     @GET
     @Path("/callback")
     fun authCallback(
-        @CookieParam(AUTH_NONCE_NAME) authNonce: String?,
-        @QueryParam("code") code: String?,
-        @QueryParam("error") error: String?,
-        @QueryParam("state") state: String?
+            @CookieParam(AUTH_NONCE_NAME) authNonce: String?,
+            @QueryParam("code") code: String?,
+            @QueryParam("error") error: String?,
+            @QueryParam("state") state: String?
     ): Response? {
         if (error != null || code == null || authNonce == null || state == null) {
             failedLoginAttempts.inc()
             return Response
-                .status(Response.Status.FORBIDDEN)
-                .build()
+                    .status(Response.Status.FORBIDDEN)
+                    .build()
         }
 
         if (state != authNonce) {
             LOG.warn("Login callback FAILED due to invalid auth nonce {}", authNonce)
             failedLoginAttempts.inc()
             return Response
-                .status(Response.Status.FORBIDDEN)
-                .build()
+                    .status(Response.Status.FORBIDDEN)
+                    .build()
         }
 
         return stravaService
@@ -86,14 +87,14 @@ class AuthResource(
     }
 
     private fun buildAuthCookie(value: String) = NewCookie(
-        "StravaAuthToken",
-        value,
-        "/",
-        "",
-        "",
-        MAX_AGE,
-        false,
-        true
+            "StravaAuthToken",
+            value,
+            "/",
+            "",
+            "",
+            MAX_AGE,
+            false,
+            true
     )
 
     private fun buildVerificationCookie(nonce: String) = NewCookie(AUTH_NONCE_NAME, nonce)
