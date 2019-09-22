@@ -9,6 +9,7 @@ jobs:
       - restore_cache:
           key: "v1-bazel-cache"
       - run: cp .circleci/bazel.rc /etc/bazel.bazelrc
+      - run: echo "1.0.$CIRCLE_BUILD_NUMBER" > version_file
       - run: bazel build //...
       - run: bazel test //...
       - run: |
