@@ -1,7 +1,7 @@
 package main
 
 import (
-    "fmt"
+	"fmt"
 	"net/http"
 	"net/url"
 
@@ -12,13 +12,13 @@ import (
 )
 
 type Handler struct {
-  cfg Config
-  client strava.Client
+	cfg    Config
+	client strava.Client
 }
 
 func main() {
-    config := InitConfig()
-    h := Handler {cfg: config}
+	config := InitConfig()
+	h := Handler{cfg: config}
 
 	e := echo.New()
 
@@ -30,7 +30,7 @@ func main() {
 	e.GET("/metrics", h.metrics)
 	e.GET("/punchcard", h.getPunchcard)
 	e.GET("/strava/login", h.redirectToStrava)
-// 	e.GET("/strava/callback", stravaOauthCallback)
+	// 	e.GET("/strava/callback", stravaOauthCallback)
 
 	// Start server
 	e.Logger.Fatal(e.Start(":8080"))
@@ -38,23 +38,22 @@ func main() {
 
 // Handler
 func (h Handler) redirectToStrava(c echo.Context) error {
-  dest, err := url.Parse("https://www.strava.com/oauth/authorize")
-  if err != nil {
-    return c.NoContent(http.StatusInternalServerError)
-  }
+	dest, err := url.Parse("https://www.strava.com/oauth/authorize")
+	if err != nil {
+		return c.NoContent(http.StatusInternalServerError)
+	}
 
-  redirectUrl := fmt.Sprintf("%s/strava/callback", h.cfg.BaseURL)
-  queryParams := dest.Query()
-  queryParams.Set("client_id", h.cfg.StravaClientID)
-  queryParams.Set("redirect_uri", redirectUrl)
-  queryParams.Set("response_type", "code")
-  queryParams.Set("scope", "read,activity:read")
+	redirectUrl := fmt.Sprintf("%s/strava/callback", h.cfg.BaseURL)
+	queryParams := dest.Query()
+	queryParams.Set("client_id", h.cfg.StravaClientID)
+	queryParams.Set("redirect_uri", redirectUrl)
+	queryParams.Set("response_type", "code")
+	queryParams.Set("scope", "read,activity:read")
 
-  dest.RawQuery = queryParams.Encode()
+	dest.RawQuery = queryParams.Encode()
 
-  return c.Redirect(http.StatusSeeOther, dest.String())
+	return c.Redirect(http.StatusSeeOther, dest.String())
 }
-
 
 func getAthlete(c echo.Context) error {
 	client := strava.NewClient()
