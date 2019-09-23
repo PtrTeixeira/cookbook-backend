@@ -1,7 +1,9 @@
 package main
 
 import (
+    "fmt"
 	"net/http"
+	"net/url"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -9,12 +11,14 @@ import (
 	strava "github.com/PtrTeixeira/cookbook/strava/client"
 )
 
+type Handler struct {
+  cfg Config
+  client strava.Client
+}
+
 func main() {
-	config := Config{}
-	config.BaseURL = "localhost:8080"
-	config.DashboardURL = "localhost:3000/dashboard"
-	config.StravaClientID = "fake-client-id"
-	config.StravaClientSecret = "fake-client-secret"
+    config := InitConfig()
+    h := Handler {cfg: config}
 
 	e := echo.New()
 
@@ -23,19 +27,34 @@ func main() {
 	e.Use(middleware.Recover())
 
 	// Routes
-	// e.GET("/metrics", metrics)
-	e.GET("/punchcard", getPunchcard)
-	e.GET("/strava/login", config.redirectToStrava)
-	e.GET("/strava/callback", stravaOauthCallback)
+	e.GET("/metrics", h.metrics)
+	e.GET("/punchcard", h.getPunchcard)
+	e.GET("/strava/login", h.redirectToStrava)
+// 	e.GET("/strava/callback", stravaOauthCallback)
 
 	// Start server
 	e.Logger.Fatal(e.Start(":8080"))
 }
 
 // Handler
-func hello(c echo.Context) error {
-	return c.String(http.StatusOK, "Hello, World!")
+func (h Handler) redirectToStrava(c echo.Context) error {
+  dest, err := url.Parse("https://www.strava.com/oauth/authorize")
+  if err != nil {
+    return c.NoContent(http.StatusInternalServerError)
+  }
+
+  redirectUrl := fmt.Sprintf("%s/strava/callback", h.cfg.BaseURL)
+  queryParams := dest.Query()
+  queryParams.Set("client_id", h.cfg.StravaClientID)
+  queryParams.Set("redirect_uri", redirectUrl)
+  queryParams.Set("response_type", "code")
+  queryParams.Set("scope", "read,activity:read")
+
+  dest.RawQuery = queryParams.Encode()
+
+  return c.Redirect(http.StatusSeeOther, dest.String())
 }
+
 
 func getAthlete(c echo.Context) error {
 	client := strava.NewClient()
@@ -44,14 +63,14 @@ func getAthlete(c echo.Context) error {
 	return err
 }
 
-func metrics(e echo.Context) error {
+func (h Handler) metrics(e echo.Context) error {
 	return nil
 }
 
-func getPunchcard(e echo.Context) error {
+func (h Handler) getPunchcard(e echo.Context) error {
 	return nil
 }
 
-func stravaOauthCallback(e echo.Context) error {
+func (h Handler) stravaOauthCallback(e echo.Context) error {
 	return nil
 }
