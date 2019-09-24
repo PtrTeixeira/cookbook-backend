@@ -38,7 +38,7 @@ func deserializeTokenResponse(body io.Reader) (*strava_api.TokenResponse, error)
 		return nil, err
 	}
 
-  value := strava_api.TokenResponse{}
+	value := strava_api.TokenResponse{}
 	err = json.Unmarshal(asBytes, &value)
 
 	return &value, err

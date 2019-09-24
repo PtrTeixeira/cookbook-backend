@@ -70,6 +70,10 @@ func TestRequests(t *testing.T) {
 		defer gock.Off()
 		gock.New("https://www.strava.com").
 			Post("/oauth/token").
+			MatchParam("client_id", "client-id").
+			MatchParam("client_secret", "client-secret").
+			MatchParam("code", "redirect-code").
+			MatchParam("grant_type", "authorization_code").
 			Reply(200).
 			BodyString(`
 			{

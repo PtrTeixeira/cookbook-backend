@@ -3,6 +3,7 @@ package strava
 import (
 	"fmt"
 	"net/http"
+	"net/url"
 
 	. "github.com/PtrTeixeira/cookbook/strava/api"
 )
@@ -59,17 +60,32 @@ func (c *Client) GetAthleteActivities(token string, page int, perPage int) ([]At
 		return nil, err
 	}
 
+	if 400 <= resp.StatusCode && resp.StatusCode < 600 {
+		fault, err := deserializeErrorResponse(resp.Body)
+		if err != nil {
+			return nil, err
+		}
+
+		return nil, fault
+	}
+
 	return deserializeAthleteActivitiesResponse(resp.Body)
 }
 
 // GetToken returns the *initial* token for authentication with Strava
 func (c *Client) GetToken(clientID, clientSecret, code string) (*TokenResponse, error) {
-	url := fmt.Sprintf(
-		"https://www.strava.com/oauth/token?client_id=%s&client_secret=%s&code=%s&grant_type=authorization_code",
-		clientID,
-		clientSecret,
-		code)
-	request, err := http.NewRequest("POST", url, nil)
+	dest, err := url.Parse("https://www.strava.com/oauth/token")
+	if err != nil {
+		return nil, err
+	}
+
+	params := dest.Query()
+	params.Add("client_id", clientID)
+	params.Add("client_secret", clientSecret)
+	params.Add("code", code)
+	params.Add("grant_type", "authorization_code")
+	dest.RawQuery = params.Encode()
+	request, err := http.NewRequest("POST", dest.String(), nil)
 	if err != nil {
 		return nil, err
 	}
@@ -78,6 +94,15 @@ func (c *Client) GetToken(clientID, clientSecret, code string) (*TokenResponse, 
 	if err != nil {
 		return nil, err
 	}
-	// _ := "authorization_code" // grant type
+
+	if 400 <= resp.StatusCode && resp.StatusCode < 600 {
+		fault, err := deserializeErrorResponse(resp.Body)
+		if err != nil {
+			return nil, err
+		}
+
+		return nil, fault
+	}
+
 	return deserializeTokenResponse(resp.Body)
 }
