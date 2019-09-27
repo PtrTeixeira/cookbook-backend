@@ -15,6 +15,8 @@ type Config struct {
 	StravaClientID string
 	// StravaClientSecret is the strava client secret
 	StravaClientSecret string
+	// Environment is the runtime environment (eg, production)
+	Environment string
 }
 
 func InitConfig() Config {
@@ -22,6 +24,7 @@ func InitConfig() Config {
 	viper.SetDefault("dashboardUrl", "http://localhost:3000/dashboard")
 	viper.SetDefault("stravaClientId", "")
 	viper.SetDefault("stravaClientSecret", "")
+	viper.SetDefault("environment", "local")
 
 	viper.SetConfigName("config")
 	viper.AddConfigPath("/etc/punchcard")
@@ -39,16 +42,19 @@ func InitConfig() Config {
 	viper.BindEnv("STRAVA_DASHBOARD_URL", "dashboardUrl")
 	viper.BindEnv("STRAVA_CLIENT_ID", "stravaClientId")
 	viper.BindEnv("STRAVA_CLIENT_SECRET", "stravaClientSecret")
+	viper.BindEnv("ENVIRONMENT", "environment")
 
 	baseUrl := viper.GetString("baseUrl")
 	dashboardUrl := viper.GetString("dashboardUrl")
 	stravaClientId := viper.GetString("stravaClientId")
 	stravaClientSecret := viper.GetString("stravaClientSecret")
+	environment := viper.GetString("environment")
 
 	return Config{
 		BaseURL:            baseUrl,
 		DashboardURL:       dashboardUrl,
 		StravaClientID:     stravaClientId,
 		StravaClientSecret: stravaClientSecret,
+		Environment:        environment,
 	}
 }
