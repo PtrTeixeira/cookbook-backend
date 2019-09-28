@@ -1,0 +1,34 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_binary", "go_library", "go_test")
+
+go_library(
+    name = "go_default_library",
+    srcs = [
+        "config.go",
+        "oauth.go",
+        "punchcard.go",
+        "server.go",
+        "stats.go",
+    ],
+    importpath = "github.com/PtrTeixeira/cookbook/punchcard/go-server",
+    visibility = ["//visibility:private"],
+    deps = [
+        "//strava/api:go_default_library",
+        "//strava/client:go_default_library",
+        "@com_github_labstack_echo_v4//:go_default_library",
+        "@com_github_labstack_echo_v4//middleware:go_default_library",
+        "@com_github_labstack_gommon//log:go_default_library",
+        "@com_github_spf13_viper//:go_default_library",
+    ],
+)
+
+go_binary(
+    name = "go-server",
+    embed = [":go_default_library"],
+    visibility = ["//visibility:public"],
+)
+
+go_test(
+    name = "go_default_test",
+    srcs = ["stats_test.go"],
+    embed = [":go_default_library"],
+)
