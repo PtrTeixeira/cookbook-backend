@@ -16,7 +16,7 @@ jobs:
           mkdir tests
           find -L bazel-testlogs -name 'test.xml' -printf '%h\n' | xargs -n1 -I{} cp -r {} tests
           mkdir artifacts
-          cp bazel-bin/punchcard/punchcard.deb artifacts
+          find -L bazel-bin -name '*.deb' -exec cp {} artifacts \;
       - store_test_results:
           path: tests
       - store_artifacts:
