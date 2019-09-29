@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+
 	"github.com/spf13/viper"
 )
 
@@ -19,9 +20,10 @@ type Config struct {
 	Environment string
 }
 
-func InitConfig() Config {
+// InitConfig loads server configuration from file or environment variables.
+func InitConfig() (*Config, error) {
 	viper.SetDefault("baseUrl", "http://localhost:8080")
-	viper.SetDefault("dashboardUrl", "http://localhost:3000/dashboard")
+	viper.SetDefault("dashboardUiUrl", "http://localhost:3000/dashboard")
 	viper.SetDefault("stravaClientId", "")
 	viper.SetDefault("stravaClientSecret", "")
 	viper.SetDefault("environment", "local")
@@ -34,7 +36,7 @@ func InitConfig() Config {
 		if _, ok := err.(viper.ConfigFileNotFoundError); ok {
 			// continue; just don't read the file
 		} else {
-			panic(fmt.Errorf("Could not read config file %s\n", err))
+			return nil, fmt.Errorf("could not read config file %s", err)
 		}
 	}
 
@@ -44,17 +46,18 @@ func InitConfig() Config {
 	viper.BindEnv("STRAVA_CLIENT_SECRET", "stravaClientSecret")
 	viper.BindEnv("ENVIRONMENT", "environment")
 
-	baseUrl := viper.GetString("baseUrl")
-	dashboardUrl := viper.GetString("dashboardUrl")
-	stravaClientId := viper.GetString("stravaClientId")
+	baseURL := viper.GetString("baseUrl")
+	dashboardURL := viper.GetString("dashboardUiUrl")
+	stravaClientID := viper.GetString("stravaClientId")
 	stravaClientSecret := viper.GetString("stravaClientSecret")
 	environment := viper.GetString("environment")
 
-	return Config{
-		BaseURL:            baseUrl,
-		DashboardURL:       dashboardUrl,
-		StravaClientID:     stravaClientId,
+	config := Config{
+		BaseURL:            baseURL,
+		DashboardURL:       dashboardURL,
+		StravaClientID:     stravaClientID,
 		StravaClientSecret: stravaClientSecret,
 		Environment:        environment,
 	}
+	return &config, nil
 }
