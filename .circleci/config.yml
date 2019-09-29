@@ -3,26 +3,30 @@ jobs:
   build_primary:
     working_directory: ~/cookbook
     docker:
-      - image: l.gcr.io/google/bazel:0.29.0
+      - image: l.gcr.io/google/bazel:0.29.1
     steps:
       - checkout
       - restore_cache:
-          key: "v1-bazel-cache"
+          keys:
+            - v1-bazel-cache-{{ checksum "WORKSPACE" }}
+            - v1-bazel-cache
       - run: cp .circleci/bazel.rc /etc/bazel.bazelrc
-      - run: echo "1.0.$CIRCLE_BUILD_NUM" > version_file
+      - run: echo "1.0.$CIRCLE_BUILD_NUM" | tee version_file
       - run: bazel build //...
       - run: bazel test //...
       - run: |
           mkdir tests
           find -L bazel-testlogs -name 'test.xml' -printf '%h\n' | xargs -n1 -I{} cp -r {} tests
           mkdir artifacts
-          find -L bazel-bin -name '*.deb' -exec cp {} artifacts \;
+          find -L bazel-bin -name '*.deb' -print -exec cp {} artifacts \;
       - store_test_results:
           path: tests
-      - store_artifacts:
-          path: artifacts/punchcard.deb
+      - persist_to_workspace:
+          root: artifacts
+          paths:
+            - "*.deb"
       - save_cache:
-          key: "v1-bazel-cache"
+          key: v1-bazel-cache-{{ checksum "WORKSPACE" }}
           paths:
             - "/home/circleci/.cache/bazel"
   build_ui:
@@ -33,6 +37,16 @@ jobs:
       - run: yarn
       - run: yarn workspaces run build
       - run: yarn workspaces run test
+  deploy:
+    docker:
+      - image: circleci/openjdk:8u181-jdk-node-browsers
+    steps:
+      - attach_workspace:
+          at: /tmp/workspace
+      - store_artifacts:
+          path: /tmp/workspace/punchcard.deb
+      - store_artifacts:
+          path: /tmp/workspace/gopunchcard.deb
 
 workflows:
   version: 2
@@ -40,3 +54,8 @@ workflows:
     jobs:
     - build_primary
     - build_ui
+    - deploy:
+        requires: [build_primary]
+        filters:
+          branches:
+            only: master
