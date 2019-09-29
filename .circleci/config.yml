@@ -9,18 +9,20 @@ jobs:
       - restore_cache:
           key: "v1-bazel-cache"
       - run: cp .circleci/bazel.rc /etc/bazel.bazelrc
-      - run: echo "1.0.$CIRCLE_BUILD_NUM" > version_file
+      - run: echo "1.0.$CIRCLE_BUILD_NUM" | tee version_file
       - run: bazel build //...
       - run: bazel test //...
       - run: |
           mkdir tests
           find -L bazel-testlogs -name 'test.xml' -printf '%h\n' | xargs -n1 -I{} cp -r {} tests
           mkdir artifacts
-          find -L bazel-bin -name '*.deb' -exec cp {} artifacts \;
+          find -L bazel-bin -name '*.deb' -print -exec cp {} artifacts \;
       - store_test_results:
           path: tests
       - store_artifacts:
           path: artifacts/punchcard.deb
+      - store_artifacts:
+          path: artifacts/gopunchcard.deb
       - save_cache:
           key: "v1-bazel-cache"
           paths:
