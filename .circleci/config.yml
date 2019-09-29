@@ -25,10 +25,6 @@ jobs:
           root: artifacts
           paths:
             - "*.deb"
-      - store_artifacts:
-          path: artifacts/punchcard.deb
-      - store_artifacts:
-          path: artifacts/gopunchcard.deb
       - save_cache:
           key: v1-bazel-cache-{{ checksum "WORKSPACE" }}
           paths:
