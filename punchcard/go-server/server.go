@@ -14,7 +14,7 @@ import (
 )
 
 type handler struct {
-	cfg    Config
+	cfg    *Config
 	client *strava.Client
 	log    echo.Logger
 }
@@ -27,7 +27,11 @@ type RedirectParams struct {
 }
 
 func main() {
-	config := InitConfig()
+	config, err := InitConfig()
+	if err != nil {
+		panic(err)
+	}
+
 	e := echo.New()
 	e.Logger.SetLevel(log.INFO)
 	h := handler{
