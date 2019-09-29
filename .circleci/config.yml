@@ -22,8 +22,9 @@ jobs:
       - store_test_results:
           path: tests
       - persist_to_workspace:
+          root: artifacts
           paths:
-            - "artifacts/*.deb"
+            - "*.deb"
       - store_artifacts:
           path: artifacts/punchcard.deb
       - store_artifacts:
@@ -47,9 +48,9 @@ jobs:
       - attach_workspace:
           at: /tmp/workspace
       - store_artifacts:
-          path: /tmp/workspace/artifacts/punchcard.deb
+          path: /tmp/workspace/punchcard.deb
       - store_artifacts:
-          path: /tmp/workspace/artifacts/gopunchcard.deb
+          path: /tmp/workspace/gopunchcard.deb
 
 workflows:
   version: 2
