@@ -22,6 +22,7 @@ require (
 )
 
 replace github.com/PtrTeixeira/cookbook/strava/client => ../../strava/client
+
 replace github.com/PtrTeixeira/cookbook/strava/api => ../../strava/api
 
 go 1.13
