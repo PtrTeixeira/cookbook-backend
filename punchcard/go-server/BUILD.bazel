@@ -4,7 +4,6 @@ go_library(
     name = "go_default_library",
     srcs = [
         "config.go",
-        "oauth.go",
         "punchcard.go",
         "server.go",
         "stats.go",
@@ -29,6 +28,7 @@ go_binary(
 
 go_test(
     name = "go_default_test",
+    size = "small",
     srcs = ["stats_test.go"],
     embed = [":go_default_library"],
 )

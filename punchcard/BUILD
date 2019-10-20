@@ -8,10 +8,10 @@ pkg_tar(
 )
 
 pkg_tar(
-  name= "gopunchcard-bin",
-  srcs = ["//punchcard/go-server:go-server"],
-  mode = "0755",
-  package_dir = "/usr/bin"
+    name = "gopunchcard-bin",
+    srcs = ["//punchcard/go-server:go-server"],
+    mode = "0755",
+    package_dir = "/usr/bin",
 )
 
 pkg_tar(

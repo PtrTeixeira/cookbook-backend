@@ -142,8 +142,8 @@ load("@bazel_gazelle//:deps.bzl", "gazelle_dependencies")
 
 gazelle_dependencies()
 
+# gazelle:repository_macro third-party/go/deps.bzl%go_dependencies
 load("//third-party/go:deps.bzl", "go_dependencies")
-
 go_dependencies()
 
 load("//third-party/java:junit.bzl", "junit_jupiter_java_repositories", "junit_platform_java_repositories")
