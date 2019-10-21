@@ -35,6 +35,7 @@ jobs:
     steps:
       - checkout
       - run: yarn
+      - run: yarn prettier:check
       - run: yarn workspaces run build
       - run: yarn workspaces run test
   deploy:

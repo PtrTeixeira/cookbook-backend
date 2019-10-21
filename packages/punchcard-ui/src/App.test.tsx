@@ -1,14 +1,14 @@
-import * as React from 'react';
-import * as ReactDOM from 'react-dom';
+import * as React from "react";
+import * as ReactDOM from "react-dom";
 
-import 'jest-localstorage-mock';
+import "jest-localstorage-mock";
 
-import App from './App';
+import App from "./App";
 
-it('renders without crashing', () => {
-  sessionStorage.setItem('results', "{}")
+it("renders without crashing", () => {
+  sessionStorage.setItem("results", "{}");
 
-  const div = document.createElement('div');
+  const div = document.createElement("div");
   ReactDOM.render(<App />, div);
   ReactDOM.unmountComponentAtNode(div);
 });

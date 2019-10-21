@@ -1,4 +1,4 @@
-declare module 'react-heatmap-grid' {
+declare module "react-heatmap-grid" {
   export interface HeatmapProps {
     xLabels: string[];
     yLabels: string[];
