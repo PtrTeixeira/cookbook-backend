@@ -58,14 +58,6 @@ function buildHourlyGridSafe(data: IHourlyResults | undefined | null): number[] 
   }
 }
 
-function rotate(data: number[][]): number[][] {
-  return new Array(data[0].length).fill(0)
-    .map((e, outerIndex) => {
-      return new Array(data.length).fill(0)
-        .map((_, innerIndex) => data[innerIndex][outerIndex])
-    });
-}
-
 export function buildWeeklyGrid(data: IWeeklyResults): number[][] {
   const grid = ([
     "MONDAY",
