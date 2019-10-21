@@ -7,21 +7,29 @@ import { WeekMap } from '../heatmap/WeekMap';
 
 
 export function Dashboard({error, isLoaded, weeklyResults}: {error: any, isLoaded: boolean, weeklyResults: IWeeklyResults | null}) {
-    if (isLoaded && error != null) {
+    if (!isLoaded) {
+        return (
+            <p className="App-intro">
+                Loading...
+            </p>
+        )
+    }
+
+    if (error != null) {
         return (
             <p className="App-intro">
                 {error}
             </p>
-        );
-    } else if (weeklyResults != null) {
-        return (
-            <WeekMap data={buildWeeklyGrid(weeklyResults)} />
         )
-    } else {
+    }
+
+    if (weeklyResults == null) {
         return (
             <p className="App-intro">
-               Loading ...
+                Could not load data from server
             </p>
         )
     }
+
+    return <WeekMap data={buildWeeklyGrid(weeklyResults)} />
 }

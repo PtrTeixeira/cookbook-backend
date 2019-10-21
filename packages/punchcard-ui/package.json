@@ -36,6 +36,9 @@
   ],
   "description": "UI for Strava Punchcard application",
   "devDependencies": {
+    "@types/enzyme": "^3.10.3",
+    "enzyme": "^3.10.0",
+    "enzyme-adapter-react-16": "^1.15.1",
     "jest-localstorage-mock": "^2.4.0"
   }
 }
