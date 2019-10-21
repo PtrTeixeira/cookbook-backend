@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from 'axios'
+import axios from 'axios'
 import * as React from 'react'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 
