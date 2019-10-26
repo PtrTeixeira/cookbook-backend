@@ -31,4 +31,7 @@ go_test(
     size = "small",
     srcs = ["stats_test.go"],
     embed = [":go_default_library"],
+    deps = [
+        "//go-assert:go_default_library",
+    ],
 )
