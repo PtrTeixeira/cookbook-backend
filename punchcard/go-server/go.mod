@@ -3,12 +3,14 @@ module github.com/PtrTeixeira/punchcard/go-server
 require (
 	github.com/PtrTeixeira/cookbook/strava/api v0.0.0-20190929163527-e03c86f35e56
 	github.com/PtrTeixeira/cookbook/strava/client v0.0.0-20190929163527-e03c86f35e56
+	github.com/getsentry/sentry-go v0.3.0
 	github.com/labstack/echo/v4 v4.1.11
 	github.com/labstack/gommon v0.3.0
 	github.com/magiconair/properties v1.8.1 // indirect
 	github.com/mattn/go-colorable v0.1.4 // indirect
 	github.com/mattn/go-isatty v0.0.10 // indirect
 	github.com/pelletier/go-toml v1.5.0 // indirect
+	github.com/pkg/errors v0.8.1
 	github.com/spf13/afero v1.2.2 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect

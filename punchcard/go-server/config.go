@@ -18,6 +18,8 @@ type Config struct {
 	StravaClientSecret string
 	// Environment is the runtime environment (eg, production)
 	Environment string
+	// SentryDsn is the sending secret for reporting to Sentry
+	SentryDsn string
 }
 
 // InitConfig loads server configuration from file or environment variables.
@@ -27,6 +29,7 @@ func InitConfig() (*Config, error) {
 	viper.SetDefault("stravaClientId", "")
 	viper.SetDefault("stravaClientSecret", "")
 	viper.SetDefault("environment", "local")
+	viper.SetDefault("sentryDsn", "")
 
 	viper.SetConfigName("config")
 	viper.AddConfigPath("/etc/punchcard")
@@ -40,17 +43,19 @@ func InitConfig() (*Config, error) {
 		}
 	}
 
-	viper.BindEnv("STRAVA_BASE_URL", "baseUrl")
-	viper.BindEnv("STRAVA_DASHBOARD_URL", "dashboardUrl")
-	viper.BindEnv("STRAVA_CLIENT_ID", "stravaClientId")
-	viper.BindEnv("STRAVA_CLIENT_SECRET", "stravaClientSecret")
-	viper.BindEnv("ENVIRONMENT", "environment")
+	viper.BindEnv("baseUrl", "STRAVA_BASE_URL")
+	viper.BindEnv("dashboardUrl", "STRAVA_DASHBOARD_URL")
+	viper.BindEnv("stravaClientId", "STRAVA_CLIENT_ID")
+	viper.BindEnv("stravaClientSecret", "STRAVA_CLIENT_SECRET")
+	viper.BindEnv("environment", "ENVIRONMENT")
+	viper.BindEnv("sentryDsn", "SENTRY_DSN")
 
 	baseURL := viper.GetString("baseUrl")
 	dashboardURL := viper.GetString("dashboardUiUrl")
 	stravaClientID := viper.GetString("stravaClientId")
 	stravaClientSecret := viper.GetString("stravaClientSecret")
 	environment := viper.GetString("environment")
+	sentryDsn := viper.GetString("sentryDsn")
 
 	config := Config{
 		BaseURL:            baseURL,
@@ -58,6 +63,7 @@ func InitConfig() (*Config, error) {
 		StravaClientID:     stravaClientID,
 		StravaClientSecret: stravaClientSecret,
 		Environment:        environment,
+		SentryDsn:          sentryDsn,
 	}
 	return &config, nil
 }

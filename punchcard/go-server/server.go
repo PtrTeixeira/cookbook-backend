@@ -6,9 +6,12 @@ import (
 	"net/url"
 	"time"
 
+	"github.com/getsentry/sentry-go"
+	sentryecho "github.com/getsentry/sentry-go/echo"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/labstack/gommon/log"
+	"github.com/pkg/errors"
 
 	strava "github.com/PtrTeixeira/cookbook/strava/client"
 )
@@ -33,6 +36,7 @@ func main() {
 	}
 
 	e := echo.New()
+	e.HideBanner = true
 	e.Logger.SetLevel(log.INFO)
 	h := handler{
 		cfg:    config,
@@ -40,9 +44,15 @@ func main() {
 		log:    e.Logger,
 	}
 
+	initializeSentry(e.Logger, config)
+
 	// Middleware
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
+	e.Use(sentryecho.New(sentryecho.Options{
+		Repanic: true,
+		Timeout: time.Second * 3,
+	}))
 
 	// Routes
 	e.GET("/health", h.healthCheck)
@@ -54,11 +64,32 @@ func main() {
 	e.Logger.Fatal(e.Start(":8080"))
 }
 
+func initializeSentry(log echo.Logger, config *Config) {
+	sentryDsn := config.SentryDsn
+	if sentryDsn == "" {
+		log.Info("Sentry DSN was unset, will not report to Sentry")
+		return
+	}
+
+	if config.Environment == "local" {
+		log.Info("Environment is \"local\", won't report to Sentry")
+		return
+	}
+
+	err := sentry.Init(sentry.ClientOptions{
+		Dsn: sentryDsn,
+	})
+
+	if err != nil {
+		log.Warnf("Sentry initialization failed: %v\n", err)
+	}
+}
+
 // Handler
 func (h handler) redirectToStrava(c echo.Context) error {
 	dest, err := url.Parse("https://www.strava.com/oauth/authorize")
 	if err != nil {
-		return c.NoContent(http.StatusInternalServerError)
+		return err
 	}
 
 	redirectURL := fmt.Sprintf("%s/strava/callback", h.cfg.BaseURL)
@@ -75,7 +106,7 @@ func (h handler) redirectToStrava(c echo.Context) error {
 
 func (h handler) healthCheck(c echo.Context) error {
 	if h.cfg.StravaClientID == "" || h.cfg.StravaClientSecret == "" {
-		return c.NoContent(http.StatusInternalServerError)
+		return errors.New("Strava client ID or secret was blank!")
 	}
 
 	return c.NoContent(http.StatusOK)
@@ -100,8 +131,8 @@ func (h handler) getPunchcard(c echo.Context) error {
 func (h handler) stravaOauthCallback(c echo.Context) error {
 	params := new(RedirectParams)
 	if err := c.Bind(params); err != nil {
-		h.log.Errorf("Could not get redirect params", err)
-		return c.NoContent(http.StatusInternalServerError)
+		h.log.Warn("Could not get redirect params", err)
+		return c.NoContent(http.StatusBadRequest)
 	}
 
 	if params.Err == "access_denied" {
@@ -110,10 +141,15 @@ func (h handler) stravaOauthCallback(c echo.Context) error {
 	}
 
 	client := h.client
-	response, err := client.GetToken(h.cfg.StravaClientID, h.cfg.StravaClientSecret, params.Code)
+	response, err := client.GetToken("x"+h.cfg.StravaClientID, h.cfg.StravaClientSecret, params.Code)
 	if err != nil {
-		h.log.Errorf("Could not get auth token from Strava: %+v", err)
-		return c.NoContent(http.StatusInternalServerError)
+		e := errors.Wrap(err, "Could not get auth token from Strava")
+    if hub := sentryecho.GetHubFromContext(c); hub != nil {
+      h.log.Info("Got Hub from context; sending to sentry")
+      hub.CaptureException(e)
+      return e
+    }
+    return err;
 	}
 
 	cookie := new(http.Cookie)
