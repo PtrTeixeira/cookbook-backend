@@ -13,9 +13,12 @@ go_library(
     deps = [
         "//strava/api:go_default_library",
         "//strava/client:go_default_library",
+        "@com_github_getsentry_sentry_go//:go_default_library",
+        "@com_github_getsentry_sentry_go//echo:go_default_library",
         "@com_github_labstack_echo_v4//:go_default_library",
         "@com_github_labstack_echo_v4//middleware:go_default_library",
         "@com_github_labstack_gommon//log:go_default_library",
+        "@com_github_pkg_errors//:go_default_library",
         "@com_github_spf13_viper//:go_default_library",
     ],
 )

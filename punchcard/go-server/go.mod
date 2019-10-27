@@ -1,8 +1,8 @@
 module github.com/PtrTeixeira/punchcard/go-server
 
 require (
-	github.com/PtrTeixeira/cookbook/strava/api v0.0.0-20190929163527-e03c86f35e56
-	github.com/PtrTeixeira/cookbook/strava/client v0.0.0-20190929163527-e03c86f35e56
+	 github.com/PtrTeixeira/cookbook/strava/api v0.0.0-20190929163527-e03c86f35e56
+ 	github.com/PtrTeixeira/cookbook/strava/client v0.0.0-20190929163527-e03c86f35e56
 	github.com/getsentry/sentry-go v0.3.0
 	github.com/labstack/echo/v4 v4.1.11
 	github.com/labstack/gommon v0.3.0
