@@ -141,7 +141,7 @@ func (h handler) stravaOauthCallback(c echo.Context) error {
 	}
 
 	client := h.client
-	response, err := client.GetToken("x"+h.cfg.StravaClientID, h.cfg.StravaClientSecret, params.Code)
+	response, err := client.GetToken(h.cfg.StravaClientID, h.cfg.StravaClientSecret, params.Code)
 	if err != nil {
 		e := errors.Wrap(err, "Could not get auth token from Strava")
 		if hub := sentryecho.GetHubFromContext(c); hub != nil {
