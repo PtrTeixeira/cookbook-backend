@@ -144,12 +144,12 @@ func (h handler) stravaOauthCallback(c echo.Context) error {
 	response, err := client.GetToken("x"+h.cfg.StravaClientID, h.cfg.StravaClientSecret, params.Code)
 	if err != nil {
 		e := errors.Wrap(err, "Could not get auth token from Strava")
-    if hub := sentryecho.GetHubFromContext(c); hub != nil {
-      h.log.Info("Got Hub from context; sending to sentry")
-      hub.CaptureException(e)
-      return e
-    }
-    return err;
+		if hub := sentryecho.GetHubFromContext(c); hub != nil {
+			h.log.Info("Got Hub from context; sending to sentry")
+			hub.CaptureException(e)
+			return e
+		}
+		return err
 	}
 
 	cookie := new(http.Cookie)

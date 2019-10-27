@@ -3,6 +3,9 @@ github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03
 github.com/Joker/hpp v0.0.0-20180418125244-6893e659854a/go.mod h1:MzD2WMdSxvbHw5fM/OXOFily/lipJWRc9C1px0Mt0ZE=
 github.com/Joker/jade v1.0.0/go.mod h1:efZIdO0py/LtcJRSa/j2WEklMSAw84WV0zZVMxNToB8=
 github.com/OneOfOne/xxhash v1.2.2/go.mod h1:HSdplMjZKSmBqAxg5vPj2TmRDmfkzw+cTzAElWljhcU=
+github.com/PtrTeixeira/cookbook v0.3.0 h1:qGrrPlUcpCYNDZE8sGYdg09pmNNouc4NpX0j0A7PZjM=
+github.com/PtrTeixeira/cookbook/go-assert v0.0.0-20191026211910-0cd64864ad70 h1:Q8OHlmkouFqRZV4XDC3zIx+pWpwyZdYVbgL6ZzFXfew=
+github.com/PtrTeixeira/cookbook/go-assert v0.0.0-20191026211910-0cd64864ad70/go.mod h1:+2obZOhTpUDGXiG09E/RAZR4dmc48tgqar6QxU81KLE=
 github.com/Shopify/goreferrer v0.0.0-20181106222321-ec9c9a553398/go.mod h1:a1uqRtAwp2Xwc6WNPJEufxJ7fx3npB4UV/JOLmbu5I0=
 github.com/ajg/form v1.5.1/go.mod h1:uL1WgH+h2mgNtvBq0339dVnzXdBETtL2LeUXaIv25UY=
 github.com/alecthomas/template v0.0.0-20160405071501-a0175ee3bccc/go.mod h1:LOuyumcjzFXgccqObfd/Ljyb9UuFJ6TxHnclSeseNhc=
