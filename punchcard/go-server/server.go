@@ -47,6 +47,7 @@ func main() {
 	// Routes
 	e.GET("/health", h.healthCheck)
 	e.GET("/punchcard", h.getPunchcard)
+	e.GET("/distances", h.getDistances)
 	e.GET("/strava/login", h.redirectToStrava)
 	e.GET("/strava/callback", h.stravaOauthCallback)
 
@@ -95,6 +96,22 @@ func (h handler) getPunchcard(c echo.Context) error {
 	punchcard := GetPunchcard(response)
 
 	return c.JSON(http.StatusOK, punchcard)
+}
+
+func (h handler) getDistances(c echo.Context) error {
+	authCookie, err := c.Cookie("StravaAuthToken")
+	if err != nil {
+		h.log.Warn("Could not read access token from cookie", err)
+		return c.NoContent(http.StatusForbidden)
+	}
+
+	response, err := h.client.GetAthleteActivities(authCookie.Value, 1, 50)
+	if err != nil {
+		h.log.Error("Could not read data athlete data from Strava", err)
+	}
+	distances := GetDistanceDifference(response)
+
+	return c.JSON(http.StatusOK, distances)
 }
 
 func (h handler) stravaOauthCallback(c echo.Context) error {

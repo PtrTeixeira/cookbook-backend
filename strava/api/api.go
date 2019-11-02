@@ -17,6 +17,7 @@ type AthleteActivity struct {
 	Athlete        ShortAthlete `json:"athlete"`
 	StartDate      string       `json:"start_date"`
 	StartDateLocal string       `json:"start_date_local"`
+	Distance       float64      `json:"distance"`
 }
 
 type TokenResponse struct {

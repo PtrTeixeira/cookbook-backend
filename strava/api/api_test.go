@@ -12,7 +12,8 @@ func TestApi(t *testing.T) {
       "id": 4,
       "username": "ptrteixeira",
       "firstname": "Peter",
-      "lastname": "Teixeira"
+      "lastname": "Teixeira",
+      "distance": 24931.4
     }`)
 		var result AthleteResponse
 
