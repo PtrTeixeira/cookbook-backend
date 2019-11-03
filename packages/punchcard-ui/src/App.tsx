@@ -7,6 +7,7 @@ import loginButton from './btn_strava_connectwith_light.svg'
 
 import { Dashboard } from './dashboard/Dashboard';
 import { DistancesPage} from './distances/DistancesPage'
+import { IDistanceResults } from './distances/actions'
 import { Header } from './header/Header'
 import { IWeeklyResults } from "./heatmap/actions"
 
@@ -14,7 +15,13 @@ import { IWeeklyResults } from "./heatmap/actions"
 interface IAppState {
   error: any,
   isLoaded: boolean,
-  weeklyResults: IWeeklyResults | null
+  weeklyResults: IWeeklyResults | null,
+  distanceResuls: IDistanceResults | null,
+}
+
+interface IRemoteData {
+  weeklyResults: IWeeklyResults | null,
+  distanceResults: IDistanceResults | null,
 }
 
 function Login() {
@@ -25,17 +32,45 @@ function Login() {
   )
 }
 
+async function loadDistanceResults(): Promise<IDistanceResults> {
+  const sessionKey = "distancesResults"
+  const endpoint = "/api/distances"
 
-async function loadWeeklyResults(): Promise<IWeeklyResults> {
-  const storageContents = sessionStorage.getItem("results")
+  const storageContents = sessionStorage.getItem(sessionKey)
   if (storageContents != null) {
     return Promise.resolve(JSON.parse(storageContents))
   } else {
     const response = await axios
-      .get("/api/punchcard");
+      .get(endpoint);
     const data = response.data;
-    sessionStorage.setItem("results", JSON.stringify(data));
+    sessionStorage.setItem(sessionKey, JSON.stringify(data));
     return data;
+  }
+}
+
+async function loadWeeklyResults(): Promise<IWeeklyResults> {
+  const sessionKey = "results"
+  const endpoint = "/api/punchcard"
+
+  const storageContents = sessionStorage.getItem(sessionKey)
+  if (storageContents != null) {
+    return Promise.resolve(JSON.parse(storageContents))
+  } else {
+    const response = await axios
+      .get(endpoint);
+    const data = response.data;
+    sessionStorage.setItem(sessionKey, JSON.stringify(data));
+    return data;
+  }
+}
+
+async function loadRemoteData(): Promise<IRemoteData> {
+  const weeklyResults = loadWeeklyResults()
+  const distanceResults = loadDistanceResults()
+
+  return {
+    weeklyResults: (await weeklyResults),
+    distanceResults: (await distanceResults)
   }
 }
 
@@ -48,19 +83,21 @@ class App extends React.Component<{}, IAppState> {
     this.state = {
       error: null,
       isLoaded: false,
-      weeklyResults: null
+      weeklyResults: null,
+      distanceResuls: null,
     }
   }
 
   public componentDidMount() {
     this.componentIsMounted = true;
-    loadWeeklyResults()
+    loadRemoteData()
       .then(
-        (data: IWeeklyResults) => {
+        ({weeklyResults, distanceResults}: IRemoteData) => {
           if (this.componentIsMounted) {
             this.setState({
               isLoaded: true,
-              weeklyResults: data
+              weeklyResults: weeklyResults,
+              distanceResuls: distanceResults
             })
           }
         },
@@ -83,7 +120,7 @@ class App extends React.Component<{}, IAppState> {
           <div className="row justify-content-center">
             <Switch>
               <Route path="/dashboard/distances">
-                <DistancesPage />
+                <DistancesPage distances={this.state.distanceResuls}/>
               </Route>
 
               <Route path="/dashboard">
