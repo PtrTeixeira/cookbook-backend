@@ -1,11 +1,12 @@
 import axios from 'axios'
 import * as React from 'react'
-import { BrowserRouter as Router, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 
 import './App.css'
 import loginButton from './btn_strava_connectwith_light.svg'
 
 import { Dashboard } from './dashboard/Dashboard';
+import { DistancesPage} from './distances/DistancesPage'
 import { Header } from './header/Header'
 import { IWeeklyResults } from "./heatmap/actions"
 
@@ -16,30 +17,12 @@ interface IAppState {
   weeklyResults: IWeeklyResults | null
 }
 
-function withProps(component: JSX.Element) {
-  return (props: {}) => component;
-}
-
-function HomeRoute() {
+function Login() {
   return (
-    <Route exact={true} path="/" render={withProps(
-      <a href="/api/strava/login">
+    <a href="/api/strava/login">
         <img src={loginButton} alt="Connect with Strava" className="home-connect-btn" />
-      </a>
-    )} />)
-}
-
-const HelperRoute = (props: IAppState) => (
-  <div className="row">
-    <Dashboard {...props} />
-  </div>
-)
-
-function WeekMapRoute(props: IAppState) {
-  return (
-    <Route path="/dashboard" render={withProps(
-      <HelperRoute {...props} />
-    )} />)
+    </a>
+  )
 }
 
 
@@ -98,8 +81,19 @@ class App extends React.Component<{}, IAppState> {
           <Header />
 
           <div className="row justify-content-center">
-            <HomeRoute />
-            <WeekMapRoute {...this.state} />
+            <Switch>
+              <Route path="/dashboard/distances">
+                <DistancesPage />
+              </Route>
+
+              <Route path="/dashboard">
+                <Dashboard {...this.state} />
+              </Route>
+
+              <Route path="/">
+                <Login />
+              </Route>
+            </Switch>
           </div>
 
           <footer>
