@@ -21,10 +21,10 @@ rules_pkg_dependencies()
 
 http_archive(
     name = "io_bazel_rules_rust",
-    sha256 = "019958e96fcb9d8b5e5f74f31ad58f9c59804e8c04cf5aae03b983001edc79e0",
-    strip_prefix = "rules_rust-f727669b8ac3c9d237ed9bc7833b8e1eeec90506",
+    sha256 = "7b064c815eef94c34553bc73e4295a50d7b80c92ea91152802c7f77dcbb128ab",
+    strip_prefix = "rules_rust-fe9a91e8b42f731aeb3b596246f6bf4bb9a88dc3",
     urls = [
-        "https://github.com/bazelbuild/rules_rust/archive/f727669b8ac3c9d237ed9bc7833b8e1eeec90506.tar.gz",
+        "https://github.com/bazelbuild/rules_rust/archive/fe9a91e8b42f731aeb3b596246f6bf4bb9a88dc3.tar.gz",
     ],
 )
 load("@io_bazel_rules_rust//rust:repositories.bzl", "rust_repositories")
