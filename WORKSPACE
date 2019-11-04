@@ -11,27 +11,13 @@ http_archive(
     url = "https://github.com/bazelbuild/bazel-skylib/releases/download/{}/bazel-skylib.{}.tar.gz".format(skylib_version, skylib_version),
 )
 
-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 http_archive(
     name = "rules_pkg",
-    url = "https://github.com/bazelbuild/rules_pkg/releases/download/0.2.2/rules_pkg-0.2.2.tar.gz",
-    sha256 = "02de387c5ef874379e784ac968bf6efffe5285a168cab5a3169e08cfc634fd22",
+    url = "https://github.com/bazelbuild/rules_pkg/releases/download/0.2.4/rules_pkg-0.2.4.tar.gz",
+    sha256 = "4ba8f4ab0ff85f2484287ab06c0d871dcb31cc54d439457d28fd4ae14b18450a",
 )
 load("@rules_pkg//:deps.bzl", "rules_pkg_dependencies")
 rules_pkg_dependencies()
-
-http_archive(
-		name = "rules_proto",
-		sha256 = "602e7161d9195e50246177e7c55b2f39950a9cf7366f74ed5f22fd45750cd208",
-		strip_prefix = "rules_proto-97d8af4dc474595af3900dd85cb3a29ad28cc313",
-		urls = [
-			"https://mirror.bazel.build/github.com/bazelbuild/rules_proto/archive/97d8af4dc474595af3900dd85cb3a29ad28cc313.tar.gz",
-			"https://github.com/bazelbuild/rules_proto/archive/97d8af4dc474595af3900dd85cb3a29ad28cc313.tar.gz",
-		],
-)
-load("@rules_proto//proto:repositories.bzl", "rules_proto_dependencies", "rules_proto_toolchains")
-rules_proto_dependencies()
-rules_proto_toolchains()
 
 http_archive(
     name = "io_bazel_rules_rust",
@@ -41,13 +27,9 @@ http_archive(
         "https://github.com/bazelbuild/rules_rust/archive/f727669b8ac3c9d237ed9bc7833b8e1eeec90506.tar.gz",
     ],
 )
-
 load("@io_bazel_rules_rust//rust:repositories.bzl", "rust_repositories")
-
 rust_repositories()
-
 load("@io_bazel_rules_rust//:workspace.bzl", "bazel_version")
-
 bazel_version(name = "bazel_version")
 
 rules_kotlin_version = "59dc7473c777b5054e91c1af6b95ed0ecbdc0ace"
