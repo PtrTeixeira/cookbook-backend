@@ -31,28 +31,26 @@ load("@io_bazel_rules_rust//rust:repositories.bzl", "rust_repositories")
 rust_repositories()
 load("@io_bazel_rules_rust//:workspace.bzl", "bazel_version")
 bazel_version(name = "bazel_version")
+load("//third-party/cargo:crates.bzl", "raze_fetch_remote_crates")
+raze_fetch_remote_crates()
 
-rules_kotlin_version = "59dc7473c777b5054e91c1af6b95ed0ecbdc0ace"
-
+rules_kotlin_version = "legacy-1.3.0-rc1"
 http_archive(
     name = "io_bazel_rules_kotlin",
-    sha256 = "620546b4f03b001bd06ef8ef5d946f00c58ca1f6426507b0b0b415d1c9f2e102",
+    sha256 = "9de078258235ea48021830b1669bbbb678d7c3bdffd3435f4c0817c921a88e42",
     strip_prefix = "rules_kotlin-%s" % rules_kotlin_version,
     type = "zip",
     urls = ["https://github.com/bazelbuild/rules_kotlin/archive/%s.zip" % rules_kotlin_version],
 )
 
-RULES_JVM_EXTERNAL_TAG = "2.0.1"
-
-RULES_JVM_EXTERNAL_SHA = "55e8d3951647ae3dffde22b4f7f8dee11b3f70f3f89424713debd7076197eaca"
-
+RULES_JVM_EXTERNAL_TAG = "2.9"
+RULES_JVM_EXTERNAL_SHA = "e5b97a31a3e8feed91636f42e19b11c49487b85e5de2f387c999ea14d77c7f45"
 http_archive(
     name = "rules_jvm_external",
     sha256 = RULES_JVM_EXTERNAL_SHA,
     strip_prefix = "rules_jvm_external-%s" % RULES_JVM_EXTERNAL_TAG,
     url = "https://github.com/bazelbuild/rules_jvm_external/archive/%s.zip" % RULES_JVM_EXTERNAL_TAG,
 )
-
 load("@rules_jvm_external//:defs.bzl", "maven_install")
 
 maven_install(
@@ -86,9 +84,6 @@ maven_install(
     ],
 )
 
-load("//third-party/cargo:crates.bzl", "raze_fetch_remote_crates")
-
-raze_fetch_remote_crates()
 
 load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kotlin_repositories", "kt_register_toolchains")
 
