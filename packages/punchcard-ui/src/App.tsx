@@ -49,7 +49,7 @@ function WeekMapRoute(props: IAppState) {
   );
 }
 
-async function loadWeeklyResults(): Promise<IWeeklyResults> {
+export async function loadWeeklyResults(): Promise<IWeeklyResults> {
   const storageContents = sessionStorage.getItem("results");
   if (storageContents != null) {
     return Promise.resolve(JSON.parse(storageContents));
