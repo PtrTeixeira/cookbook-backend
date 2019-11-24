@@ -11,10 +11,11 @@
     "axios": "^0.18.0",
     "bootstrap": "^4.3.1",
     "jest": "24.9.0",
+    "prettier": "^1.18.2",
     "react": "^16.8.4",
     "react-dom": "^16.8.4",
     "react-heatmap-grid": "^0.8.0",
-    "react-router-dom": "^4.3.1",
+    "react-router-dom": "^5.1.2",
     "react-scripts": "3.2.0",
     "reactstrap": "^7.1.0",
     "typescript": "3.3.3333"
@@ -36,6 +37,15 @@
   ],
   "description": "UI for Strava Punchcard application",
   "devDependencies": {
+    "@types/enzyme": "^3.10.3",
+    "enzyme": "^3.10.0",
+    "enzyme-adapter-react-16": "^1.15.1",
+    "jest-junit": "^9.0.0",
     "jest-localstorage-mock": "^2.4.0"
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.{ts,tsx}"
+    ]
   }
 }
