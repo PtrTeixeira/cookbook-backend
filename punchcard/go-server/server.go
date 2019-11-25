@@ -1,6 +1,8 @@
 package main
 
 import (
+	"crypto/rand"
+	b64 "encoding/base64"
 	"fmt"
 	"net/http"
 	"net/url"
@@ -98,6 +100,23 @@ func (h handler) redirectToStrava(c echo.Context) error {
 	queryParams.Set("redirect_uri", redirectURL)
 	queryParams.Set("response_type", "code")
 	queryParams.Set("scope", "read,activity:read")
+
+	nonceBuffer := make([]byte, 10)
+	_, err = rand.Read(nonceBuffer)
+	if err != nil {
+		return err
+	}
+	nonce := b64.URLEncoding.EncodeToString(nonceBuffer)
+	queryParams.Set("state", nonce)
+
+	nonceCookie := new(http.Cookie)
+	nonceCookie.Name = "AuthNonce"
+	nonceCookie.Value = nonce
+	nonceCookie.Expires = time.Now().Add(1 * time.Hour)
+	nonceCookie.Path = "/"
+	nonceCookie.HttpOnly = true
+	nonceCookie.SameSite = http.SameSiteStrictMode
+	c.SetCookie(nonceCookie)
 
 	dest.RawQuery = queryParams.Encode()
 
