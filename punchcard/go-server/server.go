@@ -1,6 +1,8 @@
 package main
 
 import (
+	"crypto/rand"
+	b64 "encoding/base64"
 	"fmt"
 	"net/http"
 	"net/url"
@@ -14,6 +16,11 @@ import (
 	"github.com/pkg/errors"
 
 	strava "github.com/PtrTeixeira/cookbook/strava/client"
+)
+
+const (
+	AuthCookie  string = "StravaAuthToken"
+	NonceCookie string = "NonceCookie"
 )
 
 type handler struct {
@@ -99,6 +106,23 @@ func (h handler) redirectToStrava(c echo.Context) error {
 	queryParams.Set("response_type", "code")
 	queryParams.Set("scope", "read,activity:read")
 
+	nonceBuffer := make([]byte, 10)
+	_, err = rand.Read(nonceBuffer)
+	if err != nil {
+		return err
+	}
+	nonce := b64.URLEncoding.EncodeToString(nonceBuffer)
+	queryParams.Set("state", nonce)
+
+	nonceCookie := new(http.Cookie)
+	nonceCookie.Name = NonceCookie
+	nonceCookie.Value = nonce
+	nonceCookie.Expires = time.Now().Add(1 * time.Hour)
+	nonceCookie.Path = "/"
+	nonceCookie.HttpOnly = true
+	nonceCookie.SameSite = http.SameSiteStrictMode
+	c.SetCookie(nonceCookie)
+
 	dest.RawQuery = queryParams.Encode()
 
 	return c.Redirect(http.StatusSeeOther, dest.String())
@@ -113,7 +137,7 @@ func (h handler) healthCheck(c echo.Context) error {
 }
 
 func (h handler) getPunchcard(c echo.Context) error {
-	authCookie, err := c.Cookie("StravaAuthToken")
+	authCookie, err := c.Cookie(AuthCookie)
 	if err != nil {
 		h.log.Warn("Could not read access token from cookie", err)
 		return c.NoContent(http.StatusForbidden)
@@ -140,6 +164,17 @@ func (h handler) stravaOauthCallback(c echo.Context) error {
 		return c.Redirect(http.StatusSeeOther, "http://strava.com")
 	}
 
+	responseState := params.State
+	nonceCookie, err := c.Cookie(NonceCookie)
+	if err != nil {
+		h.log.Warn("Could not retrieve nonce cookie!", err)
+		return c.NoContent(http.StatusUnauthorized)
+	}
+	if nonceCookie.Value != responseState {
+		h.log.Warn("Retrieved nonce cookie, but did not match response!")
+		return c.NoContent(http.StatusUnauthorized)
+	}
+
 	client := h.client
 	response, err := client.GetToken(h.cfg.StravaClientID, h.cfg.StravaClientSecret, params.Code)
 	if err != nil {
@@ -153,7 +188,7 @@ func (h handler) stravaOauthCallback(c echo.Context) error {
 	}
 
 	cookie := new(http.Cookie)
-	cookie.Name = "StravaAuthToken"
+	cookie.Name = AuthCookie
 	cookie.Value = response.AccessToken
 	cookie.Expires = time.Now().Add(24 * time.Hour)
 	cookie.Path = "/"
