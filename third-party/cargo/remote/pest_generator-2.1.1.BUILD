@@ -12,7 +12,7 @@ package(default_visibility = [
 ])
 
 licenses([
-  "notice", # "MIT"
+  "notice", # "MIT,Apache-2.0"
 ])
 
 load(
@@ -23,25 +23,25 @@ load(
 )
 
 
-# Unsupported target "layout" with type "example" omitted
-# Unsupported target "linear" with type "bench" omitted
-# Unsupported target "termwidth" with type "example" omitted
 
 rust_library(
-    name = "textwrap",
+    name = "pest_generator",
     crate_root = "src/lib.rs",
     crate_type = "lib",
     edition = "2015",
     srcs = glob(["**/*.rs"]),
     deps = [
-        "@raze__unicode_width__0_1_6//:unicode_width",
+        "@raze__pest__2_1_2//:pest",
+        "@raze__pest_meta__2_1_2//:pest_meta",
+        "@raze__proc_macro2__1_0_6//:proc_macro2",
+        "@raze__quote__1_0_2//:quote",
+        "@raze__syn__1_0_8//:syn",
     ],
     rustc_flags = [
         "--cap-lints=allow",
     ],
-    version = "0.11.0",
+    version = "2.1.1",
     crate_features = [
     ],
 )
 
-# Unsupported target "version-numbers" with type "test" omitted

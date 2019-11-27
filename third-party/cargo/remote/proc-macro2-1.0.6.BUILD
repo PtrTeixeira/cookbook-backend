@@ -12,7 +12,7 @@ package(default_visibility = [
 ])
 
 licenses([
-  "notice", # "MIT"
+  "restricted", # "MIT OR Apache-2.0"
 ])
 
 load(
@@ -23,25 +23,30 @@ load(
 )
 
 
-# Unsupported target "layout" with type "example" omitted
-# Unsupported target "linear" with type "bench" omitted
-# Unsupported target "termwidth" with type "example" omitted
+# Unsupported target "build-script-build" with type "custom-build" omitted
+# Unsupported target "features" with type "test" omitted
+# Unsupported target "marker" with type "test" omitted
 
 rust_library(
-    name = "textwrap",
+    name = "proc_macro2",
     crate_root = "src/lib.rs",
     crate_type = "lib",
-    edition = "2015",
+    edition = "2018",
     srcs = glob(["**/*.rs"]),
     deps = [
-        "@raze__unicode_width__0_1_6//:unicode_width",
+        "@raze__unicode_xid__0_2_0//:unicode_xid",
     ],
     rustc_flags = [
         "--cap-lints=allow",
+        "--cfg=use_proc_macro",
+        "--cfg=u128",
+        "--cfg=wrap_proc_macro",
     ],
-    version = "0.11.0",
+    version = "1.0.6",
     crate_features = [
+        "default",
+        "proc-macro",
     ],
 )
 
-# Unsupported target "version-numbers" with type "test" omitted
+# Unsupported target "test" with type "test" omitted

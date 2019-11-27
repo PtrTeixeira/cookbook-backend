@@ -23,25 +23,27 @@ load(
 )
 
 
-# Unsupported target "layout" with type "example" omitted
-# Unsupported target "linear" with type "bench" omitted
-# Unsupported target "termwidth" with type "example" omitted
+# Unsupported target "arr" with type "test" omitted
 
 rust_library(
-    name = "textwrap",
+    name = "generic_array",
     crate_root = "src/lib.rs",
     crate_type = "lib",
     edition = "2015",
     srcs = glob(["**/*.rs"]),
     deps = [
-        "@raze__unicode_width__0_1_6//:unicode_width",
+        "@raze__typenum__1_11_2//:typenum",
     ],
     rustc_flags = [
         "--cap-lints=allow",
     ],
-    version = "0.11.0",
+    version = "0.12.3",
     crate_features = [
     ],
 )
 
-# Unsupported target "version-numbers" with type "test" omitted
+# Unsupported target "generics" with type "test" omitted
+# Unsupported target "hex" with type "test" omitted
+# Unsupported target "import_name" with type "test" omitted
+# Unsupported target "iter" with type "test" omitted
+# Unsupported target "mod" with type "test" omitted

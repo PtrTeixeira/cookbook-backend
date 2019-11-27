@@ -12,7 +12,7 @@ package(default_visibility = [
 ])
 
 licenses([
-  "notice", # "MIT"
+  "notice", # "MIT,Apache-2.0"
 ])
 
 load(
@@ -23,25 +23,22 @@ load(
 )
 
 
-# Unsupported target "layout" with type "example" omitted
-# Unsupported target "linear" with type "bench" omitted
-# Unsupported target "termwidth" with type "example" omitted
 
 rust_library(
-    name = "textwrap",
+    name = "lazy_static",
     crate_root = "src/lib.rs",
     crate_type = "lib",
     edition = "2015",
     srcs = glob(["**/*.rs"]),
     deps = [
-        "@raze__unicode_width__0_1_6//:unicode_width",
     ],
     rustc_flags = [
         "--cap-lints=allow",
     ],
-    version = "0.11.0",
+    version = "1.4.0",
     crate_features = [
     ],
 )
 
-# Unsupported target "version-numbers" with type "test" omitted
+# Unsupported target "no_std" with type "test" omitted
+# Unsupported target "test" with type "test" omitted

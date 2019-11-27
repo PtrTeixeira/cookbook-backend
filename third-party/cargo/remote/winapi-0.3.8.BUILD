@@ -12,7 +12,7 @@ package(default_visibility = [
 ])
 
 licenses([
-  "notice", # "MIT"
+  "notice", # "MIT,Apache-2.0"
 ])
 
 load(
@@ -23,25 +23,32 @@ load(
 )
 
 
-# Unsupported target "layout" with type "example" omitted
-# Unsupported target "linear" with type "bench" omitted
-# Unsupported target "termwidth" with type "example" omitted
+# Unsupported target "build-script-build" with type "custom-build" omitted
 
 rust_library(
-    name = "textwrap",
+    name = "winapi",
     crate_root = "src/lib.rs",
     crate_type = "lib",
     edition = "2015",
     srcs = glob(["**/*.rs"]),
     deps = [
-        "@raze__unicode_width__0_1_6//:unicode_width",
     ],
     rustc_flags = [
         "--cap-lints=allow",
     ],
-    version = "0.11.0",
+    version = "0.3.8",
     crate_features = [
+        "consoleapi",
+        "errhandlingapi",
+        "fileapi",
+        "minwinbase",
+        "minwindef",
+        "processenv",
+        "std",
+        "winbase",
+        "wincon",
+        "winerror",
+        "winnt",
     ],
 )
 
-# Unsupported target "version-numbers" with type "test" omitted

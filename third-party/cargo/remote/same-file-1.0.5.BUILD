@@ -13,6 +13,7 @@ package(default_visibility = [
 
 licenses([
   "notice", # "MIT"
+  "unencumbered", # "Unlicense"
 ])
 
 load(
@@ -23,25 +24,22 @@ load(
 )
 
 
-# Unsupported target "layout" with type "example" omitted
-# Unsupported target "linear" with type "bench" omitted
-# Unsupported target "termwidth" with type "example" omitted
+# Unsupported target "is_same_file" with type "example" omitted
+# Unsupported target "is_stderr" with type "example" omitted
 
 rust_library(
-    name = "textwrap",
+    name = "same_file",
     crate_root = "src/lib.rs",
     crate_type = "lib",
     edition = "2015",
     srcs = glob(["**/*.rs"]),
     deps = [
-        "@raze__unicode_width__0_1_6//:unicode_width",
     ],
     rustc_flags = [
         "--cap-lints=allow",
     ],
-    version = "0.11.0",
+    version = "1.0.5",
     crate_features = [
     ],
 )
 
-# Unsupported target "version-numbers" with type "test" omitted

@@ -23,25 +23,22 @@ load(
 )
 
 
-# Unsupported target "layout" with type "example" omitted
-# Unsupported target "linear" with type "bench" omitted
-# Unsupported target "termwidth" with type "example" omitted
+# Unsupported target "atty" with type "example" omitted
 
 rust_library(
-    name = "textwrap",
+    name = "atty",
     crate_root = "src/lib.rs",
     crate_type = "lib",
     edition = "2015",
     srcs = glob(["**/*.rs"]),
     deps = [
-        "@raze__unicode_width__0_1_6//:unicode_width",
+        "@raze__libc__0_2_65//:libc",
     ],
     rustc_flags = [
         "--cap-lints=allow",
     ],
-    version = "0.11.0",
+    version = "0.2.13",
     crate_features = [
     ],
 )
 
-# Unsupported target "version-numbers" with type "test" omitted

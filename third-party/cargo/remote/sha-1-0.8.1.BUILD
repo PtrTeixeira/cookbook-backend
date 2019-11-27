@@ -38,18 +38,15 @@ rust_library(
     srcs = glob(["**/*.rs"]),
     deps = [
         "@raze__block_buffer__0_7_3//:block_buffer",
-        "@raze__digest__0_8_0//:digest",
+        "@raze__digest__0_8_1//:digest",
         "@raze__fake_simd__0_1_2//:fake_simd",
-        "@raze__opaque_debug__0_2_2//:opaque_debug",
+        "@raze__opaque_debug__0_2_3//:opaque_debug",
     ],
     rustc_flags = [
         "--cap-lints=allow",
     ],
     version = "0.8.1",
     crate_features = [
-        "default",
-        "digest",
-        "std",
     ],
 )
 

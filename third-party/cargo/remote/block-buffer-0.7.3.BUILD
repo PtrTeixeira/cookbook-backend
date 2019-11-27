@@ -31,10 +31,10 @@ rust_library(
     edition = "2015",
     srcs = glob(["**/*.rs"]),
     deps = [
-        "@raze__block_padding__0_1_4//:block_padding",
+        "@raze__block_padding__0_1_5//:block_padding",
         "@raze__byte_tools__0_3_1//:byte_tools",
-        "@raze__byteorder__1_3_1//:byteorder",
-        "@raze__generic_array__0_12_0//:generic_array",
+        "@raze__byteorder__1_3_2//:byteorder",
+        "@raze__generic_array__0_12_3//:generic_array",
     ],
     rustc_flags = [
         "--cap-lints=allow",
