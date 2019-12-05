@@ -9,6 +9,7 @@ rust_library(
     deps = [
         "//third-party/cargo:clap",
         "//third-party/cargo:regex",
+        "//third-party/cargo:walkdir",
     ],
 )
 
@@ -20,11 +21,11 @@ rust_binary(
     deps = [
         ":lib",
         "//third-party/cargo:regex",
-        "//third-party/cargo:walkdir",
     ],
 )
 
 rust_test(
     name = "mvb_test",
     crate = ":lib",
+    size = "small",
 )

@@ -5,6 +5,7 @@ pub struct CommandLine {
     pub from_pattern: String,
     pub to_pattern: String,
     pub preserve: bool,
+    pub verbose: bool,
 }
 
 pub fn parse_command_line<I, T>(args: I) -> ClapResult<CommandLine>
@@ -18,6 +19,13 @@ where
         .arg(Arg::with_name("from_pattern").required(true).index(1))
         .arg(Arg::with_name("to_pattern").required(true).index(2))
         .arg(
+            Arg::with_name("verbose")
+                .required(false)
+                .short("v")
+                .long("verbose")
+                .help("List all inspected files"),
+        )
+        .arg(
             Arg::with_name("preserve")
                 .required(false)
                 .short("p")
@@ -29,11 +37,13 @@ where
     let from_pattern = matches.value_of("from_pattern").unwrap();
     let to_pattern = matches.value_of("to_pattern").unwrap();
     let preserve = matches.is_present("preserve");
+    let verbose = matches.is_present("verbose");
 
     return Ok(CommandLine {
         from_pattern: from_pattern.to_owned(),
         to_pattern: to_pattern.to_owned(),
         preserve: preserve,
+        verbose: verbose,
     });
 }
 
@@ -70,10 +80,24 @@ mod test {
     }
 
     #[test]
+    pub fn parse_command_line_sets_verbose_flag_if_present() {
+        let command_line = parse_command_line(&["mvb", "-v", "name1", "name2"]).unwrap();
+
+        assert!(command_line.verbose, "Verbose flag should be set")
+    }
+
+    #[test]
     pub fn perserve_flag_defaults_to_false() {
         let command_line = parse_command_line(&["mvb", "name1", "name2"]).unwrap();
 
         assert!(!command_line.preserve, "Preserve flag should be false");
+    }
+
+    #[test]
+    pub fn verbose_flag_defaults_to_false() {
+        let command_line = parse_command_line(&["mvb", "name1", "name2"]).unwrap();
+
+        assert!(!command_line.verbose, "Verbose flag should be false");
     }
 
     #[test]
