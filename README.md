@@ -47,30 +47,7 @@ their status.
 All of the backend things are built with [bazel](http://bazel.build).
 I don't know Bazel that well, but I'm learning as I go.
 
-* `cookbook` - A Kotlin server for keeping recipes. 
-  * Build with `bazel build //cookbook/...`
-  * Test with `bazel test //cookbook/...`
-  * Run with `bazel run //cookbook/server -- <REPO ROOT>/cookbook.yml`
-* `punchcard` - A Kotlin server. Gets data from Strava to show 
-   when you run.
-   * Build with `bazel build //punchcard/...`
-   * Test with `bazel test //punchcard/...`
-   * Run with `bazel run //punchcard/server`. This should have, but 
-     doesn't require, a config file.
-* `strava-api` - Kotlin API client for Strava. In practice, supports only 
-   the one method I needed for `punchcard`.
-   * Build with `bazel build //strava-api/...`
-   * Test with `bazel test //strava-api/...`
-* `sentry-appender` - A Dropwizard appender for sending data to Sentry.
-  * Build with `bazel build //sentry-appender/...`
-  * Test with `bazel test //sentry-appender/...`
-* `kotlin-dropwizard-dsl` - A small Kotlin library for configuring Dropwizard
-  * Build with `bazel build //kotlin-dropwizard-dsl/...`
-  * Test with `bazel test //kotlin-dropwizard-dsl/...`
-* `mvb` - A command-line batch file renamer
-  * Build with `bazel build //mvb/...`
-  * Test with `bazel test //mvb/...`
-* third-party has external dependency things in it.
+You should see individual folders for more detailed information.
 
 You can test everything (in CI, for instance) with `bazel test ...`.
 
