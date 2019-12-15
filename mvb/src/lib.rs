@@ -47,11 +47,7 @@ fn try_copy_file(entry: DirEntry, opts: &RenameSettings) -> Option<io::Result<()
     };
 }
 
-pub fn move_in_directory(to_pattern: &str, re: &Regex, verbose: bool, preserve: bool) -> bool {
-    let opts = RenameSettings {
-        target_pattern: to_pattern.to_owned(),
-        source_pattern: re.to_owned(),
-    };
+pub fn move_in_directory(opts: RenameSettings, verbose: bool, preserve: bool) -> bool {
     let mut exit_ok = true;
     for entry in WalkDir::new(".").into_iter().filter_map(|e| e.ok()) {
         if verbose {

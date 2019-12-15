@@ -2,7 +2,7 @@ extern crate lib;
 extern crate regex;
 
 use lib::cli::{parse_command_line, CommandLine};
-use lib::move_in_directory;
+use lib::{move_in_directory, RenameSettings};
 use regex::Regex;
 use std::env;
 
@@ -38,5 +38,10 @@ fn run_app() -> bool {
         }
     };
 
-    return move_in_directory(&to_pattern, &re, verbose, preserve);
+    let opts = RenameSettings {
+        target_pattern: to_pattern,
+        source_pattern: re,
+    };
+
+    return move_in_directory(opts, verbose, preserve);
 }
