@@ -17,6 +17,13 @@ pub struct RenameSettings {
     pub source_pattern: Regex,
 }
 
+pub struct Options {
+    pub preserve: bool,
+    pub verbose: bool,
+    pub depth: Option<u8>,
+    pub show_hidden: bool,
+}
+
 pub fn get_new_path(filename: &str, opts: &RenameSettings) -> Option<PathBuf> {
     let target_pattern: &str = &opts.target_pattern;
     let from_pattern = &opts.source_pattern;
@@ -47,17 +54,17 @@ fn try_copy_file(entry: DirEntry, opts: &RenameSettings) -> Option<io::Result<()
     };
 }
 
-pub fn move_in_directory(opts: RenameSettings, verbose: bool, preserve: bool) -> bool {
+pub fn move_in_directory(ctxt: RenameSettings, opts: Options) -> bool {
     let mut exit_ok = true;
     for entry in WalkDir::new(".").into_iter().filter_map(|e| e.ok()) {
-        if verbose {
+        if opts.verbose {
             println!("Checking file {}", entry.path().display());
         }
 
-        let move_result = if preserve {
-            try_copy_file(entry, &opts)
+        let move_result = if opts.preserve {
+            try_copy_file(entry, &ctxt)
         } else {
-            try_move_file(entry, &opts)
+            try_move_file(entry, &ctxt)
         };
 
         if let Some(Err(e)) = move_result {

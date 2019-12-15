@@ -1,4 +1,4 @@
-use clap::{App, Arg, Result as ClapResult};
+use clap::{App, Arg, Result as ClapResult, value_t};
 use std::ffi::OsString;
 
 pub struct CommandLine {
@@ -6,6 +6,8 @@ pub struct CommandLine {
     pub to_pattern: String,
     pub preserve: bool,
     pub verbose: bool,
+    pub depth: Option<u8>,
+    pub show_hidden: bool,
 }
 
 pub fn parse_command_line<I, T>(args: I) -> ClapResult<CommandLine>
@@ -32,18 +34,30 @@ where
                 .long("preserve")
                 .help("Preserve original files (make copies at new location)"),
         )
+        .arg(
+            Arg::with_name("depth")
+            .required(false)
+            .long("depth")
+            .help("Max depth to search")
+        )
         .get_matches_from_safe(args)?;
 
     let from_pattern = matches.value_of("from_pattern").unwrap();
     let to_pattern = matches.value_of("to_pattern").unwrap();
     let preserve = matches.is_present("preserve");
     let verbose = matches.is_present("verbose");
+    let depth = value_t!(matches, "depth", u8)
+      .map(|val| Some(val))
+      .unwrap_or(None);
+    let show_hidden = matches.is_present("hidden");
 
     return Ok(CommandLine {
         from_pattern: from_pattern.to_owned(),
         to_pattern: to_pattern.to_owned(),
         preserve: preserve,
         verbose: verbose,
+        depth: depth,
+        show_hidden: show_hidden,
     });
 }
 
