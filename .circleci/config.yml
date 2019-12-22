@@ -52,9 +52,9 @@ jobs:
           at: /tmp/workspace
       - store_artifacts:
           path: /tmp/workspace/gopunchcard.deb
-      - run: tar -cvzf punchcard-ui.tgz packages/punchcard-ui/build
+      - run: tar -cvzf punchcard-ui.tgz /tmp/workspace/packages/punchcard-ui/build
       - store_artifacts:
-          path: /tmp/workspace/punchcard-ui.tgz
+          path: punchcard-ui.tgz
 
 workflows:
   version: 2
