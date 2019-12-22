@@ -41,16 +41,21 @@ jobs:
       - run: node .circleci/move-test-out.js
       - store_test_results:
           path: tests
+      - persist_to_workspace:
+          root: packages
+          paths:
+            - punchcard-ui/build
   deploy:
     docker:
-      - image: circleci/openjdk:8u181-jdk-node-browsers
+      - image: google/cloud-sdk
     steps:
       - attach_workspace:
           at: /tmp/workspace
       - store_artifacts:
-          path: /tmp/workspace/punchcard.deb
-      - store_artifacts:
           path: /tmp/workspace/gopunchcard.deb
+      - run: tar -czf punchcard-ui.tgz punchcard-ui/build
+      - store_artifacts:
+          path: /tmp/workspace/punchcard-ui.tgz
 
 workflows:
   version: 2
@@ -59,7 +64,7 @@ workflows:
     - build_primary
     - build_ui
     - deploy:
-        requires: [build_primary]
+        requires: [build_primary, build_ui]
         filters:
           branches:
             only: master
