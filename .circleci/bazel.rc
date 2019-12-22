@@ -6,8 +6,11 @@ build --noshow_progress
 # Skip manual tests
 test --test_tag_filters=-manual
 
+# Show reasonable test output
+test --test_output=errors
+
 # Write build info into the build cache
-build --experimental_repository_cache=/home/circleci/bazel_repository_cache
+build --disk_cache=/home/circleci/bazel_cache
 
 # Explicitly limit resources on server
 build --local_resources=3072,1.0,1.0

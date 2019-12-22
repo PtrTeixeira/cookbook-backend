@@ -8,8 +8,7 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - v1-bazel-cache-{{ checksum "WORKSPACE" }}
-            - v1-bazel-cache
+            - v2-bazel-cache
       - run: cp .circleci/bazel.rc /etc/bazel.bazelrc
       - run: echo "1.0.$CIRCLE_BUILD_NUM" | tee version_file
       - run: bazel build //...
@@ -26,9 +25,9 @@ jobs:
           paths:
             - "*.deb"
       - save_cache:
-          key: v1-bazel-cache-{{ checksum "WORKSPACE" }}
+          key: v2-bazel-cache
           paths:
-            - "/home/circleci/.cache/bazel"
+            - "/home/circleci/bazel_cache"
   build_ui:
     docker:
       - image: circleci/node:11.15.0-browsers
@@ -42,9 +41,9 @@ jobs:
       - store_test_results:
           path: tests
       - persist_to_workspace:
-          root: packages
+          root: .
           paths:
-            - punchcard-ui/build
+            - packages/punchcard-ui/build
   deploy:
     docker:
       - image: google/cloud-sdk
@@ -53,7 +52,7 @@ jobs:
           at: /tmp/workspace
       - store_artifacts:
           path: /tmp/workspace/gopunchcard.deb
-      - run: tar -czf punchcard-ui.tgz punchcard-ui/build
+      - run: tar -cvzf punchcard-ui.tgz packages/punchcard-ui/build
       - store_artifacts:
           path: /tmp/workspace/punchcard-ui.tgz
 
