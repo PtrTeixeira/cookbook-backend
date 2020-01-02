@@ -1,9 +1,7 @@
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
-load("@bazel_tools//tools/build_defs/repo:maven_rules.bzl", "maven_dependency_plugin", "maven_jar")
 
 skylib_version = "0.8.0"
-
 http_archive(
     name = "bazel_skylib",
     sha256 = "2ef429f5d7ce7111263289644d233707dba35e39696377ebab8b0bc701f7818e",
@@ -21,10 +19,10 @@ rules_pkg_dependencies()
 
 http_archive(
     name = "io_bazel_rules_rust",
-    sha256 = "7b064c815eef94c34553bc73e4295a50d7b80c92ea91152802c7f77dcbb128ab",
-    strip_prefix = "rules_rust-fe9a91e8b42f731aeb3b596246f6bf4bb9a88dc3",
+    sha256 = "f33bffd6b779ae5a4f57944e86307f876872b9dbfc07b3d10d0e7f0041f29d5f",
+    strip_prefix = "rules_rust-959ba5692cc4e6b803b20018c9eeeadedaa4b637",
     urls = [
-        "https://github.com/bazelbuild/rules_rust/archive/fe9a91e8b42f731aeb3b596246f6bf4bb9a88dc3.tar.gz",
+        "https://github.com/bazelbuild/rules_rust/archive/959ba5692cc4e6b803b20018c9eeeadedaa4b637.tar.gz",
     ],
 )
 load("@io_bazel_rules_rust//rust:repositories.bzl", "rust_repositories")
@@ -124,21 +122,10 @@ gazelle_dependencies()
 load("//third-party/go:deps.bzl", "go_dependencies")
 go_dependencies()
 
-load("//third-party/java:junit.bzl", "junit_jupiter_java_repositories", "junit_platform_java_repositories")
+load(
+  "//third-party/java:junit.bzl",
+  "junit_jupiter_java_repositories",
+  "junit_platform_java_repositories")
 
-maven_server(
-    name = "default",
-    url = "http://central.maven.org/maven2/",
-)
-
-JUNIT_JUPITER_VERSION = "5.4.0"
-
-JUNIT_PLATFORM_VERSION = "1.4.0"
-
-junit_jupiter_java_repositories(
-    version = JUNIT_JUPITER_VERSION,
-)
-
-junit_platform_java_repositories(
-    version = JUNIT_PLATFORM_VERSION,
-)
+junit_jupiter_java_repositories()
+junit_platform_java_repositories()
