@@ -1,7 +1,7 @@
-load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 skylib_version = "0.8.0"
+
 http_archive(
     name = "bazel_skylib",
     sha256 = "2ef429f5d7ce7111263289644d233707dba35e39696377ebab8b0bc701f7818e",
@@ -14,7 +14,9 @@ http_archive(
     url = "https://github.com/bazelbuild/rules_pkg/releases/download/0.2.4/rules_pkg-0.2.4.tar.gz",
     sha256 = "4ba8f4ab0ff85f2484287ab06c0d871dcb31cc54d439457d28fd4ae14b18450a",
 )
+
 load("@rules_pkg//:deps.bzl", "rules_pkg_dependencies")
+
 rules_pkg_dependencies()
 
 http_archive(
@@ -25,30 +27,46 @@ http_archive(
         "https://github.com/bazelbuild/rules_rust/archive/959ba5692cc4e6b803b20018c9eeeadedaa4b637.tar.gz",
     ],
 )
+
 load("@io_bazel_rules_rust//rust:repositories.bzl", "rust_repositories")
+
 rust_repositories()
+
 load("@io_bazel_rules_rust//:workspace.bzl", "bazel_version")
+
 bazel_version(name = "bazel_version")
+
 load("//third-party/cargo:crates.bzl", "raze_fetch_remote_crates")
+
 raze_fetch_remote_crates()
 
-rules_kotlin_version = "legacy-1.3.0-rc1"
+rules_kotlin_version = "legacy-1.3.0-rc3"
+
 http_archive(
     name = "io_bazel_rules_kotlin",
-    sha256 = "9de078258235ea48021830b1669bbbb678d7c3bdffd3435f4c0817c921a88e42",
+    sha256 = "54678552125753d9fc0a37736d140f1d2e69778d3e52cf454df41a913b964ede",
     strip_prefix = "rules_kotlin-%s" % rules_kotlin_version,
     type = "zip",
     urls = ["https://github.com/bazelbuild/rules_kotlin/archive/%s.zip" % rules_kotlin_version],
 )
 
-RULES_JVM_EXTERNAL_TAG = "2.9"
-RULES_JVM_EXTERNAL_SHA = "e5b97a31a3e8feed91636f42e19b11c49487b85e5de2f387c999ea14d77c7f45"
+load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kotlin_repositories", "kt_register_toolchains")
+
+kotlin_repositories()
+
+kt_register_toolchains()
+
+RULES_JVM_EXTERNAL_TAG = "3.1"
+
+RULES_JVM_EXTERNAL_SHA = "e246373de2353f3d34d35814947aa8b7d0dd1a58c2f7a6c41cfeaff3007c2d14"
+
 http_archive(
     name = "rules_jvm_external",
     sha256 = RULES_JVM_EXTERNAL_SHA,
     strip_prefix = "rules_jvm_external-%s" % RULES_JVM_EXTERNAL_TAG,
     url = "https://github.com/bazelbuild/rules_jvm_external/archive/%s.zip" % RULES_JVM_EXTERNAL_TAG,
 )
+
 load("@rules_jvm_external//:defs.bzl", "maven_install")
 
 maven_install(
@@ -82,30 +100,22 @@ maven_install(
     ],
 )
 
-
-load("@io_bazel_rules_kotlin//kotlin:kotlin.bzl", "kotlin_repositories", "kt_register_toolchains")
-
-kotlin_repositories()
-
-kt_register_toolchains()
-
 http_archive(
     name = "io_bazel_rules_go",
     urls = [
-        "https://storage.googleapis.com/bazel-mirror/github.com/bazelbuild/rules_go/releases/download/v0.20.2/rules_go-v0.20.2.tar.gz",
-        "https://github.com/bazelbuild/rules_go/releases/download/v0.20.2/rules_go-v0.20.2.tar.gz",
-
+        "https://storage.googleapis.com/bazel-mirror/github.com/bazelbuild/rules_go/releases/download/v0.20.3/rules_go-v0.20.3.tar.gz",
+        "https://github.com/bazelbuild/rules_go/releases/download/v0.20.3/rules_go-v0.20.3.tar.gz",
     ],
-    sha256 = "b9aa86ec08a292b97ec4591cf578e020b35f98e12173bbd4a921f84f583aebd9",
+    sha256 = "e88471aea3a3a4f19ec1310a55ba94772d087e9ce46e41ae38ecebe17935de7b",
 )
 
 http_archive(
     name = "bazel_gazelle",
     urls = [
-        "https://storage.googleapis.com/bazel-mirror/github.com/bazelbuild/bazel-gazelle/releases/download/v0.19.0/bazel-gazelle-v0.19.0.tar.gz",
-        "https://github.com/bazelbuild/bazel-gazelle/releases/download/v0.19.0/bazel-gazelle-v0.19.0.tar.gz",
+        "https://storage.googleapis.com/bazel-mirror/github.com/bazelbuild/bazel-gazelle/releases/download/v0.19.1/bazel-gazelle-v0.19.1.tar.gz",
+        "https://github.com/bazelbuild/bazel-gazelle/releases/download/v0.19.1/bazel-gazelle-v0.19.1.tar.gz",
     ],
-    sha256 = "41bff2a0b32b02f20c227d234aa25ef3783998e5453f7eade929704dcff7cd4b",
+    sha256 = "86c6d481b3f7aedc1d60c1c211c6f76da282ae197c3b3160f54bd3a8f847896f",
 )
 
 load("@io_bazel_rules_go//go:deps.bzl", "go_register_toolchains", "go_rules_dependencies")
@@ -120,12 +130,15 @@ gazelle_dependencies()
 
 # gazelle:repository_macro third-party/go/deps.bzl%go_dependencies
 load("//third-party/go:deps.bzl", "go_dependencies")
+
 go_dependencies()
 
 load(
-  "//third-party/java:junit.bzl",
-  "junit_jupiter_java_repositories",
-  "junit_platform_java_repositories")
+    "//third-party/java:junit.bzl",
+    "junit_jupiter_java_repositories",
+    "junit_platform_java_repositories",
+)
 
 junit_jupiter_java_repositories()
+
 junit_platform_java_repositories()
