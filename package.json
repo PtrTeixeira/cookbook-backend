@@ -9,8 +9,8 @@
     "packages/*"
   ],
   "devDependencies": {
-    "json-server": "^0.15.1",
-    "prettier": "^1.18.2"
+    "json-server": "^0.16.1",
+    "prettier": "^2.0.5"
   },
   "scripts": {
     "punchcard:backend": "json-server punchcard/punchcard-db.json --port=8080 --ro",

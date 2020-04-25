@@ -7,7 +7,7 @@ const EMPTY = [
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 ];
 
 it("builds an empty grid if given no data", () => {
@@ -20,7 +20,7 @@ it("builds an empty grid if given no data", () => {
 it("treats Monday as the first day of the week", () => {
   const data = buildWeeklyGrid({ MONDAY: { "0": 2 } });
 
-  const expectedGrid = EMPTY.map(e => e);
+  const expectedGrid = EMPTY.map((e) => e);
   expectedGrid[0][0] = 2;
 
   expect(data).toEqual(expectedGrid);

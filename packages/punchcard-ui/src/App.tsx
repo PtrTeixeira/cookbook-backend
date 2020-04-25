@@ -70,7 +70,7 @@ class App extends React.Component<{}, IAppState> {
     this.state = {
       error: null,
       isLoaded: false,
-      weeklyResults: null
+      weeklyResults: null,
     };
   }
 
@@ -81,15 +81,15 @@ class App extends React.Component<{}, IAppState> {
         if (this.componentIsMounted) {
           this.setState({
             isLoaded: true,
-            weeklyResults: data
+            weeklyResults: data,
           });
         }
       },
-      error => {
+      (error) => {
         if (this.componentIsMounted) {
           this.setState({
             error: `Failed to load data from server: ${error.response.data}`,
-            isLoaded: true
+            isLoaded: true,
           });
         }
       }
