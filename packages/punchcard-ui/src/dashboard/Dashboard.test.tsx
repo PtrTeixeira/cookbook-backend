@@ -8,7 +8,7 @@ describe("Dashboard", () => {
     const props = {
       isLoaded: true,
       error: null,
-      weeklyResults: {}
+      weeklyResults: {},
     };
 
     mount(<Dashboard {...props} />);
@@ -18,7 +18,7 @@ describe("Dashboard", () => {
     const props = {
       isLoaded: false,
       error: null,
-      weeklyResults: null
+      weeklyResults: null,
     };
 
     const dashboard = shallow(<Dashboard {...props} />);
@@ -30,7 +30,7 @@ describe("Dashboard", () => {
     const props = {
       isLoaded: true,
       error: "Could not get data from server",
-      weeklyResults: null
+      weeklyResults: null,
     };
 
     const dashboard = shallow(<Dashboard {...props} />);

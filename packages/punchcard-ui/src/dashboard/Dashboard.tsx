@@ -8,7 +8,7 @@ import { WeekMap } from "../heatmap/WeekMap";
 export function Dashboard({
   error,
   isLoaded,
-  weeklyResults
+  weeklyResults,
 }: {
   error: any;
   isLoaded: boolean;

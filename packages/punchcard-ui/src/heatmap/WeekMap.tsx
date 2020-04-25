@@ -28,7 +28,7 @@ export function WeekMap({ data }: { data: number[][] }): JSX.Element {
     "9 PM",
     "10 PM",
     "11 PM",
-    "12 PM"
+    "12 PM",
   ];
 
   const visibility = hours.map((_, index) => index % 2 === 0);

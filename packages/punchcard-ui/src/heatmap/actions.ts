@@ -41,7 +41,7 @@ function buildHourlyGrid(data: IHourlyResults): number[] {
   return new Array(24)
     .fill(0)
     .map((e, index) => data[`${index}`])
-    .map(element => {
+    .map((element) => {
       if (element === null || element === undefined) {
         return 0;
       } else {
@@ -68,8 +68,8 @@ export function buildWeeklyGrid(data: IWeeklyResults): number[][] {
     "THURSDAY",
     "FRIDAY",
     "SATURDAY",
-    "SUNDAY"
-  ].map(weekday => buildHourlyGridSafe(data[weekday]));
+    "SUNDAY",
+  ].map((weekday) => buildHourlyGridSafe(data[weekday]));
 
   return grid;
 }
