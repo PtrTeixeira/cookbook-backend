@@ -1,6 +1,7 @@
 package strava
 
 import (
+	"context"
 	"testing"
 
 	"gopkg.in/h2non/gock.v1"
@@ -28,7 +29,7 @@ func TestRequests(t *testing.T) {
 			}
 			`)
 
-		athlete, err := client.GetAthlete("fake-token")
+		athlete, err := client.GetAthlete(context.Background(), "fake-token")
 		if err != nil {
 			t.Error("Failed to make request", err)
 		}
@@ -56,7 +57,7 @@ func TestRequests(t *testing.T) {
 			}
 			`)
 
-		athlete, err := client.GetAthlete("fake-token")
+		athlete, err := client.GetAthlete(context.Background(), "fake-token")
 		if err == nil || athlete != nil {
 			t.Error("Request should have returned an error")
 		}
@@ -88,7 +89,7 @@ func TestRequests(t *testing.T) {
 			  }
 			`)
 
-		token, err := client.GetToken("client-id", "client-secret", "redirect-code")
+		token, err := client.GetToken(context.Background(), "client-id", "client-secret", "redirect-code")
 		if err != nil {
 			t.Error("Failed to make request", err)
 		}

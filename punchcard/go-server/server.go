@@ -143,7 +143,11 @@ func (h handler) getPunchcard(c echo.Context) error {
 		return c.NoContent(http.StatusForbidden)
 	}
 
-	response, err := h.client.GetAthleteActivities(authCookie.Value, 1, 50)
+	response, err := h.client.GetAthleteActivities(
+		c.Request().Context(),
+		authCookie.Value,
+		1,
+		50)
 	if err != nil {
 		h.log.Error("Could not read data athlete data from Strava", err)
 	}
@@ -176,7 +180,11 @@ func (h handler) stravaOauthCallback(c echo.Context) error {
 	}
 
 	client := h.client
-	response, err := client.GetToken(h.cfg.StravaClientID, h.cfg.StravaClientSecret, params.Code)
+	response, err := client.GetToken(
+		c.Request().Context(),
+		h.cfg.StravaClientID,
+		h.cfg.StravaClientSecret,
+		params.Code)
 	if err != nil {
 		e := errors.Wrap(err, "Could not get auth token from Strava")
 		if hub := sentryecho.GetHubFromContext(c); hub != nil {

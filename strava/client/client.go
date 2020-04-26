@@ -1,6 +1,7 @@
 package strava
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 	"net/url"
@@ -22,8 +23,8 @@ func NewClient() *Client {
 }
 
 // GetAthlete returns the currently logged-in user
-func (c *Client) GetAthlete(token string) (*AthleteResponse, error) {
-	request, err := http.NewRequest("GET", "https://www.strava.com/api/v3/athlete", nil)
+func (c *Client) GetAthlete(ctx context.Context, token string) (*AthleteResponse, error) {
+	request, err := http.NewRequestWithContext(ctx, "GET", "https://www.strava.com/api/v3/athlete", nil)
 	if err != nil {
 		return nil, err
 	}
@@ -47,9 +48,9 @@ func (c *Client) GetAthlete(token string) (*AthleteResponse, error) {
 }
 
 // GetAthleteActivities returns the logged-in user's activities
-func (c *Client) GetAthleteActivities(token string, page int, perPage int) ([]AthleteActivity, error) {
+func (c *Client) GetAthleteActivities(ctx context.Context, token string, page int, perPage int) ([]AthleteActivity, error) {
 	url := fmt.Sprintf("https://www.strava.com/api/v3/athlete/activities?page=%d&per_page=%d", page, perPage)
-	request, err := http.NewRequest("GET", url, nil)
+	request, err := http.NewRequestWithContext(ctx, "GET", url, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -73,7 +74,7 @@ func (c *Client) GetAthleteActivities(token string, page int, perPage int) ([]At
 }
 
 // GetToken returns the *initial* token for authentication with Strava
-func (c *Client) GetToken(clientID, clientSecret, code string) (*TokenResponse, error) {
+func (c *Client) GetToken(ctx context.Context, clientID, clientSecret, code string) (*TokenResponse, error) {
 	dest, err := url.Parse("https://www.strava.com/oauth/token")
 	if err != nil {
 		return nil, err
@@ -85,7 +86,7 @@ func (c *Client) GetToken(clientID, clientSecret, code string) (*TokenResponse, 
 	params.Add("code", code)
 	params.Add("grant_type", "authorization_code")
 	dest.RawQuery = params.Encode()
-	request, err := http.NewRequest("POST", dest.String(), nil)
+	request, err := http.NewRequestWithContext(ctx, "POST", dest.String(), nil)
 	if err != nil {
 		return nil, err
 	}
