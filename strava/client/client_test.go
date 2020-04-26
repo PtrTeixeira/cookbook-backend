@@ -1,7 +1,7 @@
 package strava
 
 import (
-  "context"
+	"context"
 	"testing"
 
 	"gopkg.in/h2non/gock.v1"
