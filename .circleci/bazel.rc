@@ -13,5 +13,5 @@ test --test_output=errors
 build --disk_cache=/home/circleci/bazel_cache
 
 # Explicitly limit resources on server
-build --local_ram_resources=3072
-startup --host_jvm_args=-Xmx2G
+# build --local_ram_resources=3072
+# startup --host_jvm_args=-Xmx3G
