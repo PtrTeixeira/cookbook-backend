@@ -1,0 +1,58 @@
+"""
+@generated
+cargo-raze generated Bazel file.
+
+DO NOT EDIT! Replaced on runs of cargo-raze
+"""
+
+package(default_visibility = ["//visibility:public"])
+
+licenses([
+    "notice",  # See individual crates for specific licenses
+])
+
+# Aliased targets
+alias(
+    name = "clap",
+    actual = "@raze__clap__2_33_0//:clap",
+    tags = [
+        "cargo-raze",
+        "manual",
+    ],
+)
+
+alias(
+    name = "pest",
+    actual = "@raze__pest__2_1_1//:pest",
+    tags = [
+        "cargo-raze",
+        "manual",
+    ],
+)
+
+alias(
+    name = "pest_derive",
+    actual = "@raze__pest_derive__2_1_0//:pest_derive",
+    tags = [
+        "cargo-raze",
+        "manual",
+    ],
+)
+
+alias(
+    name = "regex",
+    actual = "@raze__regex__1_1_6//:regex",
+    tags = [
+        "cargo-raze",
+        "manual",
+    ],
+)
+
+alias(
+    name = "walkdir",
+    actual = "@raze__walkdir__2_2_7//:walkdir",
+    tags = [
+        "cargo-raze",
+        "manual",
+    ],
+)

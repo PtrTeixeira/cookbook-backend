@@ -27,20 +27,17 @@ rules_pkg_dependencies()
 
 http_archive(
     name = "io_bazel_rules_rust",
-    sha256 = "2e690b7d0caccc3000b98a9831adf2899b36268efec3ced8d3cfaec6322843d1",
-    strip_prefix = "rules_rust-6e5fa2c570ac2f17ac1df840d060fc8aab521a07",
+    sha256 = "b5d4d1c7609714dfef821355f40353c58aa1afb3803401b3442ed2355db9b0c7",
+    strip_prefix = "rules_rust-8d2b4eeeff9dce24f5cbb36018f2d60ecd676639",
     urls = [
-        "https://github.com/bazelbuild/rules_rust/archive/6e5fa2c570ac2f17ac1df840d060fc8aab521a07.tar.gz",
+        # Master branch as of 2020-11-10
+        "https://github.com/bazelbuild/rules_rust/archive/8d2b4eeeff9dce24f5cbb36018f2d60ecd676639.tar.gz",
     ],
 )
-
 load("@io_bazel_rules_rust//rust:repositories.bzl", "rust_repositories")
-
 rust_repositories()
-
-load("@io_bazel_rules_rust//:workspace.bzl", "bazel_version")
-
-bazel_version(name = "bazel_version")
+load("@io_bazel_rules_rust//:workspace.bzl", "rust_workspace")
+rust_workspace()
 
 load("//third-party/cargo:crates.bzl", "raze_fetch_remote_crates")
 
