@@ -3,7 +3,7 @@ jobs:
   build_primary:
     working_directory: ~/cookbook
     docker:
-      - image: l.gcr.io/google/bazel:3.2.0
+      - image: l.gcr.io/google/bazel:3.7.0
     steps:
       - checkout
       - restore_cache:
