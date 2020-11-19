@@ -9,6 +9,8 @@ rust_library(
     ],
     deps = [
         "//third-party/cargo:pest",
+    ],
+    proc_macro_deps = [
         "//third-party/cargo:pest_derive",
     ],
 )
