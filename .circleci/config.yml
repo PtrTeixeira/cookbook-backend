@@ -3,16 +3,18 @@ jobs:
   build_primary:
     working_directory: ~/cookbook
     docker:
-      - image: l.gcr.io/google/bazel:3.7.0
+      - image: l.gcr.io/google/bazel:3.5.0
     steps:
       - checkout
+      - run: mkdir -p ~/bin
+      - run: wget -O ~/bin/bazel https://github.com/bazelbuild/bazelisk/releases/download/v1.7.4/bazelisk-linux-amd64 && chmod +x ~/bin/bazel
       - restore_cache:
           keys:
             - v2-bazel-cache
       - run: cp .circleci/bazel.rc /etc/bazel.bazelrc
       - run: echo "1.0.$CIRCLE_BUILD_NUM" | tee version_file
-      - run: bazel build punchcard/... mvb/...
-      - run: bazel test punchcard/... mvb/...
+      - run: ~/bin/bazel build punchcard/... mvb/...
+      - run: ~/bin/bazel test punchcard/... mvb/...
       - run: |
           mkdir tests
           find -L bazel-testlogs -name 'test.xml' -printf '%h\n' | xargs -n1 -I{} cp -r {} tests
