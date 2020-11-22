@@ -3,17 +3,6 @@ workspace(name = "ptrteixeira_cookbook")
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 
 http_archive(
-    name = "rules_pkg",
-    sha256 = "6b5969a7acd7b60c02f816773b06fcf32fbe8ba0c7919ccdc2df4f8fb923804a",
-    url = "https://github.com/bazelbuild/rules_pkg/releases/download/0.3.0/rules_pkg-0.3.0.tar.gz",
-)
-
-load("@rules_pkg//:deps.bzl", "rules_pkg_dependencies")
-
-rules_pkg_dependencies()
-
-
-http_archive(
     name = "io_bazel_rules_rust",
     sha256 = "b5d4d1c7609714dfef821355f40353c58aa1afb3803401b3442ed2355db9b0c7",
     strip_prefix = "rules_rust-8d2b4eeeff9dce24f5cbb36018f2d60ecd676639",
@@ -158,3 +147,12 @@ load(
     _go_image_repos = "repositories",
 )
 _go_image_repos()
+
+load(
+  "@io_bazel_rules_docker//toolchains/docker:toolchain.bzl",
+  docker_toolchain_configure="toolchain_configure",
+)
+docker_toolchain_configure(
+  name = "docker_config",
+  client_config="/home/teixeira/.docker/bkp-config.json",
+)
