@@ -12,20 +12,21 @@ jobs:
           keys:
             - v2-bazel-cache
       - run: cp .circleci/bazel.rc /etc/bazel.bazelrc
-      - run: echo "1.0.$CIRCLE_BUILD_NUM" | tee version_file
-      - run: ~/bin/bazel build punchcard/... mvb/...
+      - setup_remote_docker
+      - run: ~/bin/bazel build //punchcard/go-server //mvb
       - run: ~/bin/bazel test punchcard/... mvb/...
       - run: |
           mkdir tests
           find -L bazel-testlogs -name 'test.xml' -printf '%h\n' | xargs -n1 -I{} cp -r {} tests
           mkdir artifacts
-          find -L bazel-bin -name '*.deb' -print -exec cp {} artifacts \;
+          find -L bazel-bin -name '*.tar' -print -exec cp {} artifacts \;
       - store_test_results:
           path: tests
-      - persist_to_workspace:
-          root: artifacts
-          paths:
-            - "*.deb"
+      - run: |
+          if [ "$CIRCLE_BRANCH" = "master" ]; then
+            docker login -u _json_key -p $SERVICE_ACCOUNT https://gcr.io
+            bazel run //punchcard:publish
+          fi
       - save_cache:
           key: v2-bazel-cache
           paths:
@@ -52,8 +53,6 @@ jobs:
     steps:
       - attach_workspace:
           at: /tmp/workspace
-      - store_artifacts:
-          path: /tmp/workspace/gopunchcard.deb
       - run: tar -cvzf punchcard-ui.tgz /tmp/workspace/packages/punchcard-ui/build
       - store_artifacts:
           path: punchcard-ui.tgz
@@ -62,7 +61,8 @@ workflows:
   version: 2
   full_build:
     jobs:
-    - build_primary
+    - build_primary:
+        context: [cookbook]
     - build_ui
     - deploy:
         requires: [build_primary, build_ui]
