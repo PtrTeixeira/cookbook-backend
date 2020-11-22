@@ -1,5 +1,0 @@
-baseUrl: http://localhost:8080/
-dashboardUiUrl: http://localhost:3000
-
-stravaClientId: ""
-stravaClientSecret: ""
