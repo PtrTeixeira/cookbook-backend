@@ -7,11 +7,11 @@ rust_library(
     srcs = [
         "src/lib.rs",
     ],
-    deps = [
-        "//third-party/cargo:pest",
-    ],
     proc_macro_deps = [
         "//third-party/cargo:pest_derive",
+    ],
+    deps = [
+        "//third-party/cargo:pest",
     ],
 )
 
