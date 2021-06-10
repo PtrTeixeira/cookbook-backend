@@ -23,7 +23,7 @@ JUNIT_EXTRA_DEPENDENCIES = [
     ("org.opentest4j", "opentest4j", "1.1.1"),
 ]
 
-def junit_jupiter_java_repositories(version = "5.5.2"):
+def junit_jupiter_java_repositories(version = "5.7.2"):
     """Imports dependencies for JUnit Jupiter"""
     artifacts = [
         "%s:%s:%s" % (JUNIT_JUPITER_GROUP_ID, artifact, version)
@@ -42,7 +42,7 @@ def junit_jupiter_java_repositories(version = "5.5.2"):
         ]
     )
 
-def junit_platform_java_repositories(version = "1.5.2"):
+def junit_platform_java_repositories(version = "1.7.2"):
     artifacts = [
         "%s:%s:%s" % (JUNIT_PLATFORM_GROUP_ID, artifact, version)
         for artifact in JUNIT_PLATFORM_ARTIFACT_ID_LIST
